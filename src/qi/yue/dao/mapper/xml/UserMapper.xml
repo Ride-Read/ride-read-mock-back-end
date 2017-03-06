@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.entity.User">
+		<id column="uid" property="uid" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="school" property="school" jdbcType="VARCHAR" />
+		<result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+		<result column="follower" property="follower" jdbcType="INTEGER" />
+		<result column="token" property="token" jdbcType="VARCHAR" />
+		<result column="hometown" property="hometown" jdbcType="VARCHAR" />
+		<result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="DATE" />
+		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="following" property="following" jdbcType="INTEGER" />
+		<result column="career" property="career" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		uid, username, password, sex, school, phonenumber,
+		updated_at, follower,
+		token, hometown,
+		face_url, signature, location,
+		created_at, birthday, following, career,
+		nickname
+	</sql>
+
+	<select id="findByUsernameAndPassword" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<!-- <if test="distinct"> -->
+		<!-- distinct -->
+		<!-- </if> -->
+		<include refid="Base_Column_List" />
+		from t_user
+		where username=#{username,jdbcType=VARCHAR} and
+		password=#{password,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findByUsername" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<!-- <if test="distinct"> -->
+		<!-- distinct -->
+		<!-- </if> -->
+		<include refid="Base_Column_List" />
+		from t_user
+		where username=#{username,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="qi.yue.entity.User">
+		insert into t_user (
+			username,
+			password,
+			sex, school, phonenumber,
+			updated_at, follower,
+			token,
+			hometown, face_url, signature,
+			location, created_at, birthday,
+			following, career, nickname
+		)
+		values (
+			#{username,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{sex,jdbcType=INTEGER},
+			#{school,jdbcType=VARCHAR},
+			#{phonenumber,jdbcType=VARCHAR},
+			#{updatedAt,jdbcType=DATE},
+			#{follower,jdbcType=INTEGER},
+			#{token,jdbcType=VARCHAR},
+			#{hometown,jdbcType=VARCHAR},
+			#{faceUrl,jdbcType=VARCHAR},
+			#{signature,jdbcType=VARCHAR},
+			#{location,jdbcType=VARCHAR},
+			#{createdAt,jdbcType=DATE},
+			#{birthday,jdbcType=DATE},
+			#{following,jdbcType=INTEGER},
+			#{career,jdbcType=VARCHAR},
+			#{nickname,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="qi.yue.entity.User">
+		update t_user
+		<set>
+			<if test="record.uid != null">
+				uid = #{record.uid,jdbcType=INTEGER},
+			</if>
+			<if test="record.username != null">
+				username = #{record.username,jdbcType=VARCHAR},
+			</if>
+			<if test="record.password != null">
+				password = #{record.password,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sex != null">
+				sex = #{record.sex,jdbcType=INTEGER},
+			</if>
+			<if test="record.school != null">
+				school = #{record.school,jdbcType=VARCHAR},
+			</if>
+			<if test="record.phonenumber != null">
+				phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="record.updatedAt != null">
+				updated_at = #{record.updatedAt,jdbcType=DATE},
+			</if>
+			<if test="record.follower != null">
+				follower = #{record.follower,jdbcType=INTEGER},
+			</if>
+			<if test="record.token != null">
+				token = #{record.token,jdbcType=VARCHAR},
+			</if>
+			<if test="record.hometown != null">
+				hometown = #{record.hometown,jdbcType=VARCHAR},
+			</if>
+			<if test="record.faceUrl != null">
+				face_url = #{record.faceUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="record.signature != null">
+				signature = #{record.signature,jdbcType=VARCHAR},
+			</if>
+			<if test="record.location != null">
+				location = #{record.location,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createdAt != null">
+				created_at = #{record.createdAt,jdbcType=DATE},
+			</if>
+			<if test="record.birthday != null">
+				birthday = #{record.birthday,jdbcType=DATE},
+			</if>
+			<if test="record.following != null">
+				following = #{record.following,jdbcType=INTEGER},
+			</if>
+			<if test="record.career != null">
+				career = #{record.career,jdbcType=VARCHAR},
+			</if>
+			<if test="record.nickname != null">
+				nickname = #{record.nickname,jdbcType=VARCHAR},
+			</if>
+		</set>
+	</update>
+
+</mapper>
