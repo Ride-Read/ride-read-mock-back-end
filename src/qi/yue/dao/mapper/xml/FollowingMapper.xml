@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.FollowingMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.entity.Following">
+		<id column="fid" property="fid" jdbcType="INTEGER" />
+		<result column="tid" property="tid" jdbcType="INTEGER" />
+		<result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		fid, tid, face_url, signature, nickname
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_following
+		where fid = #{fid,jdbcType=INTEGER}
+	</select>
+	
+	<select id="findByTid" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_following
+		where tid = #{tid,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_following
+		where fid = #{fid,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="qi.yue.entity.Following">
+		insert into t_following (fid, tid, face_url,
+		signature, nickname)
+		values (#{fid,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER},
+		#{faceUrl,jdbcType=VARCHAR},
+		#{signature,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR})
+	</insert>
+</mapper>

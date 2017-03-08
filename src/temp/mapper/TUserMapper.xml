@@ -1,430 +1,417 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="qi.yue.temp.mapper.TUserMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.temp.po.TUser">
-		<id column="uid" property="uid" jdbcType="INTEGER" />
-		<result column="username" property="username" jdbcType="VARCHAR" />
-		<result column="password" property="password" jdbcType="VARCHAR" />
-		<result column="sex" property="sex" jdbcType="INTEGER" />
-		<result column="school" property="school" jdbcType="VARCHAR" />
-		<result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
-		<result column="updated_at" property="updatedAt" jdbcType="DATE" />
-		<result column="follower" property="follower" jdbcType="INTEGER" />
-		<result column="token" property="token" jdbcType="VARCHAR" />
-		<result column="hometown" property="hometown" jdbcType="VARCHAR" />
-		<result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
-		<result column="signature" property="signature" jdbcType="VARCHAR" />
-		<result column="location" property="location" jdbcType="VARCHAR" />
-		<result column="created_at" property="createdAt" jdbcType="DATE" />
-		<result column="birthday" property="birthday" jdbcType="DATE" />
-		<result column="following" property="following" jdbcType="INTEGER" />
-		<result column="career" property="career" jdbcType="VARCHAR" />
-		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
-	</resultMap>
-	<sql id="Example_Where_Clause">
-		<where>
-			<foreach collection="oredCriteria" item="criteria" separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
-	<sql id="Update_By_Example_Where_Clause">
-		<where>
-			<foreach collection="example.oredCriteria" item="criteria"
-				separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
-	<sql id="Base_Column_List">
-		uid, username, password, sex, school, phonenumber, updated_at, follower,
-		token, hometown,
-		face_url, signature, location, created_at, birthday, following, career,
-		nickname
-	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="qi.yue.temp.po.TUserExample">
-		select
-		<if test="distinct">
-			distinct
-		</if>
-		<include refid="Base_Column_List" />
-		from t_user
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-		<if test="orderByClause != null">
-			order by ${orderByClause}
-		</if>
-	</select>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
-		select
-		<include refid="Base_Column_List" />
-		from t_user
-		where uid = #{uid,jdbcType=INTEGER}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from t_user
-		where uid = #{uid,jdbcType=INTEGER}
-	</delete>
-	<delete id="deleteByExample" parameterType="qi.yue.temp.po.TUserExample">
-		delete from t_user
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-	</delete>
-	<insert id="insert" parameterType="qi.yue.temp.po.TUser">
-		insert into t_user (uid, username, password,
-		sex, school, phonenumber,
-		updated_at, follower, token,
-		hometown, face_url, signature,
-		location, created_at, birthday,
-		following, career, nickname
-		)
-		values (#{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
-		#{password,jdbcType=VARCHAR},
-		#{sex,jdbcType=INTEGER}, #{school,jdbcType=VARCHAR}, #{phonenumber,jdbcType=VARCHAR},
-		#{updatedAt,jdbcType=DATE}, #{follower,jdbcType=INTEGER},
-		#{token,jdbcType=VARCHAR},
-		#{hometown,jdbcType=VARCHAR}, #{faceUrl,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR},
-		#{location,jdbcType=VARCHAR}, #{createdAt,jdbcType=DATE},
-		#{birthday,jdbcType=DATE},
-		#{following,jdbcType=INTEGER}, #{career,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}
-		)
-	</insert>
-	<insert id="insertSelective" parameterType="qi.yue.temp.po.TUser">
-		insert into t_user
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="uid != null">
-				uid,
-			</if>
-			<if test="username != null">
-				username,
-			</if>
-			<if test="password != null">
-				password,
-			</if>
-			<if test="sex != null">
-				sex,
-			</if>
-			<if test="school != null">
-				school,
-			</if>
-			<if test="phonenumber != null">
-				phonenumber,
-			</if>
-			<if test="updatedAt != null">
-				updated_at,
-			</if>
-			<if test="follower != null">
-				follower,
-			</if>
-			<if test="token != null">
-				token,
-			</if>
-			<if test="hometown != null">
-				hometown,
-			</if>
-			<if test="faceUrl != null">
-				face_url,
-			</if>
-			<if test="signature != null">
-				signature,
-			</if>
-			<if test="location != null">
-				location,
-			</if>
-			<if test="createdAt != null">
-				created_at,
-			</if>
-			<if test="birthday != null">
-				birthday,
-			</if>
-			<if test="following != null">
-				following,
-			</if>
-			<if test="career != null">
-				career,
-			</if>
-			<if test="nickname != null">
-				nickname,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="uid != null">
-				#{uid,jdbcType=INTEGER},
-			</if>
-			<if test="username != null">
-				#{username,jdbcType=VARCHAR},
-			</if>
-			<if test="password != null">
-				#{password,jdbcType=VARCHAR},
-			</if>
-			<if test="sex != null">
-				#{sex,jdbcType=INTEGER},
-			</if>
-			<if test="school != null">
-				#{school,jdbcType=VARCHAR},
-			</if>
-			<if test="phonenumber != null">
-				#{phonenumber,jdbcType=VARCHAR},
-			</if>
-			<if test="updatedAt != null">
-				#{updatedAt,jdbcType=DATE},
-			</if>
-			<if test="follower != null">
-				#{follower,jdbcType=INTEGER},
-			</if>
-			<if test="token != null">
-				#{token,jdbcType=VARCHAR},
-			</if>
-			<if test="hometown != null">
-				#{hometown,jdbcType=VARCHAR},
-			</if>
-			<if test="faceUrl != null">
-				#{faceUrl,jdbcType=VARCHAR},
-			</if>
-			<if test="signature != null">
-				#{signature,jdbcType=VARCHAR},
-			</if>
-			<if test="location != null">
-				#{location,jdbcType=VARCHAR},
-			</if>
-			<if test="createdAt != null">
-				#{createdAt,jdbcType=DATE},
-			</if>
-			<if test="birthday != null">
-				#{birthday,jdbcType=DATE},
-			</if>
-			<if test="following != null">
-				#{following,jdbcType=INTEGER},
-			</if>
-			<if test="career != null">
-				#{career,jdbcType=VARCHAR},
-			</if>
-			<if test="nickname != null">
-				#{nickname,jdbcType=VARCHAR},
-			</if>
-		</trim>
-	</insert>
-	<select id="countByExample" parameterType="qi.yue.temp.po.TUserExample"
-		resultType="java.lang.Integer">
-		select count(*) from t_user
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-	</select>
-	<update id="updateByExampleSelective" parameterType="map">
-		update t_user
-		<set>
-			<if test="record.uid != null">
-				uid = #{record.uid,jdbcType=INTEGER},
-			</if>
-			<if test="record.username != null">
-				username = #{record.username,jdbcType=VARCHAR},
-			</if>
-			<if test="record.password != null">
-				password = #{record.password,jdbcType=VARCHAR},
-			</if>
-			<if test="record.sex != null">
-				sex = #{record.sex,jdbcType=INTEGER},
-			</if>
-			<if test="record.school != null">
-				school = #{record.school,jdbcType=VARCHAR},
-			</if>
-			<if test="record.phonenumber != null">
-				phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
-			</if>
-			<if test="record.updatedAt != null">
-				updated_at = #{record.updatedAt,jdbcType=DATE},
-			</if>
-			<if test="record.follower != null">
-				follower = #{record.follower,jdbcType=INTEGER},
-			</if>
-			<if test="record.token != null">
-				token = #{record.token,jdbcType=VARCHAR},
-			</if>
-			<if test="record.hometown != null">
-				hometown = #{record.hometown,jdbcType=VARCHAR},
-			</if>
-			<if test="record.faceUrl != null">
-				face_url = #{record.faceUrl,jdbcType=VARCHAR},
-			</if>
-			<if test="record.signature != null">
-				signature = #{record.signature,jdbcType=VARCHAR},
-			</if>
-			<if test="record.location != null">
-				location = #{record.location,jdbcType=VARCHAR},
-			</if>
-			<if test="record.createdAt != null">
-				created_at = #{record.createdAt,jdbcType=DATE},
-			</if>
-			<if test="record.birthday != null">
-				birthday = #{record.birthday,jdbcType=DATE},
-			</if>
-			<if test="record.following != null">
-				following = #{record.following,jdbcType=INTEGER},
-			</if>
-			<if test="record.career != null">
-				career = #{record.career,jdbcType=VARCHAR},
-			</if>
-			<if test="record.nickname != null">
-				nickname = #{record.nickname,jdbcType=VARCHAR},
-			</if>
-		</set>
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
-	<update id="updateByExample" parameterType="map">
-		update t_user
-		set uid = #{record.uid,jdbcType=INTEGER},
-		username = #{record.username,jdbcType=VARCHAR},
-		password = #{record.password,jdbcType=VARCHAR},
-		sex = #{record.sex,jdbcType=INTEGER},
-		school = #{record.school,jdbcType=VARCHAR},
-		phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
-		updated_at = #{record.updatedAt,jdbcType=DATE},
-		follower = #{record.follower,jdbcType=INTEGER},
-		token = #{record.token,jdbcType=VARCHAR},
-		hometown = #{record.hometown,jdbcType=VARCHAR},
-		face_url = #{record.faceUrl,jdbcType=VARCHAR},
-		signature = #{record.signature,jdbcType=VARCHAR},
-		location = #{record.location,jdbcType=VARCHAR},
-		created_at = #{record.createdAt,jdbcType=DATE},
-		birthday = #{record.birthday,jdbcType=DATE},
-		following = #{record.following,jdbcType=INTEGER},
-		career = #{record.career,jdbcType=VARCHAR},
-		nickname = #{record.nickname,jdbcType=VARCHAR}
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
-	<update id="updateByPrimaryKeySelective" parameterType="qi.yue.temp.po.TUser">
-		update t_user
-		<set>
-			<if test="username != null">
-				username = #{username,jdbcType=VARCHAR},
-			</if>
-			<if test="password != null">
-				password = #{password,jdbcType=VARCHAR},
-			</if>
-			<if test="sex != null">
-				sex = #{sex,jdbcType=INTEGER},
-			</if>
-			<if test="school != null">
-				school = #{school,jdbcType=VARCHAR},
-			</if>
-			<if test="phonenumber != null">
-				phonenumber = #{phonenumber,jdbcType=VARCHAR},
-			</if>
-			<if test="updatedAt != null">
-				updated_at = #{updatedAt,jdbcType=DATE},
-			</if>
-			<if test="follower != null">
-				follower = #{follower,jdbcType=INTEGER},
-			</if>
-			<if test="token != null">
-				token = #{token,jdbcType=VARCHAR},
-			</if>
-			<if test="hometown != null">
-				hometown = #{hometown,jdbcType=VARCHAR},
-			</if>
-			<if test="faceUrl != null">
-				face_url = #{faceUrl,jdbcType=VARCHAR},
-			</if>
-			<if test="signature != null">
-				signature = #{signature,jdbcType=VARCHAR},
-			</if>
-			<if test="location != null">
-				location = #{location,jdbcType=VARCHAR},
-			</if>
-			<if test="createdAt != null">
-				created_at = #{createdAt,jdbcType=DATE},
-			</if>
-			<if test="birthday != null">
-				birthday = #{birthday,jdbcType=DATE},
-			</if>
-			<if test="following != null">
-				following = #{following,jdbcType=INTEGER},
-			</if>
-			<if test="career != null">
-				career = #{career,jdbcType=VARCHAR},
-			</if>
-			<if test="nickname != null">
-				nickname = #{nickname,jdbcType=VARCHAR},
-			</if>
-		</set>
-		where uid = #{uid,jdbcType=INTEGER}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="qi.yue.temp.po.TUser">
-		update t_user
-		set username = #{username,jdbcType=VARCHAR},
-		password = #{password,jdbcType=VARCHAR},
-		sex = #{sex,jdbcType=INTEGER},
-		school = #{school,jdbcType=VARCHAR},
-		phonenumber = #{phonenumber,jdbcType=VARCHAR},
-		updated_at = #{updatedAt,jdbcType=DATE},
-		follower = #{follower,jdbcType=INTEGER},
-		token = #{token,jdbcType=VARCHAR},
-		hometown = #{hometown,jdbcType=VARCHAR},
-		face_url = #{faceUrl,jdbcType=VARCHAR},
-		signature = #{signature,jdbcType=VARCHAR},
-		location = #{location,jdbcType=VARCHAR},
-		created_at = #{createdAt,jdbcType=DATE},
-		birthday = #{birthday,jdbcType=DATE},
-		following = #{following,jdbcType=INTEGER},
-		career = #{career,jdbcType=VARCHAR},
-		nickname = #{nickname,jdbcType=VARCHAR}
-		where uid = #{uid,jdbcType=INTEGER}
-	</update>
+<mapper namespace="temp.mapper.TUserMapper" >
+  <resultMap id="BaseResultMap" type="temp.po.TUser" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
+    <result column="follower" property="follower" jdbcType="INTEGER" />
+    <result column="following" property="following" jdbcType="INTEGER" />
+    <result column="token" property="token" jdbcType="VARCHAR" />
+    <result column="hometown" property="hometown" jdbcType="VARCHAR" />
+    <result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+    <result column="signature" property="signature" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="career" property="career" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    uid, username, password, sex, school, phonenumber, follower, following, token, hometown, 
+    face_url, signature, location, birthday, career, nickname, updated_at, created_at
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="temp.po.TUserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="temp.po.TUserExample" >
+    delete from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="temp.po.TUser" >
+    insert into t_user (uid, username, password, 
+      sex, school, phonenumber, 
+      follower, following, token, 
+      hometown, face_url, signature, 
+      location, birthday, career, 
+      nickname, updated_at, created_at
+      )
+    values (#{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{school,jdbcType=VARCHAR}, #{phonenumber,jdbcType=VARCHAR}, 
+      #{follower,jdbcType=INTEGER}, #{following,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR}, 
+      #{hometown,jdbcType=VARCHAR}, #{faceUrl,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{career,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{updatedAt,jdbcType=TIMESTAMP}, #{createdAt,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="temp.po.TUser" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="school != null" >
+        school,
+      </if>
+      <if test="phonenumber != null" >
+        phonenumber,
+      </if>
+      <if test="follower != null" >
+        follower,
+      </if>
+      <if test="following != null" >
+        following,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="hometown != null" >
+        hometown,
+      </if>
+      <if test="faceUrl != null" >
+        face_url,
+      </if>
+      <if test="signature != null" >
+        signature,
+      </if>
+      <if test="location != null" >
+        location,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="career != null" >
+        career,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="school != null" >
+        #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenumber != null" >
+        #{phonenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="follower != null" >
+        #{follower,jdbcType=INTEGER},
+      </if>
+      <if test="following != null" >
+        #{following,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="faceUrl != null" >
+        #{faceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null" >
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="career != null" >
+        #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="temp.po.TUserExample" resultType="java.lang.Integer" >
+    select count(*) from t_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_user
+    <set >
+      <if test="record.uid != null" >
+        uid = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.school != null" >
+        school = #{record.school,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonenumber != null" >
+        phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.follower != null" >
+        follower = #{record.follower,jdbcType=INTEGER},
+      </if>
+      <if test="record.following != null" >
+        following = #{record.following,jdbcType=INTEGER},
+      </if>
+      <if test="record.token != null" >
+        token = #{record.token,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hometown != null" >
+        hometown = #{record.hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faceUrl != null" >
+        face_url = #{record.faceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signature != null" >
+        signature = #{record.signature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.location != null" >
+        location = #{record.location,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.career != null" >
+        career = #{record.career,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickname != null" >
+        nickname = #{record.nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatedAt != null" >
+        updated_at = #{record.updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdAt != null" >
+        created_at = #{record.createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_user
+    set uid = #{record.uid,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=INTEGER},
+      school = #{record.school,jdbcType=VARCHAR},
+      phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
+      follower = #{record.follower,jdbcType=INTEGER},
+      following = #{record.following,jdbcType=INTEGER},
+      token = #{record.token,jdbcType=VARCHAR},
+      hometown = #{record.hometown,jdbcType=VARCHAR},
+      face_url = #{record.faceUrl,jdbcType=VARCHAR},
+      signature = #{record.signature,jdbcType=VARCHAR},
+      location = #{record.location,jdbcType=VARCHAR},
+      birthday = #{record.birthday,jdbcType=TIMESTAMP},
+      career = #{record.career,jdbcType=VARCHAR},
+      nickname = #{record.nickname,jdbcType=VARCHAR},
+      updated_at = #{record.updatedAt,jdbcType=TIMESTAMP},
+      created_at = #{record.createdAt,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="temp.po.TUser" >
+    update t_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="school != null" >
+        school = #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenumber != null" >
+        phonenumber = #{phonenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="follower != null" >
+        follower = #{follower,jdbcType=INTEGER},
+      </if>
+      <if test="following != null" >
+        following = #{following,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        hometown = #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="faceUrl != null" >
+        face_url = #{faceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null" >
+        signature = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="career != null" >
+        career = #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="temp.po.TUser" >
+    update t_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      school = #{school,jdbcType=VARCHAR},
+      phonenumber = #{phonenumber,jdbcType=VARCHAR},
+      follower = #{follower,jdbcType=INTEGER},
+      following = #{following,jdbcType=INTEGER},
+      token = #{token,jdbcType=VARCHAR},
+      hometown = #{hometown,jdbcType=VARCHAR},
+      face_url = #{faceUrl,jdbcType=VARCHAR},
+      signature = #{signature,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
+      career = #{career,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      created_at = #{createdAt,jdbcType=TIMESTAMP}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
 </mapper>

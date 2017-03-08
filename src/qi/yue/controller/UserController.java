@@ -1,21 +1,34 @@
 package qi.yue.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import qi.yue.common.DateJsonValueProcessor;
+import qi.yue.common.MessageCommon;
+import qi.yue.entity.Follower;
+import qi.yue.entity.Following;
 import qi.yue.entity.User;
+import qi.yue.service.FollowerService;
+import qi.yue.service.FollowingService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
+import qi.yue.utils.DateUtil;
 import qi.yue.utils.MD5Util;
+import qi.yue.utils.StringUtil;
 
 @Controller
 @RequestMapping("/users")
@@ -23,60 +36,87 @@ public class UserController {
 
 	@Resource
 	private UserService userService;
+	@Resource
+	private FollowingService followingService;
+	@Resource
+	private FollowerService followerService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody Map<String, Object> login(String username, String password) {
+	// @RequestMapping("/toAdd.action")
+	// public String toAdd(User user) {
+	// int i = 1;
+	// System.out.println(i);
+	// return "addUser";
+	// }
+	//
+	// @RequestMapping("/save.action")
+	// @Transactional
+	// public String save(User user) {
+	// // userService.add(user);
+	// return "addUser";
+	// }
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public @ResponseBody Object login(String username, String password) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(password)) {
 			result.put("data", "");
-			result.put("status", 1);
+			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
 			User user = userService.findByUsername(username);
 			if (CommonUtil.isNull(user)) {
 				result.put("data", "");
-				result.put("status", 1002);
+				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
 			} else {
 				if (!password.equals(user.getPassword())) {
 					result.put("data", "");
-					result.put("status", 1003);
+					result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
 				} else {
-					Long timestamp = new Date().getTime();
-					String key = "airing";
-					String token = MD5Util.GetMD5Code(user.getUid() + timestamp + key);
+					String token = MD5Util
+							.GetMD5Code(user.getUid() + DateUtil.getTimestamp() + MessageCommon.PUBLIC_KEY);
 					user.setToken(token);
-					userService.save(user);
+					userService.updateTokenByUid(user.getToken(), user.getUid());
 					result.put("data", user);
-					result.put("status", 0);
+					result.put("status", MessageCommon.STATUS_SUCCESS);
 				}
 			}
 		}
-		return result;
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+		return JSONObject.fromObject(result, jsonConfig);
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody Map<String, Object> register(String phonenumber, String password, String face_url,
-			String nickname) {
+	public @ResponseBody Object register(String phonenumber, String password, String face_url, String nickname) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
 				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNullOrEmpty(nickname)) {
-			// result.put("data", "");
-			result.put("status", 1);
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
 			User usered = userService.findByUsername(phonenumber);
 			if (!CommonUtil.isNull(usered)) {
-				result.put("status", 1000);
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_USER_EXIST);
 			} else {
 				User user = new User();
+				String token = MD5Util.GetMD5Code(user.getUid() + DateUtil.getTimestamp() + MessageCommon.PUBLIC_KEY);
+
+				user.setUsername(phonenumber);
+				user.setToken(token);
 				user.setPhonenumber(phonenumber);
 				user.setPassword(password);
 				user.setFaceUrl(face_url);
 				user.setNickname(nickname);
+				user.setCreatedAt(new Date());
 				userService.save(user);
-				result.put("data", user);
-				result.put("status", 0);
+
+				result.put("data", userService.findByUsername(phonenumber));
+				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		return result;
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+		return JSONObject.fromObject(result, jsonConfig);
 	}
 
 	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
@@ -90,7 +130,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> update(String career, String phonenumber, String location, String birthday,
+	public @ResponseBody Object update(String career, String phonenumber, String location, String birthday,
 			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
 			String hometown, Long timestamp) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -100,18 +140,22 @@ public class UserController {
 				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(nickname)
 				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNullOrEmpty(hometown)
 				|| CommonUtil.isNull(timestamp)) {
-			// result.put("data", "");
-			result.put("status", 1);
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User usered = userService.findByUsername(phonenumber);
-			if (!CommonUtil.isNull(usered)) {
-				result.put("status", 1000);
+			User user = userService.findByUidAndToken(uid, token);
+			if (CommonUtil.isNull(user)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				User user = new User();
 				user.setCareer(career);
 				user.setPhonenumber(phonenumber);
 				user.setLocation(location);
-				user.setBirthday(new Date(birthday));
+				try {
+					user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				user.setFaceUrl(face_url);
 				user.setUid(uid);
 				user.setToken(token);
@@ -120,29 +164,54 @@ public class UserController {
 				user.setSchool(school);
 				user.setSex(sex);
 				user.setHometown(hometown);
+				// user.setUpdatedAt(new Date());
 				userService.update(user);
-				result.put("data", user);
-				result.put("status", 0);
+				User parameterUser = userService.findByUsername(phonenumber);
+				result.put("data", parameterUser);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
+		}
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+		return JSONObject.fromObject(result, jsonConfig);
+	}
+
+	@RequestMapping(value = "/followers", method = RequestMethod.POST)
+	public @ResponseBody Object followers(Integer uid, String token, Long timestamp) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			User user = userService.findByUidAndToken(uid, token);
+			if (CommonUtil.isNull(user)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_FAIL);
+			} else {
+				List<Follower> FollowingList = followerService.findByTid(uid);
+				result.put("data", FollowingList);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
 		return result;
 	}
 
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> followings(Integer uid, String token, Long timestamp) {
-
+	public @ResponseBody Object followings(Integer uid, String token, Long timestamp) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("uid", uid);
-			map.put("token", token);
-			// User usered = userService.findByIdAndToken(map);
-			// if (CommonUtil.isNull(usered)) {
-			// result.put("status", 1);
-			// } else {
-			//
-			// }
-
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			User user = userService.findByUidAndToken(uid, token);
+			if (CommonUtil.isNull(user)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_FAIL);
+			} else {
+				List<Following> FollowingList = followingService.findByTid(uid);
+				result.put("data", FollowingList);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
 		}
 		return result;
 	}

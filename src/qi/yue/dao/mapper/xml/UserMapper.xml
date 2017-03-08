@@ -8,15 +8,15 @@
 		<result column="sex" property="sex" jdbcType="INTEGER" />
 		<result column="school" property="school" jdbcType="VARCHAR" />
 		<result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
-		<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
 		<result column="follower" property="follower" jdbcType="INTEGER" />
 		<result column="token" property="token" jdbcType="VARCHAR" />
 		<result column="hometown" property="hometown" jdbcType="VARCHAR" />
 		<result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
 		<result column="signature" property="signature" jdbcType="VARCHAR" />
 		<result column="location" property="location" jdbcType="VARCHAR" />
-		<result column="created_at" property="createdAt" jdbcType="DATE" />
-		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
 		<result column="following" property="following" jdbcType="INTEGER" />
 		<result column="career" property="career" jdbcType="VARCHAR" />
 		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
@@ -42,6 +42,18 @@
 		where username=#{username,jdbcType=VARCHAR} and
 		password=#{password,jdbcType=VARCHAR}
 	</select>
+	
+	<select id="findByUidAndToken" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<!-- <if test="distinct"> -->
+		<!-- distinct -->
+		<!-- </if> -->
+		<include refid="Base_Column_List" />
+		from t_user
+		where uid = #{uid,jdbcType=INTEGER} and
+		token=#{token,jdbcType=VARCHAR}
+	</select>
 
 	<select id="findByUsername" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -56,94 +68,102 @@
 
 	<insert id="insert" parameterType="qi.yue.entity.User">
 		insert into t_user (
-			username,
-			password,
-			sex, school, phonenumber,
-			updated_at, follower,
-			token,
-			hometown, face_url, signature,
-			location, created_at, birthday,
-			following, career, nickname
+		username,
+		password,
+		sex, school, phonenumber,
+		updated_at, follower,
+		token,
+		hometown, face_url, signature,
+		location, created_at, birthday,
+		following, career, nickname
 		)
 		values (
-			#{username,jdbcType=VARCHAR},
-			#{password,jdbcType=VARCHAR},
-			#{sex,jdbcType=INTEGER},
-			#{school,jdbcType=VARCHAR},
-			#{phonenumber,jdbcType=VARCHAR},
-			#{updatedAt,jdbcType=DATE},
-			#{follower,jdbcType=INTEGER},
-			#{token,jdbcType=VARCHAR},
-			#{hometown,jdbcType=VARCHAR},
-			#{faceUrl,jdbcType=VARCHAR},
-			#{signature,jdbcType=VARCHAR},
-			#{location,jdbcType=VARCHAR},
-			#{createdAt,jdbcType=DATE},
-			#{birthday,jdbcType=DATE},
-			#{following,jdbcType=INTEGER},
-			#{career,jdbcType=VARCHAR},
-			#{nickname,jdbcType=VARCHAR}
+		#{username,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{sex,jdbcType=INTEGER},
+		#{school,jdbcType=VARCHAR},
+		#{phonenumber,jdbcType=VARCHAR},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{follower,jdbcType=INTEGER},
+		#{token,jdbcType=VARCHAR},
+		#{hometown,jdbcType=VARCHAR},
+		#{faceUrl,jdbcType=VARCHAR},
+		#{signature,jdbcType=VARCHAR},
+		#{location,jdbcType=VARCHAR},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{birthday,jdbcType=TIMESTAMP},
+		#{following,jdbcType=INTEGER},
+		#{career,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR}
 		)
 	</insert>
-	
+
 	<update id="update" parameterType="qi.yue.entity.User">
 		update t_user
 		<set>
-			<if test="record.uid != null">
-				uid = #{record.uid,jdbcType=INTEGER},
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
 			</if>
-			<if test="record.username != null">
-				username = #{record.username,jdbcType=VARCHAR},
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
 			</if>
-			<if test="record.password != null">
-				password = #{record.password,jdbcType=VARCHAR},
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
 			</if>
-			<if test="record.sex != null">
-				sex = #{record.sex,jdbcType=INTEGER},
+			<if test="school != null">
+				school = #{school,jdbcType=VARCHAR},
 			</if>
-			<if test="record.school != null">
-				school = #{record.school,jdbcType=VARCHAR},
+			<if test="phonenumber != null">
+				phonenumber = #{phonenumber,jdbcType=VARCHAR},
 			</if>
-			<if test="record.phonenumber != null">
-				phonenumber = #{record.phonenumber,jdbcType=VARCHAR},
+			<if test="updatedAt != null">
+				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
 			</if>
-			<if test="record.updatedAt != null">
-				updated_at = #{record.updatedAt,jdbcType=DATE},
+			<if test="follower != null">
+				follower = #{follower,jdbcType=INTEGER},
 			</if>
-			<if test="record.follower != null">
-				follower = #{record.follower,jdbcType=INTEGER},
+			<if test="token != null">
+				token = #{token,jdbcType=VARCHAR},
 			</if>
-			<if test="record.token != null">
-				token = #{record.token,jdbcType=VARCHAR},
+			<if test="hometown != null">
+				hometown = #{hometown,jdbcType=VARCHAR},
 			</if>
-			<if test="record.hometown != null">
-				hometown = #{record.hometown,jdbcType=VARCHAR},
+			<if test="faceUrl != null">
+				face_url = #{faceUrl,jdbcType=VARCHAR},
 			</if>
-			<if test="record.faceUrl != null">
-				face_url = #{record.faceUrl,jdbcType=VARCHAR},
+			<if test="signature != null">
+				signature = #{signature,jdbcType=VARCHAR},
 			</if>
-			<if test="record.signature != null">
-				signature = #{record.signature,jdbcType=VARCHAR},
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
 			</if>
-			<if test="record.location != null">
-				location = #{record.location,jdbcType=VARCHAR},
+			<if test="createdAt != null">
+				created_at = #{createdAt,jdbcType=TIMESTAMP},
 			</if>
-			<if test="record.createdAt != null">
-				created_at = #{record.createdAt,jdbcType=DATE},
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=TIMESTAMP},
 			</if>
-			<if test="record.birthday != null">
-				birthday = #{record.birthday,jdbcType=DATE},
+			<if test="following != null">
+				following = #{following,jdbcType=INTEGER},
 			</if>
-			<if test="record.following != null">
-				following = #{record.following,jdbcType=INTEGER},
+			<if test="career != null">
+				career = #{career,jdbcType=VARCHAR},
 			</if>
-			<if test="record.career != null">
-				career = #{record.career,jdbcType=VARCHAR},
-			</if>
-			<if test="record.nickname != null">
-				nickname = #{record.nickname,jdbcType=VARCHAR},
+			<if test="nickname != null">
+				nickname = #{nickname,jdbcType=VARCHAR},
 			</if>
 		</set>
+		where uid = #{uid,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateTokenByUid" parameterType="map">
+		update t_user
+		<set>
+			<if test="token != null">
+				token = #{token,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where uid = #{uid,jdbcType=INTEGER}
 	</update>
 
 </mapper>

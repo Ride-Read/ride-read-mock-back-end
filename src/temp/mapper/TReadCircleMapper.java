@@ -2,8 +2,7 @@ package temp.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-
-import qi.yue.entity.ReadCircle;
+import temp.po.TReadCircle;
 import temp.po.TReadCircleExample;
 
 public interface TReadCircleMapper {
@@ -13,19 +12,19 @@ public interface TReadCircleMapper {
 
     int deleteByPrimaryKey(Integer mid);
 
-    int insert(ReadCircle record);
+    int insert(TReadCircle record);
 
-    int insertSelective(ReadCircle record);
+    int insertSelective(TReadCircle record);
 
-    List<ReadCircle> selectByExample(TReadCircleExample example);
+    List<TReadCircle> selectByExample(TReadCircleExample example);
 
-    ReadCircle selectByPrimaryKey(Integer mid);
+    TReadCircle selectByPrimaryKey(Integer mid);
 
-    int updateByExampleSelective(@Param("record") ReadCircle record, @Param("example") TReadCircleExample example);
+    int updateByExampleSelective(@Param("record") TReadCircle record, @Param("example") TReadCircleExample example);
 
-    int updateByExample(@Param("record") ReadCircle record, @Param("example") TReadCircleExample example);
+    int updateByExample(@Param("record") TReadCircle record, @Param("example") TReadCircleExample example);
 
-    int updateByPrimaryKeySelective(ReadCircle record);
+    int updateByPrimaryKeySelective(TReadCircle record);
 
-    int updateByPrimaryKey(ReadCircle record);
+    int updateByPrimaryKey(TReadCircle record);
 }

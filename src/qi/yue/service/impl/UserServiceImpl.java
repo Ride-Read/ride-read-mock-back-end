@@ -19,9 +19,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByUsernameAndPassword(String username, String password) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(username, username);
-		map.put(password, password);
+		map.put("username", username);
+		map.put("password", password);
 		return userMapper.findByUsernameAndPassword(map);
+	}
+
+	@Override
+	public User findByUidAndToken(int uid, String token) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("uid", uid);
+		map.put("token", token);
+		return userMapper.findByUidAndToken(map);
 	}
 
 	@Override
@@ -37,6 +45,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int update(User user) {
 		return userMapper.update(user);
+	}
+
+	@Override
+	public int updateTokenByUid(String token, int uid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("token", token);
+		map.put("uid", uid);
+		return userMapper.updateTokenByUid(map);
 	}
 
 }

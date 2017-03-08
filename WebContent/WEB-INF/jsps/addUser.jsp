@@ -15,12 +15,12 @@
 </head>
 <body>
 	<form id="itemForm"
-		action="${pageContext.request.contextPath }/user/save.action"
+		action="${pageContext.request.contextPath }/users/save.action"
 		method="post">
 		<table width="100%" border=1>
 			<tr>
 				<td>用户名称</td>
-				<td><input type="text" name="name" /></td>
+				<td><input type="text" name="username" /></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="center"><input type="submit" value="提交" />

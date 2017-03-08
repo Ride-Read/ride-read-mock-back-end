@@ -1,301 +1,290 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="qi.yue.temp.mapper.TReadCircleMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.temp.po.TReadCircle">
-		<id column="mid" property="mid" jdbcType="INTEGER" />
-		<result column="created_at" property="createdAt" jdbcType="DATE" />
-		<result column="comment" property="comment" jdbcType="VARCHAR" />
-		<result column="uid" property="uid" jdbcType="INTEGER" />
-		<result column="cover" property="cover" jdbcType="VARCHAR" />
-		<result column="pictures" property="pictures" jdbcType="VARCHAR" />
-		<result column="thumbs_up" property="thumbsUp" jdbcType="VARCHAR" />
-		<result column="video" property="video" jdbcType="VARCHAR" />
-		<result column="thumbs" property="thumbs" jdbcType="VARCHAR" />
-		<result column="msg" property="msg" jdbcType="VARCHAR" />
-	</resultMap>
-	<sql id="Example_Where_Clause">
-		<where>
-			<foreach collection="oredCriteria" item="criteria" separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
-	<sql id="Update_By_Example_Where_Clause">
-		<where>
-			<foreach collection="example.oredCriteria" item="criteria"
-				separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
-	<sql id="Base_Column_List">
-		mid, created_at, comment, uid, cover, pictures, thumbs_up, video, thumbs,
-		msg
-	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="qi.yue.temp.po.TReadCircleExample">
-		select
-		<if test="distinct">
-			distinct
-		</if>
-		<include refid="Base_Column_List" />
-		from t_read_circle
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-		<if test="orderByClause != null">
-			order by ${orderByClause}
-		</if>
-	</select>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
-		select
-		<include refid="Base_Column_List" />
-		from t_read_circle
-		where mid = #{mid,jdbcType=INTEGER}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from t_read_circle
-		where mid = #{mid,jdbcType=INTEGER}
-	</delete>
-	<delete id="deleteByExample" parameterType="qi.yue.temp.po.TReadCircleExample">
-		delete from t_read_circle
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-	</delete>
-	<insert id="insert" parameterType="qi.yue.temp.po.TReadCircle">
-		insert into t_read_circle (mid, created_at, comment,
-		uid, cover, pictures,
-		thumbs_up, video, thumbs,
-		msg)
-		values (#{mid,jdbcType=INTEGER}, #{createdAt,jdbcType=DATE},
-		#{comment,jdbcType=VARCHAR},
-		#{uid,jdbcType=INTEGER}, #{cover,jdbcType=VARCHAR}, #{pictures,jdbcType=VARCHAR},
-		#{thumbsUp,jdbcType=VARCHAR}, #{video,jdbcType=VARCHAR},
-		#{thumbs,jdbcType=VARCHAR},
-		#{msg,jdbcType=VARCHAR})
-	</insert>
-	<insert id="insertSelective" parameterType="qi.yue.temp.po.TReadCircle">
-		insert into t_read_circle
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="mid != null">
-				mid,
-			</if>
-			<if test="createdAt != null">
-				created_at,
-			</if>
-			<if test="comment != null">
-				comment,
-			</if>
-			<if test="uid != null">
-				uid,
-			</if>
-			<if test="cover != null">
-				cover,
-			</if>
-			<if test="pictures != null">
-				pictures,
-			</if>
-			<if test="thumbsUp != null">
-				thumbs_up,
-			</if>
-			<if test="video != null">
-				video,
-			</if>
-			<if test="thumbs != null">
-				thumbs,
-			</if>
-			<if test="msg != null">
-				msg,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="mid != null">
-				#{mid,jdbcType=INTEGER},
-			</if>
-			<if test="createdAt != null">
-				#{createdAt,jdbcType=DATE},
-			</if>
-			<if test="comment != null">
-				#{comment,jdbcType=VARCHAR},
-			</if>
-			<if test="uid != null">
-				#{uid,jdbcType=INTEGER},
-			</if>
-			<if test="cover != null">
-				#{cover,jdbcType=VARCHAR},
-			</if>
-			<if test="pictures != null">
-				#{pictures,jdbcType=VARCHAR},
-			</if>
-			<if test="thumbsUp != null">
-				#{thumbsUp,jdbcType=VARCHAR},
-			</if>
-			<if test="video != null">
-				#{video,jdbcType=VARCHAR},
-			</if>
-			<if test="thumbs != null">
-				#{thumbs,jdbcType=VARCHAR},
-			</if>
-			<if test="msg != null">
-				#{msg,jdbcType=VARCHAR},
-			</if>
-		</trim>
-	</insert>
-	<select id="countByExample" parameterType="qi.yue.temp.po.TReadCircleExample"
-		resultType="java.lang.Integer">
-		select count(*) from t_read_circle
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-	</select>
-	<update id="updateByExampleSelective" parameterType="map">
-		update t_read_circle
-		<set>
-			<if test="record.mid != null">
-				mid = #{record.mid,jdbcType=INTEGER},
-			</if>
-			<if test="record.createdAt != null">
-				created_at = #{record.createdAt,jdbcType=DATE},
-			</if>
-			<if test="record.comment != null">
-				comment = #{record.comment,jdbcType=VARCHAR},
-			</if>
-			<if test="record.uid != null">
-				uid = #{record.uid,jdbcType=INTEGER},
-			</if>
-			<if test="record.cover != null">
-				cover = #{record.cover,jdbcType=VARCHAR},
-			</if>
-			<if test="record.pictures != null">
-				pictures = #{record.pictures,jdbcType=VARCHAR},
-			</if>
-			<if test="record.thumbsUp != null">
-				thumbs_up = #{record.thumbsUp,jdbcType=VARCHAR},
-			</if>
-			<if test="record.video != null">
-				video = #{record.video,jdbcType=VARCHAR},
-			</if>
-			<if test="record.thumbs != null">
-				thumbs = #{record.thumbs,jdbcType=VARCHAR},
-			</if>
-			<if test="record.msg != null">
-				msg = #{record.msg,jdbcType=VARCHAR},
-			</if>
-		</set>
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
-	<update id="updateByExample" parameterType="map">
-		update t_read_circle
-		set mid = #{record.mid,jdbcType=INTEGER},
-		created_at = #{record.createdAt,jdbcType=DATE},
-		comment = #{record.comment,jdbcType=VARCHAR},
-		uid = #{record.uid,jdbcType=INTEGER},
-		cover = #{record.cover,jdbcType=VARCHAR},
-		pictures = #{record.pictures,jdbcType=VARCHAR},
-		thumbs_up = #{record.thumbsUp,jdbcType=VARCHAR},
-		video = #{record.video,jdbcType=VARCHAR},
-		thumbs = #{record.thumbs,jdbcType=VARCHAR},
-		msg = #{record.msg,jdbcType=VARCHAR}
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
-	<update id="updateByPrimaryKeySelective" parameterType="qi.yue.temp.po.TReadCircle">
-		update t_read_circle
-		<set>
-			<if test="createdAt != null">
-				created_at = #{createdAt,jdbcType=DATE},
-			</if>
-			<if test="comment != null">
-				comment = #{comment,jdbcType=VARCHAR},
-			</if>
-			<if test="uid != null">
-				uid = #{uid,jdbcType=INTEGER},
-			</if>
-			<if test="cover != null">
-				cover = #{cover,jdbcType=VARCHAR},
-			</if>
-			<if test="pictures != null">
-				pictures = #{pictures,jdbcType=VARCHAR},
-			</if>
-			<if test="thumbsUp != null">
-				thumbs_up = #{thumbsUp,jdbcType=VARCHAR},
-			</if>
-			<if test="video != null">
-				video = #{video,jdbcType=VARCHAR},
-			</if>
-			<if test="thumbs != null">
-				thumbs = #{thumbs,jdbcType=VARCHAR},
-			</if>
-			<if test="msg != null">
-				msg = #{msg,jdbcType=VARCHAR},
-			</if>
-		</set>
-		where mid = #{mid,jdbcType=INTEGER}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="qi.yue.temp.po.TReadCircle">
-		update t_read_circle
-		set created_at = #{createdAt,jdbcType=DATE},
-		comment = #{comment,jdbcType=VARCHAR},
-		uid = #{uid,jdbcType=INTEGER},
-		cover = #{cover,jdbcType=VARCHAR},
-		pictures = #{pictures,jdbcType=VARCHAR},
-		thumbs_up = #{thumbsUp,jdbcType=VARCHAR},
-		video = #{video,jdbcType=VARCHAR},
-		thumbs = #{thumbs,jdbcType=VARCHAR},
-		msg = #{msg,jdbcType=VARCHAR}
-		where mid = #{mid,jdbcType=INTEGER}
-	</update>
+<mapper namespace="temp.mapper.TReadCircleMapper" >
+  <resultMap id="BaseResultMap" type="temp.po.TReadCircle" >
+    <id column="mid" property="mid" jdbcType="INTEGER" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="pictures" property="pictures" jdbcType="VARCHAR" />
+    <result column="thumbs_up" property="thumbsUp" jdbcType="VARCHAR" />
+    <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="thumbs" property="thumbs" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mid, created_at, comment, uid, cover, pictures, thumbs_up, video, thumbs, msg
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="temp.po.TReadCircleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_read_circle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_read_circle
+    where mid = #{mid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_read_circle
+    where mid = #{mid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="temp.po.TReadCircleExample" >
+    delete from t_read_circle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="temp.po.TReadCircle" >
+    insert into t_read_circle (mid, created_at, comment, 
+      uid, cover, pictures, 
+      thumbs_up, video, thumbs, 
+      msg)
+    values (#{mid,jdbcType=INTEGER}, #{createdAt,jdbcType=DATE}, #{comment,jdbcType=VARCHAR}, 
+      #{uid,jdbcType=INTEGER}, #{cover,jdbcType=VARCHAR}, #{pictures,jdbcType=VARCHAR}, 
+      #{thumbsUp,jdbcType=VARCHAR}, #{video,jdbcType=VARCHAR}, #{thumbs,jdbcType=VARCHAR}, 
+      #{msg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="temp.po.TReadCircle" >
+    insert into t_read_circle
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="pictures != null" >
+        pictures,
+      </if>
+      <if test="thumbsUp != null" >
+        thumbs_up,
+      </if>
+      <if test="video != null" >
+        video,
+      </if>
+      <if test="thumbs != null" >
+        thumbs,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=DATE},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        #{pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbsUp != null" >
+        #{thumbsUp,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null" >
+        #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbs != null" >
+        #{thumbs,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="temp.po.TReadCircleExample" resultType="java.lang.Integer" >
+    select count(*) from t_read_circle
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_read_circle
+    <set >
+      <if test="record.mid != null" >
+        mid = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdAt != null" >
+        created_at = #{record.createdAt,jdbcType=DATE},
+      </if>
+      <if test="record.comment != null" >
+        comment = #{record.comment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uid != null" >
+        uid = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.cover != null" >
+        cover = #{record.cover,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pictures != null" >
+        pictures = #{record.pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbsUp != null" >
+        thumbs_up = #{record.thumbsUp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.video != null" >
+        video = #{record.video,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thumbs != null" >
+        thumbs = #{record.thumbs,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msg != null" >
+        msg = #{record.msg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_read_circle
+    set mid = #{record.mid,jdbcType=INTEGER},
+      created_at = #{record.createdAt,jdbcType=DATE},
+      comment = #{record.comment,jdbcType=VARCHAR},
+      uid = #{record.uid,jdbcType=INTEGER},
+      cover = #{record.cover,jdbcType=VARCHAR},
+      pictures = #{record.pictures,jdbcType=VARCHAR},
+      thumbs_up = #{record.thumbsUp,jdbcType=VARCHAR},
+      video = #{record.video,jdbcType=VARCHAR},
+      thumbs = #{record.thumbs,jdbcType=VARCHAR},
+      msg = #{record.msg,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="temp.po.TReadCircle" >
+    update t_read_circle
+    <set >
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=DATE},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="cover != null" >
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        pictures = #{pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbsUp != null" >
+        thumbs_up = #{thumbsUp,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null" >
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbs != null" >
+        thumbs = #{thumbs,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="temp.po.TReadCircle" >
+    update t_read_circle
+    set created_at = #{createdAt,jdbcType=DATE},
+      comment = #{comment,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=INTEGER},
+      cover = #{cover,jdbcType=VARCHAR},
+      pictures = #{pictures,jdbcType=VARCHAR},
+      thumbs_up = #{thumbsUp,jdbcType=VARCHAR},
+      video = #{video,jdbcType=VARCHAR},
+      thumbs = #{thumbs,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR}
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
 </mapper>

@@ -2,8 +2,7 @@ package temp.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-
-import qi.yue.entity.User;
+import temp.po.TUser;
 import temp.po.TUserExample;
 
 public interface TUserMapper {
@@ -13,19 +12,19 @@ public interface TUserMapper {
 
     int deleteByPrimaryKey(Integer uid);
 
-    int insert(User record);
+    int insert(TUser record);
 
-    int insertSelective(User record);
+    int insertSelective(TUser record);
 
-    List<User> selectByExample(TUserExample example);
+    List<TUser> selectByExample(TUserExample example);
 
-    User selectByPrimaryKey(Integer uid);
+    TUser selectByPrimaryKey(Integer uid);
 
-    int updateByExampleSelective(@Param("record") User record, @Param("example") TUserExample example);
+    int updateByExampleSelective(@Param("record") TUser record, @Param("example") TUserExample example);
 
-    int updateByExample(@Param("record") User record, @Param("example") TUserExample example);
+    int updateByExample(@Param("record") TUser record, @Param("example") TUserExample example);
 
-    int updateByPrimaryKeySelective(User record);
+    int updateByPrimaryKeySelective(TUser record);
 
-    int updateByPrimaryKey(User record);
+    int updateByPrimaryKey(TUser record);
 }
