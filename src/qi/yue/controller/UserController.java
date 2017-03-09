@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +27,6 @@ import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.DateUtil;
 import qi.yue.utils.MD5Util;
-import qi.yue.utils.StringUtil;
 
 @Controller
 @RequestMapping("/users")
@@ -164,7 +162,7 @@ public class UserController {
 				user.setSchool(school);
 				user.setSex(sex);
 				user.setHometown(hometown);
-				// user.setUpdatedAt(new Date());
+				user.setUpdatedAt(new Date());
 				userService.update(user);
 				User parameterUser = userService.findByUsername(phonenumber);
 				result.put("data", parameterUser);
@@ -191,6 +189,36 @@ public class UserController {
 				List<Follower> FollowingList = followerService.findByTid(uid);
 				result.put("data", FollowingList);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
+		}
+		return result;
+	}
+
+	@RequestMapping(value = "/follow", method = RequestMethod.POST)
+	public @ResponseBody Object follow(Integer uid, String token, Integer user_id, Long timestamp) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(user_id)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			User userFollowing = userService.findByUidAndToken(uid, token);
+			if (CommonUtil.isNull(userFollowing)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_FAIL);
+			} else {
+				User userFollowed = userService.findByUid(user_id);
+				if (CommonUtil.isNull(userFollowed)) {
+					Following following = new Following();
+					following.setTid(userFollowing.getUid());
+					following.setFaceUrl(userFollowing.getFaceUrl());
+					following.setSignature(userFollowing.getSignature());
+					following.setNickname(userFollowing.getNickname());
+					// List<Following> FollowingList =
+					// followingService.save(following);
+					// result.put("data", FollowingList);
+					result.put("status", MessageCommon.STATUS_SUCCESS);
+				}
 			}
 		}
 		return result;

@@ -9,6 +9,8 @@ public interface UserService {
 
 	public User findByUsername(String username);
 
+	public User findByUid(int uid);
+
 	public int save(User user);
 
 	public int update(User user);

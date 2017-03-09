@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User findByUid(int uid) {
+		return userMapper.findByUid(uid);
+	}
+
+	@Override
 	public int save(User user) {
 		return userMapper.insert(user);
 	}
@@ -54,5 +59,4 @@ public class UserServiceImpl implements UserService {
 		map.put("uid", uid);
 		return userMapper.updateTokenByUid(map);
 	}
-
 }
