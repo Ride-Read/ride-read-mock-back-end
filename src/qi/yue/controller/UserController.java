@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ import qi.yue.service.FollowingService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.DateUtil;
-import qi.yue.utils.MD5Util;
+import qi.yue.utils.EncryptionUtil;
 
 @Controller
 @RequestMapping("/users")
@@ -65,14 +66,16 @@ public class UserController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
 			} else {
+				password = EncryptionUtil.GetSHACode(password);
 				if (!password.equals(user.getPassword())) {
 					result.put("data", "");
 					result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
 				} else {
-					String token = MD5Util
-							.GetMD5Code(user.getUid() + DateUtil.getTimestamp() + MessageCommon.PUBLIC_KEY);
+					long timestamp = new Date().getTime();
+					String token = EncryptionUtil.GetMD5Code(user.getId() + timestamp + MessageCommon.PUBLIC_KEY);
 					user.setToken(token);
-					userService.updateTokenByUid(user.getToken(), user.getUid());
+					userService.updateTokenById(user.getToken(), user.getId());
+					result.put("timestamp", timestamp);
 					result.put("data", user);
 					result.put("status", MessageCommon.STATUS_SUCCESS);
 				}
@@ -83,7 +86,29 @@ public class UserController {
 		return JSONObject.fromObject(result, jsonConfig);
 	}
 
+	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
+	public @ResponseBody Object resetPassword(String username, String new_password, Long timestamp) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(new_password)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			User user = userService.findByUsername(username);
+			if (CommonUtil.isNull(user)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
+			} else {
+				String passwordSHA = EncryptionUtil.GetSHACode(new_password);
+				userService.updatePasswordByUsernamae(passwordSHA, username);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
+		}
+		return result;
+	}
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
+	@Transactional
 	public @ResponseBody Object register(String phonenumber, String password, String face_url, String nickname) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
@@ -96,18 +121,22 @@ public class UserController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_USER_EXIST);
 			} else {
+				String passwordSHA = EncryptionUtil.GetSHACode(password);
 				User user = new User();
-				String token = MD5Util.GetMD5Code(user.getUid() + DateUtil.getTimestamp() + MessageCommon.PUBLIC_KEY);
-
 				user.setUsername(phonenumber);
-				user.setToken(token);
 				user.setPhonenumber(phonenumber);
-				user.setPassword(password);
+				user.setPassword(passwordSHA);
 				user.setFaceUrl(face_url);
 				user.setNickname(nickname);
 				user.setCreatedAt(new Date());
+				user.setUpdatedAt(new Date());
 				userService.save(user);
 
+				long timestamp = new Date().getTime();
+				String token = EncryptionUtil.GetMD5Code(user.getId() + timestamp + MessageCommon.PUBLIC_KEY);
+				user.setToken(token);
+				userService.updateTokenById(user.getToken(), user.getId());
+				result.put("timestamp", timestamp);
 				result.put("data", userService.findByUsername(phonenumber));
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
@@ -141,11 +170,13 @@ public class UserController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User user = userService.findByUidAndToken(uid, token);
-			if (CommonUtil.isNull(user)) {
+			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+			if (!tokenTemp.equals(token)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
+				User user = new User();
+				user.setId(uid);
 				user.setCareer(career);
 				user.setPhonenumber(phonenumber);
 				user.setLocation(location);
@@ -155,7 +186,7 @@ public class UserController {
 					e.printStackTrace();
 				}
 				user.setFaceUrl(face_url);
-				user.setUid(uid);
+				user.setId(uid);
 				user.setToken(token);
 				user.setSignature(signature);
 				user.setNickname(nickname);
@@ -181,8 +212,8 @@ public class UserController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User user = userService.findByUidAndToken(uid, token);
-			if (CommonUtil.isNull(user)) {
+			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+			if (!tokenTemp.equals(token)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
@@ -191,7 +222,31 @@ public class UserController {
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		return result;
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+		return JSONObject.fromObject(result, jsonConfig);
+	}
+
+	@RequestMapping(value = "/followings", method = RequestMethod.POST)
+	public @ResponseBody Object followings(Integer uid, String token, Long timestamp) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+			if (!tokenTemp.equals(token)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_FAIL);
+			} else {
+				List<Following> FollowingList = followingService.findByFid(uid);
+				result.put("data", FollowingList);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
+		}
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
+		return JSONObject.fromObject(result, jsonConfig);
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
@@ -202,21 +257,36 @@ public class UserController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User userFollowing = userService.findByUidAndToken(uid, token);
-			if (CommonUtil.isNull(userFollowing)) {
+			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+			if (!tokenTemp.equals(token)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				User userFollowed = userService.findByUid(user_id);
-				if (CommonUtil.isNull(userFollowed)) {
+				User userFollowed = userService.find(user_id);
+				User userFollowing = userService.find(uid);
+				if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
+					result.put("data", "");
+					result.put("status", MessageCommon.STATUS_FAIL);
+				} else {
 					Following following = new Following();
-					following.setTid(userFollowing.getUid());
-					following.setFaceUrl(userFollowing.getFaceUrl());
-					following.setSignature(userFollowing.getSignature());
-					following.setNickname(userFollowing.getNickname());
-					// List<Following> FollowingList =
-					// followingService.save(following);
-					// result.put("data", FollowingList);
+					following.setFid(uid);
+					following.setTid(user_id);
+					following.setFaceUrl(userFollowed.getFaceUrl());
+					following.setSignature(userFollowed.getSignature());
+					following.setNickname(userFollowed.getNickname());
+					following.setCreatedAt(new Date());
+					following.setUpdatedAt(new Date());
+
+					Follower follower = new Follower();
+					follower.setFid(uid);
+					follower.setTid(user_id);
+					follower.setFaceUrl(userFollowing.getFaceUrl());
+					follower.setSignature(userFollowing.getSignature());
+					follower.setNickname(userFollowing.getNickname());
+					follower.setCreatedAt(new Date());
+					follower.setUpdatedAt(new Date());
+
+					followingService.saveFollowingAndFollower(following, follower);
 					result.put("status", MessageCommon.STATUS_SUCCESS);
 				}
 			}
@@ -224,24 +294,23 @@ public class UserController {
 		return result;
 	}
 
-	@RequestMapping(value = "/followings", method = RequestMethod.POST)
-	public @ResponseBody Object followings(Integer uid, String token, Long timestamp) {
+	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
+	public @ResponseBody Object unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(user_id)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User user = userService.findByUidAndToken(uid, token);
-			if (CommonUtil.isNull(user)) {
+			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+			if (!tokenTemp.equals(token)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				List<Following> FollowingList = followingService.findByTid(uid);
-				result.put("data", FollowingList);
+				followingService.deleteFollowingAndFollower(uid, user_id);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
 		return result;
 	}
-
 }

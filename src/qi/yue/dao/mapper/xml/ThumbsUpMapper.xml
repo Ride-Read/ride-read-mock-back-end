@@ -10,7 +10,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		thumbs_up_id, uid, comment_id, nickname, created_at
+		id, user_id, nickname, moment_id, created_at, updated_at
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -18,24 +18,26 @@
 		select
 		<include refid="Base_Column_List" />
 		from t_thumbs_up
-		where thumbs_up_id = #{thumbsUpId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
 	</select>
 
 	<insert id="insert" parameterType="qi.yue.entity.ThumbsUp"
-		useGeneratedKeys="true" keyProperty="thumbsUpId">
-		insert into t_thumbs_up
-		(uid,
-		comment_id,
-		nickname, created_at)
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_thumbs_up (id,
+		user_id, nickname,
+		moment_id, created_at, updated_at
+		)
 		values
-		( #{uid,jdbcType=INTEGER},
-		#{commentId,jdbcType=INTEGER},
+		(#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
 		#{nickname,jdbcType=VARCHAR},
-		#{createdAt,jdbcType=TIMESTAMP})
+		#{momentId,jdbcType=INTEGER},
+		#{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+		)
 	</insert>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from t_thumbs_up
-		where thumbs_up_id = #{thumbsUpId,jdbcType=INTEGER}
+		delete from
+		t_thumbs_up
+		where id = #{id,jdbcType=INTEGER}
 	</delete>
 </mapper>

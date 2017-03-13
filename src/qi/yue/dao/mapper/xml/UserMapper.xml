@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.UserMapper">
 	<resultMap id="BaseResultMap" type="qi.yue.entity.User">
-		<id column="uid" property="uid" jdbcType="INTEGER" />
+		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
 		<result column="sex" property="sex" jdbcType="INTEGER" />
@@ -23,50 +23,47 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		uid, username, password, sex, school, phonenumber,
+		id, username, password, sex, school, phonenumber,
 		updated_at, follower,
 		token, hometown,
 		face_url, signature, location,
 		created_at, birthday, following, career,
 		nickname
 	</sql>
-
+	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
 	<select id="findByUsernameAndPassword" resultMap="BaseResultMap"
 		parameterType="map">
 		select
-		<!-- <if test="distinct"> -->
-		<!-- distinct -->
-		<!-- </if> -->
 		<include refid="Base_Column_List" />
 		from t_user
 		where username=#{username,jdbcType=VARCHAR} and
 		password=#{password,jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="findByUidAndToken" resultMap="BaseResultMap"
 		parameterType="map">
 		select
-		<!-- <if test="distinct"> -->
-		<!-- distinct -->
-		<!-- </if> -->
 		<include refid="Base_Column_List" />
 		from t_user
-		where uid = #{uid,jdbcType=INTEGER} and
+		where id = #{id,jdbcType=INTEGER} and
 		token=#{token,jdbcType=VARCHAR}
 	</select>
 
 	<select id="findByUsername" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
-		<!-- <if test="distinct"> -->
-		<!-- distinct -->
-		<!-- </if> -->
 		<include refid="Base_Column_List" />
 		from t_user
 		where username=#{username,jdbcType=VARCHAR}
 	</select>
 
-	<insert id="insert" parameterType="qi.yue.entity.User">
+	<insert id="insert" parameterType="qi.yue.entity.User"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into t_user (
 		username,
 		password,
@@ -153,17 +150,27 @@
 				nickname = #{nickname,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where uid = #{uid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
 	</update>
 
-	<update id="updateTokenByUid" parameterType="map">
+	<update id="updateTokenById" parameterType="map">
 		update t_user
 		<set>
 			<if test="token != null">
 				token = #{token,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where uid = #{uid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updatePasswordByUsernamae" parameterType="map">
+		update t_user
+		<set>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where username = #{username,jdbcType=INTEGER}
 	</update>
 
 </mapper>

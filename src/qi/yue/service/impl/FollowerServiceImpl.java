@@ -18,4 +18,19 @@ public class FollowerServiceImpl implements FollowerService {
 	public List<Follower> findByTid(int tid) {
 		return followerMapper.findByTid(tid);
 	}
+
+	@Override
+	public int save(Follower follower) {
+		return followerMapper.insert(follower);
+	}
+
+	@Override
+	public List<Follower> findByFid(int fid) {
+		return followerMapper.findByFid(fid);
+	}
+
+	@Override
+	public int deleteByFid(int fid) {
+		return followerMapper.deleteByFid(fid);
+	}
 }

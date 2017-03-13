@@ -19,7 +19,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public int deleteByPrimaryKey(Integer commentId) {
-		return commentMapper.deleteByPrimaryKey(commentId);
+	public int deleteByPrimaryKey(Integer id) {
+		return commentMapper.deleteByPrimaryKey(id);
 	}
 }

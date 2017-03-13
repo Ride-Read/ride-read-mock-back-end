@@ -3,50 +3,52 @@ package qi.yue.entity;
 import java.util.Date;
 
 public class Comment {
-	private Integer commentId;
+	private Integer id;
 
-	private String msg;
+	private Integer userId;
 
-	private Integer uid;
+	private String nickname;
 
-	private Integer mid;
+	private Integer momentId;
 
 	private String faceUrl;
 
 	private Date createdAt;
 
-	private String nickname;
+	private Date updatedAt;
 
-	public Integer getCommentId() {
-		return commentId;
+	private String msg;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setCommentId(Integer commentId) {
-		this.commentId = commentId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getMsg() {
-		return msg;
+	public Integer getUserId() {
+		return userId;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg == null ? null : msg.trim();
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
-	public Integer getUid() {
-		return uid;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setUid(Integer uid) {
-		this.uid = uid;
+	public void setNickname(String nickname) {
+		this.nickname = nickname == null ? null : nickname.trim();
 	}
 
-	public Integer getMid() {
-		return mid;
+	public Integer getMomentId() {
+		return momentId;
 	}
 
-	public void setMid(Integer mid) {
-		this.mid = mid;
+	public void setMomentId(Integer momentId) {
+		this.momentId = momentId;
 	}
 
 	public String getFaceUrl() {
@@ -65,11 +67,19 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname == null ? null : nickname.trim();
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg == null ? null : msg.trim();
 	}
 }

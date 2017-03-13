@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qi.yue.dao.mapper.MomentMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.entity.Moment">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="cover" jdbcType="VARCHAR" property="cover" />
+		<result column="video" jdbcType="VARCHAR" property="video" />
+		<result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+		<result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+
+		<result column="msg" jdbcType="LONGVARCHAR" property="msg" />
+		<result column="thumbs" jdbcType="LONGVARCHAR" property="thumbs" />
+		<result column="pictures" jdbcType="LONGVARCHAR" property="pictures" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, userId, type, cover, video, created_at, updated_at,
+		msg, thumbs, pictures
+	</sql>
+
+
+	<select id="find" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_moment
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByUserId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_moment
+		where user_id = #{userId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		t_moment
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="qi.yue.entity.Moment"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_moment (id,
+		user_id,
+		type,
+		cover, video, created_at,
+		updated_at, msg, thumbs,
+		pictures)
+		values
+		(#{id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER},
+		#{type,jdbcType=INTEGER},
+		#{cover,jdbcType=VARCHAR},
+		#{video,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP}, #{msg,jdbcType=LONGVARCHAR},
+		#{thumbs,jdbcType=LONGVARCHAR},
+		#{pictures,jdbcType=LONGVARCHAR})
+	</insert>
+
+</mapper>

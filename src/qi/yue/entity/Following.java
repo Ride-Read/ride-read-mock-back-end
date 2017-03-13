@@ -1,53 +1,85 @@
 package qi.yue.entity;
 
+import java.util.Date;
+
 public class Following {
-    private Integer fid;
+	private Integer id;
 
-    private Integer tid;
+	private Integer fid;// 粉丝id
 
-    private String faceUrl;
+	private Integer tid;// 被关注用户id
 
-    private String signature;
+	private String faceUrl;
 
-    private String nickname;
+	private String signature;
 
-    public Integer getFid() {
-        return fid;
-    }
+	private String nickname;
 
-    public void setFid(Integer fid) {
-        this.fid = fid;
-    }
+	private Date createdAt;
 
-    public Integer getTid() {
-        return tid;
-    }
+	private Date updatedAt;
 
-    public void setTid(Integer tid) {
-        this.tid = tid;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public String getFaceUrl() {
-        return faceUrl;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setFaceUrl(String faceUrl) {
-        this.faceUrl = faceUrl == null ? null : faceUrl.trim();
-    }
+	public Integer getFid() {
+		return fid;
+	}
 
-    public String getSignature() {
-        return signature;
-    }
+	public void setFid(Integer fid) {
+		this.fid = fid;
+	}
 
-    public void setSignature(String signature) {
-        this.signature = signature == null ? null : signature.trim();
-    }
+	public Integer getTid() {
+		return tid;
+	}
 
-    public String getNickname() {
-        return nickname;
-    }
+	public void setTid(Integer tid) {
+		this.tid = tid;
+	}
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
-    }
+	public String getFaceUrl() {
+		return faceUrl;
+	}
+
+	public void setFaceUrl(String faceUrl) {
+		this.faceUrl = faceUrl == null ? null : faceUrl.trim();
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature == null ? null : signature.trim();
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname == null ? null : nickname.trim();
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 }

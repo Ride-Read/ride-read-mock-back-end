@@ -11,11 +11,13 @@ public interface UserMapper {
 
 	User findByUsername(String username);
 
-	User findByUid(int uid);
+	User find(int id);
 
 	int insert(User user);
 
 	int update(User user);
 
-	int updateTokenByUid(Map<String, Object> map);
+	int updateTokenById(Map<String, Object> map);
+
+	int updatePasswordByUsernamae(Map<String, Object> map);
 }

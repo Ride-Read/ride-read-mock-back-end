@@ -9,11 +9,13 @@ public interface UserService {
 
 	public User findByUsername(String username);
 
-	public User findByUid(int uid);
+	public User find(int id);
 
 	public int save(User user);
 
 	public int update(User user);
 
-	public int updateTokenByUid(String token, int uid);
+	public int updateTokenById(String token, int uid);
+
+	public int updatePasswordByUsernamae(String password, String username);
 }
