@@ -19,7 +19,7 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
 	}
 
 	@Override
-	public int deleteByThumbsUpId(int id) {
-		return thumbsUpMapper.deleteByPrimaryKey(id);
+	public int delete(int id) {
+		return thumbsUpMapper.delete(id);
 	}
 }

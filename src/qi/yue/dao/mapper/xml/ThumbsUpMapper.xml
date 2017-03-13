@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.ThumbsUpMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.entity.ThumbsUp">
-		<id column="thumbs_up_id" property="thumbsUpId" jdbcType="INTEGER" />
+	<resultMap id="BaseResultMap" type="qi.yue.dto.ThumbsUpDto">
+		<id column="thumbs_up_id" property="thumbs_up_id" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="INTEGER" />
-		<result column="comment_id" property="commentId" jdbcType="INTEGER" />
+		<result column="comment_id" property="mid" jdbcType="INTEGER" />
 		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
-		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -35,9 +36,10 @@
 		)
 	</insert>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	<delete id="delete" parameterType="java.lang.Integer">
 		delete from
 		t_thumbs_up
-		where id = #{id,jdbcType=INTEGER}
+		where id
+		= #{id,jdbcType=INTEGER}
 	</delete>
 </mapper>

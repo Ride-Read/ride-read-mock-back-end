@@ -15,6 +15,10 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import qi.yue.common.DateJsonValueProcessor;
 import qi.yue.common.MessageCommon;
+import qi.yue.dto.CommentDto;
+import qi.yue.dto.ThumbsUpDto;
+import qi.yue.dto.assembler.CommentDtoAssembler;
+import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
 import qi.yue.entity.Comment;
 import qi.yue.entity.Moment;
 import qi.yue.entity.ThumbsUp;
@@ -126,7 +130,8 @@ public class MomentController {
 				comment.setNickname(user.getNickname());
 				comment.setCreatedAt(new Date());
 				commentService.save(comment);
-				result.put("data", comment);
+				CommentDto dto = CommentDtoAssembler.toDto(comment);
+				result.put("data", dto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
@@ -148,7 +153,7 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				commentService.deleteByPrimaryKey(comment_id);
+				commentService.delete(comment_id);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
@@ -175,6 +180,8 @@ public class MomentController {
 				thumbsUp.setNickname(user.getNickname());
 				thumbsUp.setCreatedAt(new Date());
 				thumbsUpService.save(thumbsUp);
+				ThumbsUpDto dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+				result.put("data", dto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
@@ -194,7 +201,7 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				thumbsUpService.deleteByThumbsUpId(thumbs_up_id);
+				thumbsUpService.delete(thumbs_up_id);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
@@ -214,7 +221,7 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				thumbsUpService.deleteByThumbsUpId(mid);
+				thumbsUpService.delete(mid);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}

@@ -19,6 +19,9 @@ import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import qi.yue.common.DateJsonValueProcessor;
 import qi.yue.common.MessageCommon;
+import qi.yue.dto.FollowerDto;
+import qi.yue.dto.FollowingDto;
+import qi.yue.dto.assembler.FollowingDtoAssembler;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
 import qi.yue.entity.User;
@@ -217,8 +220,8 @@ public class UserController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				List<Follower> FollowingList = followerService.findByTid(uid);
-				result.put("data", FollowingList);
+				List<FollowerDto> dtoList = followerService.findByTid(uid);
+				result.put("data", dtoList);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
@@ -239,8 +242,8 @@ public class UserController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				List<Following> FollowingList = followingService.findByFid(uid);
-				result.put("data", FollowingList);
+				List<FollowingDto> dtoList = followingService.findByFid(uid);
+				result.put("data", dtoList);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}

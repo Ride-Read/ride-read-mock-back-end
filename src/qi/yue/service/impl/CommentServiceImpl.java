@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import qi.yue.dao.mapper.CommentMapper;
+import qi.yue.dto.CommentDto;
 import qi.yue.entity.Comment;
 import qi.yue.service.CommentService;
 
@@ -19,7 +20,13 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public int deleteByPrimaryKey(Integer id) {
-		return commentMapper.deleteByPrimaryKey(id);
+	public int delete(Integer id) {
+		return commentMapper.delete(id);
+	}
+
+	@Override
+	public CommentDto find(Integer id) {
+		// TODO Auto-generated method stub
+		return commentMapper.find(id);
 	}
 }

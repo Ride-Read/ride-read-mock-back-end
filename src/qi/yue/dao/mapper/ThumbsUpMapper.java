@@ -6,5 +6,5 @@ public interface ThumbsUpMapper {
 
 	int insert(ThumbsUp thumbsUp);
 
-	int deleteByPrimaryKey(Integer id);
+	int delete(Integer id);
 }

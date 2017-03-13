@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.dao.mapper.FollowerMapper;
 import qi.yue.dao.mapper.FollowingMapper;
+import qi.yue.dto.FollowingDto;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
 import qi.yue.service.FollowingService;
@@ -23,7 +24,7 @@ public class FollowingServiceImpl implements FollowingService {
 	private FollowingMapper followingMapper;
 
 	@Override
-	public List<Following> findByTid(int tid) {
+	public List<FollowingDto> findByTid(int tid) {
 		return followingMapper.findByTid(tid);
 	}
 
@@ -44,7 +45,7 @@ public class FollowingServiceImpl implements FollowingService {
 	}
 
 	@Override
-	public List<Following> findByFid(int fid) {
+	public List<FollowingDto> findByFid(int fid) {
 		return followingMapper.findByFid(fid);
 	}
 

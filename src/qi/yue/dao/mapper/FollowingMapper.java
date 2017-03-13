@@ -3,12 +3,13 @@ package qi.yue.dao.mapper;
 import java.util.List;
 import java.util.Map;
 
+import qi.yue.dto.FollowingDto;
 import qi.yue.entity.Following;
 
 public interface FollowingMapper {
-	List<Following> findByTid(int tid);
+	List<FollowingDto> findByTid(int tid);
 
-	List<Following> findByFid(int fid);
+	List<FollowingDto> findByFid(int fid);
 
 	int insert(Following following);
 

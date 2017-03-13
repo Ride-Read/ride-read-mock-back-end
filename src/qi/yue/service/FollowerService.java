@@ -2,12 +2,13 @@ package qi.yue.service;
 
 import java.util.List;
 
+import qi.yue.dto.FollowerDto;
 import qi.yue.entity.Follower;
 
 public interface FollowerService {
-	List<Follower> findByTid(int tid);
+	List<FollowerDto> findByTid(int tid);
 
-	List<Follower> findByFid(int fid);
+	List<FollowerDto> findByFid(int fid);
 
 	int save(Follower follower);
 
