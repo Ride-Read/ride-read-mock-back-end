@@ -15,14 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import qi.yue.common.DateJsonValueProcessor;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.FollowerDto;
 import qi.yue.dto.FollowingDto;
 import qi.yue.dto.UserDto;
-import qi.yue.dto.assembler.FollowingDtoAssembler;
 import qi.yue.dto.assembler.UserDtoAssembler;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
@@ -62,30 +58,29 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(String username, String password) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		// if (CommonUtil.isNullOrEmpty(username) ||
-		// CommonUtil.isNullOrEmpty(password)) {
-		// result.put("data", "");
-		// result.put("status", MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDto dto = userService.findByUsername(username);
-		if (CommonUtil.isNull(dto)) {
+		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(password)) {
 			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
+			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			password = EncryptionUtil.GetSHACode(password);
-			if (!password.equals(dto.getPassword())) {
+			UserDto dto = userService.findByUsername(username);
+			if (CommonUtil.isNull(dto)) {
 				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
+				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
 			} else {
-				long timestamp = new Date().getTime();
-				String token = EncryptionUtil.GetMD5Code(dto.getUid() + timestamp + MessageCommon.PUBLIC_KEY);
-				dto.setToken(token);
-				userService.updateTokenById(dto.getToken(), dto.getUid());
-				result.put("timestamp", timestamp);
-				result.put("data", dto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
+				password = EncryptionUtil.GetSHACode(password);
+				if (!password.equals(dto.getPassword())) {
+					result.put("data", "");
+					result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
+				} else {
+					long timestamp = new Date().getTime();
+					String token = EncryptionUtil.GetMD5Code(dto.getUid() + timestamp + MessageCommon.PUBLIC_KEY);
+					dto.setToken(token);
+					userService.updateTokenById(dto.getToken(), dto.getUid());
+					result.put("timestamp", timestamp);
+					result.put("data", dto);
+					result.put("status", MessageCommon.STATUS_SUCCESS);
+				}
 			}
-			// }
 		}
 
 		return result;
@@ -142,11 +137,10 @@ public class UserController {
 				user.setToken(token);
 				userService.updateTokenById(user.getToken(), user.getId());
 				result.put("timestamp", timestamp);
-				result.put("data", userService.findByUsername(phonenumber));
+				result.put("data", UserDtoAssembler.toDto(user));
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-
 		return result;
 	}
 
@@ -194,7 +188,7 @@ public class UserController {
 				}
 				user.setFaceUrl(face_url);
 				user.setId(uid);
-				user.setToken(token);
+				// user.setToken(token);
 				user.setSignature(signature);
 				user.setNickname(nickname);
 				user.setSchool(school);
