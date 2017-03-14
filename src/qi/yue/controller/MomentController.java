@@ -214,7 +214,7 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				thumbsUpService.delete(mid);
+				momentService.delete(mid);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}

@@ -8,12 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.UserDto;
 import qi.yue.entity.User;
 import qi.yue.service.UserService;
-import qi.yue.utils.EncryptionUtil;
 
 @Service
 public class UserServiceImpl implements UserService {

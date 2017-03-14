@@ -1,8 +1,6 @@
 package qi.yue.service;
 
 import java.util.List;
-import java.util.Map;
-
 import qi.yue.dto.MomentDto;
 import qi.yue.entity.Moment;
 
@@ -13,5 +11,5 @@ public interface MomentService {
 
 	List<MomentDto> findByUserId(int userId);
 
-	Map<String, Object> showMoment(int userId);
+	int delete(int id);
 }

@@ -1,7 +1,6 @@
 package qi.yue.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -33,7 +32,8 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public Map<String, Object> showMoment(int userId) {
-		return null;
+	public int delete(int id) {
+		return momentMapper.delete(id);
 	}
+
 }

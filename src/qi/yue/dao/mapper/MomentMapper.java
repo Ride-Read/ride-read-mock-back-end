@@ -15,4 +15,6 @@ public interface MomentMapper {
 
 	List<MomentDto> findByUserId(int userId);
 
+	int delete(int id);
+
 }
