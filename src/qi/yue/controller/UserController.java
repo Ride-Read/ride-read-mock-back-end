@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import qi.yue.common.MessageCommon;
@@ -145,12 +144,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> verify_code(@RequestParam("code") String code) {
-
+	public @ResponseBody Object verify_code(String username, Long timestamp) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("token", "token001");
-		result.put("status", "0");
-		result.put("phonenumber", "135791113");
+		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNull(timestamp)) {
+			result.put("data", "");
+			result.put("status", MessageCommon.STATUS_FAIL);
+		} else {
+			UserDto dto = userService.findByUsername(username);
+			if (CommonUtil.isNull(dto)) {
+				result.put("data", "");
+				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
+			} else {
+				result.put("status", MessageCommon.STATUS_SUCCESS);
+			}
+		}
 		return result;
 	}
 
