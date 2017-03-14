@@ -22,7 +22,7 @@ public class MomentDto {
 
 	private Date created_at;
 
-	private Date updatedAt;
+	private Date updated_at;
 
 	private List<CommentDto> comment;
 
@@ -100,12 +100,12 @@ public class MomentDto {
 		this.created_at = created_at;
 	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
+	public Date getUpdated_at() {
+		return updated_at;
 	}
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
+	public void setUpdated_at(Date updated_at) {
+		this.updated_at = updated_at;
 	}
 
 	public List<CommentDto> getComment() {

@@ -1,25 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="qi.yue.dao.mapper.MomentMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.entity.Moment">
-		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="user_id" jdbcType="INTEGER" property="userId" />
+	<resultMap id="BaseResultMap" type="qi.yue.dto.MomentDto">
+		<id column="id" jdbcType="INTEGER" property="mid" />
+		<result column="user_id" jdbcType="INTEGER" property="uid" />
 		<result column="type" jdbcType="INTEGER" property="type" />
 		<result column="cover" jdbcType="VARCHAR" property="cover" />
 		<result column="video" jdbcType="VARCHAR" property="video" />
-		<result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
-		<result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+		<result column="created_at" jdbcType="TIMESTAMP" property="created_at" />
+		<result column="updated_at" jdbcType="TIMESTAMP" property="updated_at" />
 
 		<result column="msg" jdbcType="LONGVARCHAR" property="msg" />
 		<result column="thumbs" jdbcType="LONGVARCHAR" property="thumbs" />
 		<result column="pictures" jdbcType="LONGVARCHAR" property="pictures" />
+		<collection property="comment" ofType="qi.yue.dto.CommentDto">
+			<id column="c_id" jdbcType="INTEGER" property="comment_id" />
+			<result column="c_user_id" jdbcType="INTEGER" property="uid" />
+			<result column="c_nickname" jdbcType="VARCHAR" property="nickname" />
+			<result column="c_moment_id" jdbcType="INTEGER" property="mid" />
+			<result column="c_face_url" jdbcType="VARCHAR" property="face_url" />
+			<result column="c_created_at" jdbcType="TIMESTAMP" property="created_at" />
+			<result column="c_updated_at" jdbcType="TIMESTAMP" property="updated_at" />
+			<result column="c_msg" property="msg" jdbcType="LONGVARCHAR" />
+		</collection>
+		<collection property="thumbs_up" ofType="qi.yue.dto.ThumbsUpDto">
+			<id column="t_id" property="thumbs_up_id" jdbcType="INTEGER" />
+			<result column="t_user_id" property="uid" jdbcType="INTEGER" />
+			<result column="t_moment_id" property="mid" jdbcType="INTEGER" />
+			<result column="t_nickname" property="nickname" jdbcType="VARCHAR" />
+			<result column="t_created_at" property="created_at" jdbcType="TIMESTAMP" />
+			<result column="t_updated_at" property="updated_at" jdbcType="TIMESTAMP" />
+		</collection>
 	</resultMap>
 
+
 	<sql id="Base_Column_List">
-		id, userId, type, cover, video, created_at, updated_at,
+		id, user_id, type, cover, video, created_at, updated_at,
 		msg, thumbs, pictures
 	</sql>
-
+	<sql id="Moment_Column">
+		moment.id, moment.user_id, moment.type, moment.cover,
+		moment.video, moment.created_at, moment.updated_at,
+		moment.msg,
+		moment.thumbs, moment.pictures
+	</sql>
+	<sql id="Comment_Column">
+		comment.id as c_id, comment.user_id as c_user_id,
+		comment.nickname as c_nickname,
+		comment.moment_id as c_moment_id,
+		comment.face_url as c_face_url, comment.created_at as c_created_at,
+		comment.updated_at as c_updated_at, comment.msg as c_msg
+	</sql>
+	<sql id="Thumbs_Up_Column">
+		thumbs_up.id as t_id, thumbs_up.user_id as t_user_id,
+		thumbs_up.nickname as t_nickname,
+		thumbs_up.moment_id as t_moment_id,
+		thumbs_up.created_at as t_created_at, thumbs_up.updated_at as
+		t_updated_at
+	</sql>
 
 	<select id="find" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select
@@ -31,9 +69,22 @@
 	<select id="findByUserId" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from t_moment
-		where user_id = #{userId,jdbcType=INTEGER}
+		<include refid="Moment_Column" />
+		,
+		<include refid="Comment_Column" />
+		,
+		<include refid="Thumbs_Up_Column" />
+
+		from t_moment moment left join t_comment comment on
+		comment.moment_id=moment.id
+		left join t_thumbs_up thumbs_up on
+		thumbs_up.moment_id=moment.id
+		where
+		moment.user_id
+		=#{userId,jdbcType=INTEGER}
+		<!-- and -->
+		<!-- comment.moment_id=moment.id -->
+		<!-- and thumbs_up.moment_id=moment.id -->
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -51,7 +102,7 @@
 		updated_at, msg, thumbs,
 		pictures)
 		values
-		(#{id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER},
+		(#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
 		#{type,jdbcType=INTEGER},
 		#{cover,jdbcType=VARCHAR},
 		#{video,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},

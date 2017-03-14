@@ -2,6 +2,7 @@ package qi.yue.dao.mapper;
 
 import java.util.List;
 
+import qi.yue.dto.MomentDto;
 import qi.yue.entity.Moment;
 
 public interface MomentMapper {
@@ -10,8 +11,8 @@ public interface MomentMapper {
 
 	int insert(Moment moment);
 
-	Moment find(int id);
+	MomentDto find(int id);
 
-	List<Moment> findByUserId(int userId);
+	List<MomentDto> findByUserId(int userId);
 
 }

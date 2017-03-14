@@ -1,15 +1,16 @@
 package qi.yue.service;
 
+import qi.yue.dto.UserDto;
 import qi.yue.entity.User;
 
 public interface UserService {
-	public User findByUsernameAndPassword(String username, String password);
+	public UserDto findByUsernameAndPassword(String username, String password);
 
-	public User findByUidAndToken(int uid, String token);
+	public UserDto findByUidAndToken(int uid, String token);
 
-	public User findByUsername(String username);
+	public UserDto findByUsername(String username);
 
-	public User find(int id);
+	public UserDto find(int id);
 
 	public int save(User user);
 

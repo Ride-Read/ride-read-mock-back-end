@@ -21,7 +21,9 @@ import qi.yue.common.DateJsonValueProcessor;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.FollowerDto;
 import qi.yue.dto.FollowingDto;
+import qi.yue.dto.UserDto;
 import qi.yue.dto.assembler.FollowingDtoAssembler;
+import qi.yue.dto.assembler.UserDtoAssembler;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
 import qi.yue.entity.User;
@@ -60,33 +62,33 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(String username, String password) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(password)) {
+		// if (CommonUtil.isNullOrEmpty(username) ||
+		// CommonUtil.isNullOrEmpty(password)) {
+		// result.put("data", "");
+		// result.put("status", MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDto dto = userService.findByUsername(username);
+		if (CommonUtil.isNull(dto)) {
 			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
+			result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
 		} else {
-			User user = userService.findByUsername(username);
-			if (CommonUtil.isNull(user)) {
+			password = EncryptionUtil.GetSHACode(password);
+			if (!password.equals(dto.getPassword())) {
 				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
+				result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
 			} else {
-				password = EncryptionUtil.GetSHACode(password);
-				if (!password.equals(user.getPassword())) {
-					result.put("data", "");
-					result.put("status", MessageCommon.STATUS_PASSWORD_WRONG);
-				} else {
-					long timestamp = new Date().getTime();
-					String token = EncryptionUtil.GetMD5Code(user.getId() + timestamp + MessageCommon.PUBLIC_KEY);
-					user.setToken(token);
-					userService.updateTokenById(user.getToken(), user.getId());
-					result.put("timestamp", timestamp);
-					result.put("data", user);
-					result.put("status", MessageCommon.STATUS_SUCCESS);
-				}
+				long timestamp = new Date().getTime();
+				String token = EncryptionUtil.GetMD5Code(dto.getUid() + timestamp + MessageCommon.PUBLIC_KEY);
+				dto.setToken(token);
+				userService.updateTokenById(dto.getToken(), dto.getUid());
+				result.put("timestamp", timestamp);
+				result.put("data", dto);
+				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
+			// }
 		}
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
-		return JSONObject.fromObject(result, jsonConfig);
+
+		return result;
 	}
 
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
@@ -97,8 +99,8 @@ public class UserController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User user = userService.findByUsername(username);
-			if (CommonUtil.isNull(user)) {
+			UserDto dto = userService.findByUsername(username);
+			if (CommonUtil.isNull(dto)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
 			} else {
@@ -119,7 +121,7 @@ public class UserController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			User usered = userService.findByUsername(phonenumber);
+			UserDto usered = userService.findByUsername(phonenumber);
 			if (!CommonUtil.isNull(usered)) {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_USER_EXIST);
@@ -144,9 +146,8 @@ public class UserController {
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
-		return JSONObject.fromObject(result, jsonConfig);
+
+		return result;
 	}
 
 	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
@@ -186,7 +187,10 @@ public class UserController {
 				try {
 					user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
 				} catch (ParseException e) {
+					result.put("data", "");
+					result.put("status", MessageCommon.STATUS_FAIL);
 					e.printStackTrace();
+					return result;
 				}
 				user.setFaceUrl(face_url);
 				user.setId(uid);
@@ -198,14 +202,13 @@ public class UserController {
 				user.setHometown(hometown);
 				user.setUpdatedAt(new Date());
 				userService.update(user);
-				User parameterUser = userService.findByUsername(phonenumber);
+				UserDto parameterUser = UserDtoAssembler.toDto(user);
 				result.put("data", parameterUser);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
-		return JSONObject.fromObject(result, jsonConfig);
+
+		return result;
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
@@ -225,9 +228,7 @@ public class UserController {
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
-		return JSONObject.fromObject(result, jsonConfig);
+		return result;
 	}
 
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
@@ -247,9 +248,8 @@ public class UserController {
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.registerJsonValueProcessor(Date.class, new DateJsonValueProcessor());
-		return JSONObject.fromObject(result, jsonConfig);
+
+		return result;
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
@@ -265,8 +265,8 @@ public class UserController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				User userFollowed = userService.find(user_id);
-				User userFollowing = userService.find(uid);
+				UserDto userFollowed = userService.find(user_id);
+				UserDto userFollowing = userService.find(uid);
 				if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
 					result.put("data", "");
 					result.put("status", MessageCommon.STATUS_FAIL);
@@ -274,7 +274,7 @@ public class UserController {
 					Following following = new Following();
 					following.setFid(uid);
 					following.setTid(user_id);
-					following.setFaceUrl(userFollowed.getFaceUrl());
+					following.setFaceUrl(userFollowed.getFace_url());
 					following.setSignature(userFollowed.getSignature());
 					following.setNickname(userFollowed.getNickname());
 					following.setCreatedAt(new Date());
@@ -283,7 +283,7 @@ public class UserController {
 					Follower follower = new Follower();
 					follower.setFid(uid);
 					follower.setTid(user_id);
-					follower.setFaceUrl(userFollowing.getFaceUrl());
+					follower.setFaceUrl(userFollowing.getFace_url());
 					follower.setSignature(userFollowing.getSignature());
 					follower.setNickname(userFollowing.getNickname());
 					follower.setCreatedAt(new Date());

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.UserMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.entity.User">
-		<id column="id" property="id" jdbcType="INTEGER" />
+	<resultMap id="BaseResultMap" type="qi.yue.dto.UserDto">
+		<id column="id" property="uid" jdbcType="INTEGER" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
 		<result column="sex" property="sex" jdbcType="INTEGER" />
 		<result column="school" property="school" jdbcType="VARCHAR" />
 		<result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
-		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 		<result column="follower" property="follower" jdbcType="INTEGER" />
 		<result column="token" property="token" jdbcType="VARCHAR" />
 		<result column="hometown" property="hometown" jdbcType="VARCHAR" />
-		<result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 		<result column="signature" property="signature" jdbcType="VARCHAR" />
 		<result column="location" property="location" jdbcType="VARCHAR" />
-		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
 		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
 		<result column="following" property="following" jdbcType="INTEGER" />
 		<result column="career" property="career" jdbcType="VARCHAR" />

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import qi.yue.entity.Moment;
 import qi.yue.dao.mapper.MomentMapper;
+import qi.yue.dto.MomentDto;
 import qi.yue.service.MomentService;
 
 @Service
@@ -22,12 +23,12 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public Moment find(int id) {
+	public MomentDto find(int id) {
 		return momentMapper.find(id);
 	}
 
 	@Override
-	public List<Moment> findByUserId(int userId) {
+	public List<MomentDto> findByUserId(int userId) {
 		return momentMapper.findByUserId(userId);
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.UserMapper;
+import qi.yue.dto.UserDto;
 import qi.yue.entity.User;
 import qi.yue.service.UserService;
 import qi.yue.utils.EncryptionUtil;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 
 	@Override
-	public User findByUsernameAndPassword(String username, String password) {
+	public UserDto findByUsernameAndPassword(String username, String password) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("username", username);
 		map.put("password", password);
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByUidAndToken(int uid, String token) {
+	public UserDto findByUidAndToken(int uid, String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", uid);
 		map.put("token", token);
@@ -36,12 +37,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByUsername(String username) {
+	public UserDto findByUsername(String username) {
 		return userMapper.findByUsername(username);
 	}
 
 	@Override
-	public User find(int id) {
+	public UserDto find(int id) {
 		return userMapper.find(id);
 	}
 
