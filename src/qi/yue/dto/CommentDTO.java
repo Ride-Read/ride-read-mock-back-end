@@ -2,7 +2,7 @@ package qi.yue.dto;
 
 import java.util.Date;
 
-public class CommentDto {
+public class CommentDTO {
 	private Integer comment_id;
 
 	private String nickname;

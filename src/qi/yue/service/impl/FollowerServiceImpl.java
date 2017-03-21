@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import qi.yue.dao.mapper.FollowerMapper;
-import qi.yue.dto.FollowerDto;
+import qi.yue.dto.FollowerDTO;
 import qi.yue.entity.Follower;
 import qi.yue.service.FollowerService;
 
@@ -16,7 +16,7 @@ public class FollowerServiceImpl implements FollowerService {
 	private FollowerMapper followerMapper;
 
 	@Override
-	public List<FollowerDto> findByTid(int tid) {
+	public List<FollowerDTO> findByTid(int tid) {
 		return followerMapper.findByTid(tid);
 	}
 
@@ -26,7 +26,7 @@ public class FollowerServiceImpl implements FollowerService {
 	}
 
 	@Override
-	public List<FollowerDto> findByFid(int fid) {
+	public List<FollowerDTO> findByFid(int fid) {
 		return followerMapper.findByFid(fid);
 	}
 

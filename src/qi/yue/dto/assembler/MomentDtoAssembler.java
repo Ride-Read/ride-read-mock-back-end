@@ -1,6 +1,6 @@
 package qi.yue.dto.assembler;
 
-import qi.yue.dto.MomentDto;
+import qi.yue.dto.MomentDTO;
 import qi.yue.entity.Moment;
 import qi.yue.utils.CommonUtil;
 
@@ -9,8 +9,8 @@ public class MomentDtoAssembler {
 	 * @param moment
 	 * @return MomentDto
 	 */
-	public static MomentDto toDto(Moment moment) {
-		MomentDto dto = new MomentDto();
+	public static MomentDTO toDto(Moment moment) {
+		MomentDTO dto = new MomentDTO();
 		if (!CommonUtil.isNull(moment)) {
 			dto.setComment(null);
 			dto.setCover(moment.getCover());

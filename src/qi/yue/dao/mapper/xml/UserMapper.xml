@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.UserMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.dto.UserDto">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.UserDTO">
 		<id column="id" property="uid" jdbcType="INTEGER" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
@@ -18,17 +18,19 @@
 		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
 		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
 		<result column="following" property="following" jdbcType="INTEGER" />
+		<result column="longitude" jdbcType="DECIMAL" property="longitude" />
+		<result column="latitude" jdbcType="DECIMAL" property="latitude" />
 		<result column="career" property="career" jdbcType="VARCHAR" />
 		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, username, password, sex, school, phonenumber,
-		updated_at, follower,
-		token, hometown,
-		face_url, signature, location,
-		created_at, birthday, following, career,
-		nickname
+		id, username, password, sex, school, phonenumber, follower,
+		following, token, hometown,
+		face_url, signature, tags, location,
+		birthday, career, nickname, longitude,
+		latitude,
+		created_at, updated_at
 	</sql>
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
@@ -62,36 +64,41 @@
 		where username=#{username,jdbcType=VARCHAR}
 	</select>
 
+	<select id="findByPhonenumber" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where phonenumber=#{phonenumber,jdbcType=VARCHAR}
+	</select>
+
 	<insert id="insert" parameterType="qi.yue.entity.User"
 		useGeneratedKeys="true" keyProperty="id">
-		insert into t_user (
-		username,
+		insert into t_user (id, username,
 		password,
 		sex, school, phonenumber,
-		updated_at, follower,
-		token,
+		follower, following, token,
 		hometown, face_url, signature,
-		location, created_at, birthday,
-		following, career, nickname
+		tags, location, birthday,
+		career,
+		nickname, longitude,
+		latitude, created_at, updated_at
 		)
-		values (
-		#{username,jdbcType=VARCHAR},
+		values
+		(#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
 		#{password,jdbcType=VARCHAR},
 		#{sex,jdbcType=INTEGER},
-		#{school,jdbcType=VARCHAR},
-		#{phonenumber,jdbcType=VARCHAR},
-		#{updatedAt,jdbcType=TIMESTAMP},
-		#{follower,jdbcType=INTEGER},
+		#{school,jdbcType=VARCHAR}, #{phonenumber,jdbcType=VARCHAR},
+		#{follower,jdbcType=INTEGER}, #{following,jdbcType=INTEGER},
 		#{token,jdbcType=VARCHAR},
 		#{hometown,jdbcType=VARCHAR},
-		#{faceUrl,jdbcType=VARCHAR},
-		#{signature,jdbcType=VARCHAR},
-		#{location,jdbcType=VARCHAR},
-		#{createdAt,jdbcType=TIMESTAMP},
+		#{faceUrl,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR},
+		#{tags,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
 		#{birthday,jdbcType=TIMESTAMP},
-		#{following,jdbcType=INTEGER},
 		#{career,jdbcType=VARCHAR},
-		#{nickname,jdbcType=VARCHAR}
+		#{nickname,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL},
+		#{latitude,jdbcType=DECIMAL}, #{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP}
 		)
 	</insert>
 
@@ -113,11 +120,11 @@
 			<if test="phonenumber != null">
 				phonenumber = #{phonenumber,jdbcType=VARCHAR},
 			</if>
-			<if test="updatedAt != null">
-				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
-			</if>
 			<if test="follower != null">
 				follower = #{follower,jdbcType=INTEGER},
+			</if>
+			<if test="following != null">
+				following = #{following,jdbcType=INTEGER},
 			</if>
 			<if test="token != null">
 				token = #{token,jdbcType=VARCHAR},
@@ -131,23 +138,32 @@
 			<if test="signature != null">
 				signature = #{signature,jdbcType=VARCHAR},
 			</if>
+			<if test="tags != null">
+				tags = #{tags,jdbcType=VARCHAR},
+			</if>
 			<if test="location != null">
 				location = #{location,jdbcType=VARCHAR},
 			</if>
-			<if test="createdAt != null">
-				created_at = #{createdAt,jdbcType=TIMESTAMP},
-			</if>
 			<if test="birthday != null">
 				birthday = #{birthday,jdbcType=TIMESTAMP},
-			</if>
-			<if test="following != null">
-				following = #{following,jdbcType=INTEGER},
 			</if>
 			<if test="career != null">
 				career = #{career,jdbcType=VARCHAR},
 			</if>
 			<if test="nickname != null">
 				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				longitude = #{longitude,jdbcType=DECIMAL},
+			</if>
+			<if test="latitude != null">
+				latitude = #{latitude,jdbcType=DECIMAL},
+			</if>
+			<if test="createdAt != null">
+				created_at = #{createdAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatedAt != null">
+				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

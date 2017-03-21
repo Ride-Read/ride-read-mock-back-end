@@ -2,14 +2,14 @@ package qi.yue.service;
 
 import java.util.List;
 
-import qi.yue.dto.FollowingDto;
+import qi.yue.dto.FollowingDTO;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
 
 public interface FollowingService {
-	List<FollowingDto> findByTid(int tid);
+	List<FollowingDTO> findByTid(int tid);
 
-	List<FollowingDto> findByFid(int fid);
+	List<FollowingDTO> findByFid(int fid);
 
 	int save(Following following);
 

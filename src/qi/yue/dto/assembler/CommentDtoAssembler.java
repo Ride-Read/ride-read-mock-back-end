@@ -1,6 +1,6 @@
 package qi.yue.dto.assembler;
 
-import qi.yue.dto.CommentDto;
+import qi.yue.dto.CommentDTO;
 import qi.yue.entity.Comment;
 import qi.yue.utils.CommonUtil;
 
@@ -9,8 +9,8 @@ public class CommentDtoAssembler {
 	 * @param comment
 	 * @return
 	 */
-	public static CommentDto toDto(Comment comment) {
-		CommentDto dto = new CommentDto();
+	public static CommentDTO toDto(Comment comment) {
+		CommentDTO dto = new CommentDTO();
 		if (!CommonUtil.isNull(comment)) {
 			dto.setComment_id(comment.getId());
 			dto.setCreated_at(comment.getCreatedAt());

@@ -1,6 +1,6 @@
 package qi.yue.dto.assembler;
 
-import qi.yue.dto.ThumbsUpDto;
+import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.entity.ThumbsUp;
 import qi.yue.utils.CommonUtil;
 
@@ -9,8 +9,8 @@ public class ThumbsUpDtoAssembler {
 	 * @param thumbsUp
 	 * @return
 	 */
-	public static ThumbsUpDto toDto(ThumbsUp thumbsUp) {
-		ThumbsUpDto dto = new ThumbsUpDto();
+	public static ThumbsUpDTO toDto(ThumbsUp thumbsUp) {
+		ThumbsUpDTO dto = new ThumbsUpDTO();
 		if (!CommonUtil.isNull(thumbsUp)) {
 			dto.setCreated_at(thumbsUp.getCreatedAt());
 			dto.setMid(thumbsUp.getMomentId());

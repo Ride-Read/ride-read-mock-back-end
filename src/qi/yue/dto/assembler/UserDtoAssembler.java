@@ -1,6 +1,6 @@
 package qi.yue.dto.assembler;
 
-import qi.yue.dto.UserDto;
+import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 import qi.yue.utils.CommonUtil;
 
@@ -9,8 +9,8 @@ public class UserDtoAssembler {
 	 * @param thumbsUp
 	 * @return
 	 */
-	public static UserDto toDto(User user) {
-		UserDto dto = new UserDto();
+	public static UserDTO toDto(User user) {
+		UserDTO dto = new UserDTO();
 		if (!CommonUtil.isNull(user)) {
 			dto.setBirthday(user.getBirthday());
 			dto.setCareer(user.getCareer());

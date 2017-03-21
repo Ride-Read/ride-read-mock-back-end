@@ -2,7 +2,7 @@ package qi.yue.dto;
 
 import java.util.Date;
 
-public class ThumbsUpDto {
+public class ThumbsUpDTO {
 	private Integer thumbs_up_id;
 
 	private String nickname;

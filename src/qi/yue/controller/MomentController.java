@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import qi.yue.common.MessageCommon;
-import qi.yue.dto.CommentDto;
-import qi.yue.dto.MomentDto;
-import qi.yue.dto.ThumbsUpDto;
-import qi.yue.dto.UserDto;
+import qi.yue.dto.CommentDTO;
+import qi.yue.dto.MomentDTO;
+import qi.yue.dto.ThumbsUpDTO;
+import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.CommentDtoAssembler;
 import qi.yue.dto.assembler.MomentDtoAssembler;
 import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
@@ -71,7 +71,7 @@ public class MomentController {
 				moment.setCreatedAt(new Date());
 				moment.setUpdatedAt(new Date());
 				momentService.save(moment);
-				MomentDto dto = MomentDtoAssembler.toDto(moment);
+				MomentDTO dto = MomentDtoAssembler.toDto(moment);
 				result.put("data", dto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
@@ -92,8 +92,8 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				List<MomentDto> momentDtos = momentService.findByUserId(user_id);
-				UserDto userDto = userService.find(user_id);
+				List<MomentDTO> momentDtos = momentService.findByUserId(user_id);
+				UserDTO userDto = userService.find(user_id);
 				result.put("data", momentDtos);
 				result.put("user", userDto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
@@ -115,7 +115,7 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				UserDto user = userService.find(uid);
+				UserDTO user = userService.find(uid);
 				Comment comment = new Comment();
 				comment.setMomentId(mid);
 				comment.setUserId(uid);
@@ -124,7 +124,7 @@ public class MomentController {
 				comment.setNickname(user.getNickname());
 				comment.setCreatedAt(new Date());
 				commentService.save(comment);
-				CommentDto dto = CommentDtoAssembler.toDto(comment);
+				CommentDTO dto = CommentDtoAssembler.toDto(comment);
 				result.put("data", dto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
@@ -166,14 +166,14 @@ public class MomentController {
 				result.put("data", "");
 				result.put("status", MessageCommon.STATUS_FAIL);
 			} else {
-				UserDto user = userService.find(uid);
+				UserDTO user = userService.find(uid);
 				ThumbsUp thumbsUp = new ThumbsUp();
 				thumbsUp.setMomentId(mid);
 				thumbsUp.setUserId(uid);
 				thumbsUp.setNickname(user.getNickname());
 				thumbsUp.setCreatedAt(new Date());
 				thumbsUpService.save(thumbsUp);
-				ThumbsUpDto dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+				ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
 				result.put("data", dto);
 				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}

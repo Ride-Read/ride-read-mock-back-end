@@ -2,17 +2,19 @@ package qi.yue.dao.mapper;
 
 import java.util.Map;
 
-import qi.yue.dto.UserDto;
+import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 
 public interface UserMapper {
-	UserDto findByUsernameAndPassword(Map<String, String> map);
+	UserDTO findByUsernameAndPassword(Map<String, String> map);
 
-	UserDto findByUidAndToken(Map<String, Object> map);
+	UserDTO findByUidAndToken(Map<String, Object> map);
 
-	UserDto findByUsername(String username);
+	UserDTO findByUsername(String username);
 
-	UserDto find(int id);
+	UserDTO findByPhonenumber(String phonenumber);
+
+	UserDTO find(int id);
 
 	int insert(User user);
 

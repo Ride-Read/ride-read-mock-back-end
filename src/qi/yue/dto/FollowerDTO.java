@@ -2,7 +2,7 @@ package qi.yue.dto;
 
 import java.util.Date;
 
-public class FollowerDto {
+public class FollowerDTO {
 	private Integer follower_id;
 
 	private Integer fid;// 粉丝

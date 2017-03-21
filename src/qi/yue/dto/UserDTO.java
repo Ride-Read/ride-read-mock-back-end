@@ -1,8 +1,10 @@
 package qi.yue.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class UserDto {
+public class UserDTO {
 	private Integer uid;
 
 	private String username;
@@ -39,7 +41,13 @@ public class UserDto {
 
 	private String nickname;
 
-	private String tags;
+	private String tagString;
+
+	private List<String> tags;
+	
+	private BigDecimal longitude;
+
+	private BigDecimal latitude;
 
 	public Integer getUid() {
 		return uid;
@@ -185,12 +193,35 @@ public class UserDto {
 		this.nickname = nickname;
 	}
 
-	public String getTags() {
+	public String getTagString() {
+		return tagString;
+	}
+
+	public void setTagString(String tagString) {
+		this.tagString = tagString;
+	}
+
+	public List<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(String tags) {
+	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
 
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
+	}
+
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
 }

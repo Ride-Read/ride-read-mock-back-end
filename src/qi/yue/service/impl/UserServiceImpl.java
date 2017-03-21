@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.dao.mapper.UserMapper;
-import qi.yue.dto.UserDto;
+import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 import qi.yue.service.UserService;
 
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 
 	@Override
-	public UserDto findByUsernameAndPassword(String username, String password) {
+	public UserDTO findByUsernameAndPassword(String username, String password) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("username", username);
 		map.put("password", password);
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto findByUidAndToken(int uid, String token) {
+	public UserDTO findByUidAndToken(int uid, String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", uid);
 		map.put("token", token);
@@ -35,12 +35,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto findByUsername(String username) {
+	public UserDTO findByUsername(String username) {
 		return userMapper.findByUsername(username);
 	}
 
 	@Override
-	public UserDto find(int id) {
+	public UserDTO findByPhonenumber(String phonenumber) {
+		// TODO Auto-generated method stub
+		return userMapper.findByPhonenumber(phonenumber);
+	}
+
+	@Override
+	public UserDTO find(int id) {
 		return userMapper.find(id);
 	}
 
@@ -79,4 +85,5 @@ public class UserServiceImpl implements UserService {
 		map.put("username", username);
 		return userMapper.updatePasswordByUsernamae(map);
 	}
+
 }

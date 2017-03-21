@@ -1,6 +1,6 @@
 package qi.yue.dao.mapper;
 
-import qi.yue.dto.CommentDto;
+import qi.yue.dto.CommentDTO;
 import qi.yue.entity.Comment;
 
 public interface CommentMapper {
@@ -8,5 +8,5 @@ public interface CommentMapper {
 
 	int delete(Integer id);
 
-	CommentDto find(Integer id);
+	CommentDTO find(Integer id);
 }

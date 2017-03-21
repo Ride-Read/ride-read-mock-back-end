@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="qi.yue.dao.mapper.MomentMapper">
-	<resultMap id="BaseResultMap" type="qi.yue.dto.MomentDto">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.MomentDTO">
 		<id column="id" jdbcType="INTEGER" property="mid" />
 		<result column="user_id" jdbcType="INTEGER" property="uid" />
 		<result column="type" jdbcType="INTEGER" property="type" />
@@ -13,7 +13,7 @@
 		<result column="msg" jdbcType="LONGVARCHAR" property="msg" />
 		<result column="thumbs" jdbcType="LONGVARCHAR" property="thumbs" />
 		<result column="pictures" jdbcType="LONGVARCHAR" property="pictures" />
-		<collection property="comment" ofType="qi.yue.dto.CommentDto">
+		<collection property="comment" ofType="qi.yue.dto.CommentDTO">
 			<id column="c_id" jdbcType="INTEGER" property="comment_id" />
 			<result column="c_user_id" jdbcType="INTEGER" property="uid" />
 			<result column="c_nickname" jdbcType="VARCHAR" property="nickname" />
@@ -23,7 +23,7 @@
 			<result column="c_updated_at" jdbcType="TIMESTAMP" property="updated_at" />
 			<result column="c_msg" property="msg" jdbcType="LONGVARCHAR" />
 		</collection>
-		<collection property="thumbs_up" ofType="qi.yue.dto.ThumbsUpDto">
+		<collection property="thumbs_up" ofType="qi.yue.dto.ThumbsUpDTO">
 			<id column="t_id" property="thumbs_up_id" jdbcType="INTEGER" />
 			<result column="t_user_id" property="uid" jdbcType="INTEGER" />
 			<result column="t_moment_id" property="mid" jdbcType="INTEGER" />

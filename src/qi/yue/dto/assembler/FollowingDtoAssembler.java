@@ -3,7 +3,7 @@ package qi.yue.dto.assembler;
 import java.util.ArrayList;
 import java.util.List;
 
-import qi.yue.dto.FollowingDto;
+import qi.yue.dto.FollowingDTO;
 import qi.yue.entity.Following;
 import qi.yue.utils.CommonUtil;
 
@@ -12,8 +12,8 @@ public class FollowingDtoAssembler {
 	 * @param comment
 	 * @return
 	 */
-	public static FollowingDto toDto(Following following) {
-		FollowingDto dto = new FollowingDto();
+	public static FollowingDTO toDto(Following following) {
+		FollowingDTO dto = new FollowingDTO();
 		if (!CommonUtil.isNull(following)) {
 			dto.setCreated_at(following.getCreatedAt());
 			dto.setFace_url(following.getFaceUrl());
@@ -29,8 +29,8 @@ public class FollowingDtoAssembler {
 
 	}
 
-	public static List<FollowingDto> toDtoList(List<Following> followingList) {
-		List<FollowingDto> list = new ArrayList<FollowingDto>();
+	public static List<FollowingDTO> toDtoList(List<Following> followingList) {
+		List<FollowingDTO> list = new ArrayList<FollowingDTO>();
 		if (!CommonUtil.isNullOrEmpty(followingList)) {
 			for (Following following : followingList) {
 				list.add(toDto(following));

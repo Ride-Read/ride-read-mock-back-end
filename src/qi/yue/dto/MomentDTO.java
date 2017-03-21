@@ -3,7 +3,7 @@ package qi.yue.dto;
 import java.util.Date;
 import java.util.List;
 
-public class MomentDto {
+public class MomentDTO {
 	private Integer mid;
 
 	private Integer uid;
@@ -24,9 +24,9 @@ public class MomentDto {
 
 	private Date updated_at;
 
-	private List<CommentDto> comment;
+	private List<CommentDTO> comment;
 
-	private List<ThumbsUpDto> thumbs_up;
+	private List<ThumbsUpDTO> thumbs_up;
 
 	public Integer getMid() {
 		return mid;
@@ -108,19 +108,19 @@ public class MomentDto {
 		this.updated_at = updated_at;
 	}
 
-	public List<CommentDto> getComment() {
+	public List<CommentDTO> getComment() {
 		return comment;
 	}
 
-	public void setComment(List<CommentDto> comment) {
+	public void setComment(List<CommentDTO> comment) {
 		this.comment = comment;
 	}
 
-	public List<ThumbsUpDto> getThumbs_up() {
+	public List<ThumbsUpDTO> getThumbs_up() {
 		return thumbs_up;
 	}
 
-	public void setThumbs_up(List<ThumbsUpDto> thumbs_up) {
+	public void setThumbs_up(List<ThumbsUpDTO> thumbs_up) {
 		this.thumbs_up = thumbs_up;
 	}
 

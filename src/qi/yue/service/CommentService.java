@@ -1,12 +1,12 @@
 package qi.yue.service;
 
-import qi.yue.dto.CommentDto;
+import qi.yue.dto.CommentDTO;
 import qi.yue.entity.Comment;
 
 public interface CommentService {
 	int save(Comment comment);
 
-	CommentDto find(Integer id);
+	CommentDTO find(Integer id);
 
 	int delete(Integer id);
 }
