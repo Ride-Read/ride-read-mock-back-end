@@ -43,8 +43,8 @@ public class UserDTO {
 
 	private String tagString;
 
-	private List<String> tags;
-	
+	private String[] tags;
+
 	private BigDecimal longitude;
 
 	private BigDecimal latitude;
@@ -201,11 +201,11 @@ public class UserDTO {
 		this.tagString = tagString;
 	}
 
-	public List<String> getTags() {
+	public String[] getTags() {
 		return tags;
 	}
 
-	public void setTags(List<String> tags) {
+	public void setTags(String[] tags) {
 		this.tags = tags;
 	}
 

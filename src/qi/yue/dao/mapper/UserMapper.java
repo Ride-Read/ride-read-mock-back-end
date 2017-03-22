@@ -23,4 +23,6 @@ public interface UserMapper {
 	int updateTokenById(Map<String, Object> map);
 
 	int updatePasswordByUsernamae(Map<String, Object> map);
+
+	int updatePasswordByPhonenumber(Map<String, Object> map);
 }

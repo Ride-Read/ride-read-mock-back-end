@@ -26,6 +26,10 @@ public class UserDtoAssembler {
 			dto.setSchool(user.getSchool());
 			dto.setSex(user.getSex());
 			dto.setSignature(user.getSignature());
+			dto.setTagString(user.getTags());
+			if (CommonUtil.isNullOrEmpty(dto.getTagString())) {
+				dto.setTags(dto.getTagString().split(","));
+			}
 			// dto.setTags(user.ge);
 			dto.setToken(user.getToken());
 			dto.setUid(user.getId());

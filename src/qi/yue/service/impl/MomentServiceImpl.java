@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import qi.yue.entity.Moment;
 import qi.yue.dao.mapper.MomentMapper;
 import qi.yue.dto.MomentDTO;
+import qi.yue.dto.PageDTO;
 import qi.yue.service.MomentService;
 
 @Service
@@ -34,6 +35,11 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	public int delete(int id) {
 		return momentMapper.delete(id);
+	}
+
+	@Override
+	public List<MomentDTO> findByPage(PageDTO pageDTO) {
+		return momentMapper.findByPage(pageDTO);
 	}
 
 }

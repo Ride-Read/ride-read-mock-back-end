@@ -8,6 +8,10 @@ public class MessageCommon {
 	public static final int STATUS_PASSWORD_WRONG = 1003;
 	public static final int STATUS_PHONENUMBER_EXIST = 1004;
 
+	public static final int TYPE_ERROR = 1001;
+	public static final int IMAGE_EMPTY = 1002;
+	public static final int VIDEO_EMPTY = 1003;
+
 	public static final String PUBLIC_KEY = "airing";
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

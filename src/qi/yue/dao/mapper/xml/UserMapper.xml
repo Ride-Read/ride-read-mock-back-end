@@ -14,6 +14,7 @@
 		<result column="hometown" property="hometown" jdbcType="VARCHAR" />
 		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="tags" property="tagString" jdbcType="VARCHAR" />
 		<result column="location" property="location" jdbcType="VARCHAR" />
 		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
 		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
@@ -187,6 +188,16 @@
 			</if>
 		</set>
 		where username = #{username,jdbcType=INTEGER}
+	</update>
+
+	<update id="updatePasswordByPhonenumber" parameterType="map">
+		update t_user
+		<set>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where phonenumber = #{phonenumber,jdbcType=INTEGER}
 	</update>
 
 </mapper>

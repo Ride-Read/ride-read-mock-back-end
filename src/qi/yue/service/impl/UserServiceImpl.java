@@ -53,14 +53,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public int save(User user) {
-		// String token = EncryptionUtil
-		// .GetMD5Code(user.getId() + user.getUpdatedAt().getTime() +
-		// MessageCommon.PUBLIC_KEY);
-		// Map<String, Object> map = new HashMap<String, Object>();
-		// map.put("token", token);
-		// map.put("id", user.getId());
-		// userMapper.updateTokenById(map);
-
 		return userMapper.insert(user);
 
 	}
@@ -71,6 +63,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public int updateTokenById(String token, int id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("token", token);
@@ -79,11 +72,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public int updatePasswordByUsernamae(String password, String username) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("password", password);
 		map.put("username", username);
 		return userMapper.updatePasswordByUsernamae(map);
+	}
+
+	@Override
+	@Transactional
+	public int updatePasswordByPhonenumber(String password, String phonenumber) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("password", password);
+		map.put("phonenumber", phonenumber);
+		return userMapper.updatePasswordByPhonenumber(map);
 	}
 
 }

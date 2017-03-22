@@ -18,11 +18,13 @@ public class MomentDTO {
 
 	private String thumbs;
 
-	private String pictures;
+	private String pictureString;
 
 	private Date created_at;
 
 	private Date updated_at;
+
+	private String[] pictures;
 
 	private List<CommentDTO> comment;
 
@@ -84,12 +86,12 @@ public class MomentDTO {
 		this.thumbs = thumbs;
 	}
 
-	public String getPictures() {
-		return pictures;
+	public String getPictureString() {
+		return pictureString;
 	}
 
-	public void setPictures(String pictures) {
-		this.pictures = pictures;
+	public void setPictureString(String pictureString) {
+		this.pictureString = pictureString;
 	}
 
 	public Date getCreated_at() {
@@ -108,6 +110,14 @@ public class MomentDTO {
 		this.updated_at = updated_at;
 	}
 
+	public String[] getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(String[] pictures) {
+		this.pictures = pictures;
+	}
+
 	public List<CommentDTO> getComment() {
 		return comment;
 	}
@@ -123,5 +133,4 @@ public class MomentDTO {
 	public void setThumbs_up(List<ThumbsUpDTO> thumbs_up) {
 		this.thumbs_up = thumbs_up;
 	}
-
 }

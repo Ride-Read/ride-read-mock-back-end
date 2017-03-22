@@ -3,9 +3,7 @@ package qi.yue.controller;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -77,7 +75,9 @@ public class UserController {
 				dto.setToken(token);
 				dto.setLatitude(latitude);
 				dto.setLongitude(longitude);
-
+				if (CommonUtil.isNullOrEmpty(dto.getTagString())) {
+					dto.setTags(dto.getTagString().split(","));
+				}
 				User user = new User();
 				user.setId(dto.getUid());
 				user.setToken(token);
@@ -94,24 +94,22 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
-	public @ResponseBody Object resetPassword(String username, String new_password, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(new_password)
+	public @ResponseBody Object resetPassword(String phonenumber, String new_password, Long timestamp) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(new_password)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			UserDTO dto = userService.findByUsername(username);
-			if (CommonUtil.isNull(dto)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
-			} else {
-				String passwordSHA = EncryptionUtil.GetSHACode(new_password);
-				userService.updatePasswordByUsernamae(passwordSHA, username);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		UserDTO dto = userService.findByPhonenumber(phonenumber);
+		if (CommonUtil.isNull(dto)) {
+			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
+		} else {
+			String passwordSHA = EncryptionUtil.GetSHACode(new_password);
+			userService.updatePasswordByPhonenumber(passwordSHA, phonenumber);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -159,177 +157,160 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
-	public @ResponseBody Object verify_code(String username, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			UserDTO dto = userService.findByUsername(username);
-			if (CommonUtil.isNull(dto)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_USER_NOT_EXIST);
-			} else {
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+	public @ResponseBody Object verify_code(String phonenumber, Long timestamp) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNull(timestamp)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		UserDTO dto = userService.findByPhonenumber(phonenumber);
+		if (CommonUtil.isNull(dto)) {
+			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
+		} else {
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Object update(String career, String phonenumber, String location, String birthday,
 			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
 			String hometown, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
 				|| CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday)
 				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)
 				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(nickname)
 				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNullOrEmpty(hometown)
 				|| CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				User user = new User();
-				user.setId(uid);
-				user.setCareer(career);
-				user.setPhonenumber(phonenumber);
-				user.setLocation(location);
-				try {
-					user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
-				} catch (ParseException e) {
-					result.put("data", "");
-					result.put("status", MessageCommon.STATUS_FAIL);
-					e.printStackTrace();
-					return result;
-				}
-				user.setFaceUrl(face_url);
-				user.setId(uid);
-				// user.setToken(token);
-				user.setSignature(signature);
-				user.setNickname(nickname);
-				user.setSchool(school);
-				user.setSex(sex);
-				user.setHometown(hometown);
-				user.setUpdatedAt(new Date());
-				userService.update(user);
-				UserDTO parameterUser = UserDtoAssembler.toDto(user);
-				result.put("data", parameterUser);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			User user = new User();
+			user.setId(uid);
+			user.setCareer(career);
+			user.setPhonenumber(phonenumber);
+			user.setLocation(location);
+			try {
+				user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
+			} catch (ParseException e) {
+				responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+				return responseDTO;
+			}
+			user.setFaceUrl(face_url);
+			user.setId(uid);
+			// user.setToken(token);
+			user.setSignature(signature);
+			user.setNickname(nickname);
+			user.setSchool(school);
+			user.setSex(sex);
+			user.setHometown(hometown);
+			user.setUpdatedAt(new Date());
+			userService.update(user);
+			UserDTO parameterUser = UserDtoAssembler.toDto(user);
+			responseDTO.setData(parameterUser);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
 	public @ResponseBody Object followers(Integer uid, String token, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				List<FollowerDTO> dtoList = followerService.findByTid(uid);
-				result.put("data", dtoList);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			List<FollowerDTO> dtoList = followerService.findByTid(uid);
+			responseDTO.setData(dtoList);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
 	public @ResponseBody Object followings(Integer uid, String token, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				List<FollowingDTO> dtoList = followingService.findByFid(uid);
-				result.put("data", dtoList);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			List<FollowingDTO> dtoList = followingService.findByFid(uid);
+			responseDTO.setData(dtoList);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public @ResponseBody Object follow(Integer uid, String token, Integer user_id, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(user_id)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
+			UserDTO userFollowed = userService.find(user_id);
+			UserDTO userFollowing = userService.find(uid);
+			if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
+				responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			} else {
-				UserDTO userFollowed = userService.find(user_id);
-				UserDTO userFollowing = userService.find(uid);
-				if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
-					result.put("data", "");
-					result.put("status", MessageCommon.STATUS_FAIL);
-				} else {
-					Following following = new Following();
-					following.setFid(uid);
-					following.setTid(user_id);
-					following.setFaceUrl(userFollowed.getFace_url());
-					following.setSignature(userFollowed.getSignature());
-					following.setNickname(userFollowed.getNickname());
-					following.setCreatedAt(new Date());
-					following.setUpdatedAt(new Date());
+				Following following = new Following();
+				following.setFid(uid);
+				following.setTid(user_id);
+				following.setFaceUrl(userFollowed.getFace_url());
+				following.setSignature(userFollowed.getSignature());
+				following.setNickname(userFollowed.getNickname());
+				following.setCreatedAt(new Date());
+				following.setUpdatedAt(new Date());
 
-					Follower follower = new Follower();
-					follower.setFid(uid);
-					follower.setTid(user_id);
-					follower.setFaceUrl(userFollowing.getFace_url());
-					follower.setSignature(userFollowing.getSignature());
-					follower.setNickname(userFollowing.getNickname());
-					follower.setCreatedAt(new Date());
-					follower.setUpdatedAt(new Date());
+				Follower follower = new Follower();
+				follower.setFid(uid);
+				follower.setTid(user_id);
+				follower.setFaceUrl(userFollowing.getFace_url());
+				follower.setSignature(userFollowing.getSignature());
+				follower.setNickname(userFollowing.getNickname());
+				follower.setCreatedAt(new Date());
+				follower.setUpdatedAt(new Date());
 
-					followingService.saveFollowingAndFollower(following, follower);
-					result.put("status", MessageCommon.STATUS_SUCCESS);
-				}
+				followingService.saveFollowingAndFollower(following, follower);
+				responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
 			}
 		}
-		return result;
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
 	public @ResponseBody Object unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(user_id)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				followingService.deleteFollowingAndFollower(uid, user_id);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			followingService.deleteFollowingAndFollower(uid, user_id);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 }

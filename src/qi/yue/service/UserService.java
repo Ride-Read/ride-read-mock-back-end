@@ -9,7 +9,7 @@ public interface UserService {
 	public UserDTO findByUidAndToken(int uid, String token);
 
 	public UserDTO findByUsername(String username);
-	
+
 	public UserDTO findByPhonenumber(String phonenumber);
 
 	public UserDTO find(int id);
@@ -21,4 +21,6 @@ public interface UserService {
 	public int updateTokenById(String token, int uid);
 
 	public int updatePasswordByUsernamae(String password, String username);
+
+	public int updatePasswordByPhonenumber(String password, String phonenumber);
 }

@@ -2,6 +2,7 @@ package qi.yue.service;
 
 import java.util.List;
 import qi.yue.dto.MomentDTO;
+import qi.yue.dto.PageDTO;
 import qi.yue.entity.Moment;
 
 public interface MomentService {
@@ -10,6 +11,8 @@ public interface MomentService {
 	MomentDTO find(int id);
 
 	List<MomentDTO> findByUserId(int userId);
+
+	List<MomentDTO> findByPage(PageDTO pageDTO);
 
 	int delete(int id);
 }

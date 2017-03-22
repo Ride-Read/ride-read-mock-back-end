@@ -12,7 +12,7 @@
 
 		<result column="msg" jdbcType="LONGVARCHAR" property="msg" />
 		<result column="thumbs" jdbcType="LONGVARCHAR" property="thumbs" />
-		<result column="pictures" jdbcType="LONGVARCHAR" property="pictures" />
+		<result column="pictures" jdbcType="LONGVARCHAR" property="pictureString" />
 		<collection property="comment" ofType="qi.yue.dto.CommentDTO">
 			<id column="c_id" jdbcType="INTEGER" property="comment_id" />
 			<result column="c_user_id" jdbcType="INTEGER" property="uid" />
@@ -82,9 +82,26 @@
 		where
 		moment.user_id
 		=#{userId,jdbcType=INTEGER}
-		<!-- and -->
-		<!-- comment.moment_id=moment.id -->
-		<!-- and thumbs_up.moment_id=moment.id -->
+	</select>
+
+	<select id="findByPage" parameterType="qi.yue.dto.PageDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		<include refid="Comment_Column" />
+		,
+		<include refid="Thumbs_Up_Column" />
+
+		from t_moment moment left join t_comment comment on
+		comment.moment_id=moment.id
+		left join t_thumbs_up thumbs_up on
+		thumbs_up.moment_id=moment.id
+		where
+		moment.user_id
+		=#{id,jdbcType=INTEGER}
+		limit
+		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
 	<delete id="delete" parameterType="java.lang.Integer">

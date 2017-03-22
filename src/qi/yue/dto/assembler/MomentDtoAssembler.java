@@ -17,7 +17,10 @@ public class MomentDtoAssembler {
 			dto.setCreated_at(moment.getCreatedAt());
 			dto.setMid(moment.getId());
 			dto.setMsg(moment.getMsg());
-			dto.setPictures(moment.getPictures());
+			dto.setPictureString(moment.getPictures());
+			if (CommonUtil.isNullOrEmpty(moment.getPictures())) {
+				dto.setPictures(moment.getPictures().split(","));
+			}
 			dto.setThumbs(moment.getThumbs());
 			dto.setThumbs_up(null);
 			dto.setType(moment.getType());

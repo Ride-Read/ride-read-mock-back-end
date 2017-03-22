@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
+import qi.yue.dto.PageDTO;
+import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.CommentDtoAssembler;
@@ -49,34 +51,44 @@ public class MomentController {
 	@RequestMapping(value = "/post_moment", method = RequestMethod.POST)
 	public @ResponseBody Object postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(video_url)
-				|| CommonUtil.isNull(type) || CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(pictures_url)
-				|| CommonUtil.isNullOrEmpty(cover) || CommonUtil.isNullOrEmpty(token)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				Moment moment = new Moment();
-				moment.setMsg(msg);
-				moment.setUserId(uid);
-				moment.setVideo(video_url);
-				moment.setType(type);
-				moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
-				moment.setCover(cover);
-				moment.setCreatedAt(new Date());
-				moment.setUpdatedAt(new Date());
-				momentService.save(moment);
-				MomentDTO dto = MomentDtoAssembler.toDto(moment);
-				result.put("data", dto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+		ResponseDTO responseDTO = new ResponseDTO();
+		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
+				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		if (!(type >= 0 && type <= 2)) {
+			responseDTO.setStatus(MessageCommon.TYPE_ERROR);
+			return responseDTO;
+		}
+		if (1 == type && CommonUtil.isNullOrEmpty(pictures_url)) {
+			responseDTO.setStatus(MessageCommon.IMAGE_EMPTY);
+			return responseDTO;
+		}
+		if (2 == type && (CommonUtil.isNullOrEmpty(cover) || CommonUtil.isNullOrEmpty(video_url))) {
+			responseDTO.setStatus(MessageCommon.VIDEO_EMPTY);
+			return responseDTO;
+		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		Moment moment = new Moment();
+		moment.setMsg(msg);
+		moment.setUserId(uid);
+		moment.setVideo(video_url);
+		moment.setType(type);
+		moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
+		moment.setCover(cover);
+		moment.setCreatedAt(new Date());
+		moment.setUpdatedAt(new Date());
+		momentService.save(moment);
+		MomentDTO dto = MomentDtoAssembler.toDto(moment);
+		responseDTO.setData(dto);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/show_moment", method = RequestMethod.POST)
@@ -87,137 +99,130 @@ public class MomentController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				List<MomentDTO> momentDtos = momentService.findByUserId(user_id);
-				UserDTO userDto = userService.find(user_id);
-				result.put("data", momentDtos);
-				result.put("user", userDto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+			// MessageCommon.PUBLIC_KEY);
+			// if (!tokenTemp.equals(token)) {
+			// result.put("data", "");
+			// result.put("status", MessageCommon.STATUS_FAIL);
+			// } else {
+			PageDTO page = new PageDTO();
+			page.setId(user_id);
+			page.setCurrentNumberFromPages(pages);
+			List<MomentDTO> momentDtos = momentService.findByPage(page);
+			UserDTO userDto = userService.find(user_id);
+			result.put("data", momentDtos);
+			result.put("user", userDto);
+			result.put("status", MessageCommon.STATUS_SUCCESS);
 		}
+		// }
 		return result;
 	}
 
 	@RequestMapping(value = "/add_comment", method = RequestMethod.POST)
 	public @ResponseBody Object addComment(String msg, Integer mid, Integer uid, String token, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(uid)
 				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				UserDTO user = userService.find(uid);
-				Comment comment = new Comment();
-				comment.setMomentId(mid);
-				comment.setUserId(uid);
-				comment.setMsg(msg);
-				comment.setFaceUrl(user.getFace_url());
-				comment.setNickname(user.getNickname());
-				comment.setCreatedAt(new Date());
-				commentService.save(comment);
-				CommentDTO dto = CommentDtoAssembler.toDto(comment);
-				result.put("data", dto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			UserDTO user = userService.find(uid);
+			Comment comment = new Comment();
+			comment.setMomentId(mid);
+			comment.setUserId(uid);
+			comment.setMsg(msg);
+			comment.setFaceUrl(user.getFace_url());
+			comment.setNickname(user.getNickname());
+			comment.setCreatedAt(new Date());
+			commentService.save(comment);
+			CommentDTO dto = CommentDtoAssembler.toDto(comment);
+			responseDTO.setData(dto);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/remove_comment", method = RequestMethod.POST)
 	public @ResponseBody Object removeComment(String token, Integer uid, Integer comment_id, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(comment_id)
 				|| CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				commentService.delete(comment_id);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			commentService.delete(comment_id);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/add_thumbsup", method = RequestMethod.POST)
 	public @ResponseBody Object addThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				UserDTO user = userService.find(uid);
-				ThumbsUp thumbsUp = new ThumbsUp();
-				thumbsUp.setMomentId(mid);
-				thumbsUp.setUserId(uid);
-				thumbsUp.setNickname(user.getNickname());
-				thumbsUp.setCreatedAt(new Date());
-				thumbsUpService.save(thumbsUp);
-				ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
-				result.put("data", dto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			UserDTO user = userService.find(uid);
+			ThumbsUp thumbsUp = new ThumbsUp();
+			thumbsUp.setMomentId(mid);
+			thumbsUp.setUserId(uid);
+			thumbsUp.setNickname(user.getNickname());
+			thumbsUp.setCreatedAt(new Date());
+			thumbsUpService.save(thumbsUp);
+			ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+			responseDTO.setData(dto);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/remove_thumbsup", method = RequestMethod.POST)
 	public @ResponseBody Object removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(thumbs_up_id)
 				|| CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				thumbsUpService.delete(thumbs_up_id);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			thumbsUpService.delete(thumbs_up_id);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 
 	@RequestMapping(value = "/remove_moment", method = RequestMethod.POST)
 	public @ResponseBody Object removeMoment(String token, Integer uid, Integer mid, Long timestamp) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				momentService.delete(mid);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
-			}
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
 		}
-		return result;
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		} else {
+			momentService.delete(mid);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		}
+		return responseDTO;
 	}
 }
