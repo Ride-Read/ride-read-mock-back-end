@@ -4,19 +4,14 @@ import java.util.Date;
 
 public class CommentDTO {
 	private Integer comment_id;
-
 	private String nickname;
-
 	private Integer uid;
-
 	private Integer mid;
-
 	private String face_url;
-
+	private Integer reply_uid;
+	private String reply_nickname;
 	private Date created_at;
-
 	private String msg;
-
 	private Date updated_at;
 
 	public Integer getComment_id() {
@@ -81,6 +76,22 @@ public class CommentDTO {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+
+	public Integer getReply_uid() {
+		return reply_uid;
+	}
+
+	public void setReply_uid(Integer reply_uid) {
+		this.reply_uid = reply_uid;
+	}
+
+	public String getReply_nickname() {
+		return reply_nickname;
+	}
+
+	public void setReply_nickname(String reply_nickname) {
+		this.reply_nickname = reply_nickname;
 	}
 
 }

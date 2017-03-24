@@ -20,4 +20,8 @@ public interface MomentMapper {
 
 	List<MomentDTO> findByPage(PageDTO pageDTO);
 
+	List<MomentDTO> findFollowingsMoment(PageDTO pageDTO);
+
+	List<MomentDTO> findNearbyMoment(PageDTO pageDTO);
+
 }

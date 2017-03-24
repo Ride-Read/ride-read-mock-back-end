@@ -7,14 +7,17 @@
 		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
 		<result column="moment_id" jdbcType="INTEGER" property="mid" />
 		<result column="face_url" jdbcType="VARCHAR" property="face_url" />
+		<result column="reply_uid" property="reply_uid" jdbcType="INTEGER" />
 		<result column="created_at" jdbcType="TIMESTAMP" property="created_at" />
 		<result column="updated_at" jdbcType="TIMESTAMP" property="updated_at" />
 
 		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, nickname, moment_id, face_url, created_at,
-		updated_at, msg
+		id, user_id, nickname, moment_id, face_url, reply_uid,
+		reply_nickname,
+		created_at,
+		updated_at
 	</sql>
 
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -34,13 +37,19 @@
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_comment (id,
 		user_id, nickname,
-		moment_id, face_url, created_at,
-		updated_at, msg)
-		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+		moment_id, face_url, reply_uid,
+		reply_nickname,
+		created_at, updated_at,
+		msg)
+		values (#{id,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
 		#{nickname,jdbcType=VARCHAR},
-		#{momentId,jdbcType=INTEGER},
-		#{faceUrl,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
-		#{updatedAt,jdbcType=TIMESTAMP}, #{msg,jdbcType=LONGVARCHAR})
+		#{momentId,jdbcType=INTEGER}, #{faceUrl,jdbcType=VARCHAR},
+		#{replyUid,jdbcType=INTEGER},
+		#{replyNickname,jdbcType=VARCHAR},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{msg,jdbcType=LONGVARCHAR})
 	</insert>
 
 </mapper>

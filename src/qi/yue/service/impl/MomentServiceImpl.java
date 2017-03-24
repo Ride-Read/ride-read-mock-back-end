@@ -42,4 +42,14 @@ public class MomentServiceImpl implements MomentService {
 		return momentMapper.findByPage(pageDTO);
 	}
 
+	@Override
+	public List<MomentDTO> findFollowingsMoment(PageDTO pageDTO) {
+		return momentMapper.findFollowingsMoment(pageDTO);
+	}
+
+	@Override
+	public List<MomentDTO> findNearbyMoment(PageDTO pageDTO) {
+		return momentMapper.findNearbyMoment(pageDTO);
+	}
+
 }

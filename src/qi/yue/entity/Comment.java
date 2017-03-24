@@ -13,6 +13,10 @@ public class Comment {
 
 	private String faceUrl;
 
+	private Integer replyUid;
+
+	private String replyNickname;
+
 	private Date createdAt;
 
 	private Date updatedAt;
@@ -57,6 +61,22 @@ public class Comment {
 
 	public void setFaceUrl(String faceUrl) {
 		this.faceUrl = faceUrl == null ? null : faceUrl.trim();
+	}
+
+	public Integer getReplyUid() {
+		return replyUid;
+	}
+
+	public void setReplyUid(Integer replyUid) {
+		this.replyUid = replyUid;
+	}
+
+	public String getReplyNickname() {
+		return replyNickname;
+	}
+
+	public void setReplyNickname(String replyNickname) {
+		this.replyNickname = replyNickname;
 	}
 
 	public Date getCreatedAt() {

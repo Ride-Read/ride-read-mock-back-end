@@ -15,4 +15,8 @@ public interface MomentService {
 	List<MomentDTO> findByPage(PageDTO pageDTO);
 
 	int delete(int id);
+
+	List<MomentDTO> findFollowingsMoment(PageDTO pageDTO);
+
+	List<MomentDTO> findNearbyMoment(PageDTO pageDTO);
 }
