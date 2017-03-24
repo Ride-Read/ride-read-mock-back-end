@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-03-23 17:58:17
+Date: 2017-03-24 18:12:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,16 +20,18 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_comment`;
 CREATE TABLE `t_comment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '����id',
-  `user_id` int(11) NOT NULL COMMENT '�����˵�id',
-  `nickname` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '�������ǳ�',
-  `moment_id` int(11) NOT NULL COMMENT '��Ȧid',
-  `msg` text COLLATE utf8_bin NOT NULL COMMENT '��������',
-  `face_url` varchar(125) COLLATE utf8_bin NOT NULL COMMENT '������ͷ��',
-  `created_at` datetime NOT NULL COMMENT '���۴���ʱ��',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '评论id',
+  `user_id` int(11) NOT NULL COMMENT '评论人的id',
+  `nickname` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '评论者昵称',
+  `moment_id` int(11) NOT NULL COMMENT '阅圈id',
+  `msg` text COLLATE utf8_bin NOT NULL COMMENT '评论内容',
+  `face_url` varchar(125) COLLATE utf8_bin NOT NULL COMMENT '评论者头像',
+  `reply_uid` int(11) DEFAULT NULL COMMENT '回复评论的用户id',
+  `reply_nickname` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '评论回复用户昵称',
+  `created_at` datetime NOT NULL COMMENT '评论创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='��������';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='评论数据';
 
 -- ----------------------------
 -- Table structure for t_follower
