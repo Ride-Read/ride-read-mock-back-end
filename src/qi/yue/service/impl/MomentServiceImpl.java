@@ -1,6 +1,7 @@
 package qi.yue.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -43,13 +44,13 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public List<MomentDTO> findFollowingsMoment(PageDTO pageDTO) {
-		return momentMapper.findFollowingsMoment(pageDTO);
+	public List<MomentDTO> findFollowingsMoment(Map<String, Object> map) {
+		return momentMapper.findFollowingsMoment(map);
 	}
 
 	@Override
-	public List<MomentDTO> findNearbyMoment(PageDTO pageDTO) {
-		return momentMapper.findNearbyMoment(pageDTO);
+	public List<MomentDTO> findNearbyMoment(Map<String, Object> map) {
+		return momentMapper.findNearbyMoment(map);
 	}
 
 }

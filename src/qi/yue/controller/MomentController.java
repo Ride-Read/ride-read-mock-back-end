@@ -1,5 +1,6 @@
 package qi.yue.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -123,10 +124,12 @@ public class MomentController {
 	}
 
 	@RequestMapping(value = "/show_moment", method = RequestMethod.POST)
-	public @ResponseBody Object showMoment(Integer uid, Integer type, Long timestamp, String token, Integer pages) {
+	public @ResponseBody Object showMoment(Integer uid, Integer type, Long timestamp, String token, Integer pages,
+			BigDecimal latitude, BigDecimal longitude) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNull(uid) || CommonUtil.isNull(type) || CommonUtil.isNullOrEmpty(timestamp)
-				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
+				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
+				|| CommonUtil.isNull(longitude)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
@@ -135,14 +138,19 @@ public class MomentController {
 		// if (!tokenTemp.equals(token)) {
 		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 		// } else {
-		PageDTO pageDTO = new PageDTO();
-		pageDTO.setId(uid);
-		pageDTO.setCurrentNumberFromPages(pages);
-		List<MomentDTO> momentDtos = momentService.findFollowingsMoment(pageDTO);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
+		map.put("size", MessageCommon.PAGE_SIZE);
+		map.put("latitude", latitude);
+		map.put("id", uid);
+		map.put("longitude", longitude);
+		List<MomentDTO> momentDtos;
+		// List<MomentDTO> momentDtos =
+		// momentService.findFollowingsMoment(pageDTO);
 		if (0 == type) {
-			momentDtos = momentService.findFollowingsMoment(pageDTO);
+			momentDtos = momentService.findFollowingsMoment(map);
 		} else {
-			momentDtos = momentService.findFollowingsMoment(pageDTO);
+			momentDtos = momentService.findNearbyMoment(map);
 		}
 		for (MomentDTO momentDTO : momentDtos) {
 			if (CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {

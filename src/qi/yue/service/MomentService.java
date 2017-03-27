@@ -1,6 +1,8 @@
 package qi.yue.service;
 
 import java.util.List;
+import java.util.Map;
+
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.PageDTO;
 import qi.yue.entity.Moment;
@@ -16,7 +18,7 @@ public interface MomentService {
 
 	int delete(int id);
 
-	List<MomentDTO> findFollowingsMoment(PageDTO pageDTO);
+	List<MomentDTO> findFollowingsMoment(Map<String, Object> map);
 
-	List<MomentDTO> findNearbyMoment(PageDTO pageDTO);
+	List<MomentDTO> findNearbyMoment(Map<String, Object> map);
 }

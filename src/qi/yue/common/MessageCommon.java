@@ -19,4 +19,6 @@ public class MessageCommon {
 	public static final String QI_NIU_SECRE_KEY = "UfLYZXK0ihHkaqTA2QQdzbn1FkDHH0G8oVCaRXMf";
 	public static final String QI_NIU_BUCKET = "rideread";
 
+	public static final int PAGE_SIZE = 20;
+
 }

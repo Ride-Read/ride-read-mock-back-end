@@ -1,6 +1,7 @@
 package qi.yue.dao.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.PageDTO;
@@ -20,8 +21,8 @@ public interface MomentMapper {
 
 	List<MomentDTO> findByPage(PageDTO pageDTO);
 
-	List<MomentDTO> findFollowingsMoment(PageDTO pageDTO);
+	List<MomentDTO> findFollowingsMoment(Map<String, Object> map);
 
-	List<MomentDTO> findNearbyMoment(PageDTO pageDTO);
+	List<MomentDTO> findNearbyMoment(Map<String, Object> map);
 
 }

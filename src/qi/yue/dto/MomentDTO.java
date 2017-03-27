@@ -1,5 +1,6 @@
 package qi.yue.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,17 @@ public class MomentDTO {
 
 	private String[] pictures;
 
+	private UserDTO user;
+
 	private List<CommentDTO> comment;
 
 	private List<ThumbsUpDTO> thumbs_up;
+
+	private BigDecimal latitude;
+
+	private BigDecimal longitude;
+
+	private BigDecimal distance;
 
 	public Integer getMid() {
 		return mid;
@@ -133,4 +142,37 @@ public class MomentDTO {
 	public void setThumbs_up(List<ThumbsUpDTO> thumbs_up) {
 		this.thumbs_up = thumbs_up;
 	}
+
+	public UserDTO getUser() {
+		return user;
+	}
+
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
+
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
+
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
+	}
+
+	public BigDecimal getDistance() {
+		return distance;
+	}
+
+	public void setDistance(BigDecimal distance) {
+		this.distance = distance;
+	}
+
 }

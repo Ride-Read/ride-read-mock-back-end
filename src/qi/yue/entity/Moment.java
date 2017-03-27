@@ -1,5 +1,6 @@
 package qi.yue.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Moment {
@@ -18,6 +19,10 @@ public class Moment {
 	private String thumbs;
 
 	private String pictures;
+
+	private BigDecimal latitude;
+
+	private BigDecimal longitude;
 
 	private Date createdAt;
 
@@ -101,6 +106,22 @@ public class Moment {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
+
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
 	}
 
 }
