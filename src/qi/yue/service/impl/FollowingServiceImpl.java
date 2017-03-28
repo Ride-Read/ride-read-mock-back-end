@@ -56,7 +56,7 @@ public class FollowingServiceImpl implements FollowingService {
 
 	@Override
 	public int deleteFollowingAndFollower(int fid, int tid) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fid", fid);
 		map.put("tid", tid);
 		int countFollowing = followingMapper.deleteByFidAndTid(map);

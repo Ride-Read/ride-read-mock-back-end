@@ -48,68 +48,6 @@
 		</association>
 	</resultMap>
 
-	<select id="findFollowingsMoment" parameterType="map" resultMap="BaseResultMap">
-		select
-		<include refid="Moment_Column" />
-		,
-		<include refid="User_Column" />
-		,
-		<include refid="Comment_Column" />
-		,
-		<include refid="Thumbs_Up_Column" />
-		,
-		ROUND(
-		6378.138 * 2 * ASIN(
-		SQRT(
-		POW(
-		SIN(
-		(
-		#{latitude,jdbcType=DECIMAL}
-		* PI() / 180 - moment.latitude * PI() / 180
-		) / 2
-		),
-		2
-		) +
-		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
-		PI() / 180) * POW(
-		SIN(
-		(
-		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
-		moment.longitude * PI() / 180
-		) / 2
-		),
-		2
-		)
-		)
-		) * 1000
-		) AS
-		distance
-
-		from
-		t_moment
-		moment left join t_user user
-		on
-		user.id=moment.user_id
-		left join
-		t_comment comment on
-		comment.moment_id=moment.id
-		left join
-		t_thumbs_up
-		thumbs_up on
-		thumbs_up.moment_id=moment.id
-		where
-		moment.user_id
-		in (select
-		tid from
-		t_following where
-		t_following.fid=#{id,jdbcType=INTEGER})
-		order
-		by
-		moment.created_at
-		limit
-		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
-	</select>
-
 	<sql id="Base_Column_List">
 		id, user_id, type, cover, video, latitude, longitude, msg,
 		thumbs, pictures,
@@ -194,44 +132,127 @@
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
-	<!-- <select id="findFollowingsMoment" parameterType="qi.yue.dto.PageDTO" -->
-	<!-- resultMap="BaseResultMap"> -->
-	<!-- select -->
-	<!-- <include refid="Moment_Column" /> -->
-	<!-- , -->
-	<!-- <include refid="Comment_Column" /> -->
-	<!-- , -->
-	<!-- <include refid="Thumbs_Up_Column" /> -->
-	<!-- from t_moment moment left join t_comment comment on -->
-	<!-- comment.moment_id=moment.id -->
-	<!-- left join t_thumbs_up thumbs_up on -->
-	<!-- thumbs_up.moment_id=moment.id -->
-	<!-- where -->
-	<!-- moment.user_id -->
-	<!-- in (select fid from -->
-	<!-- t_following where t_following.fid=#{id,jdbcType=INTEGER}) -->
-	<!-- limit -->
-	<!-- #{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER} -->
-	<!-- </select> -->
+	<select id="findFollowingsMoment" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		<include refid="User_Column" />
+		,
+		<include refid="Comment_Column" />
+		,
+		<include refid="Thumbs_Up_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		* PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
+
+		from
+		t_moment
+		moment left join t_user user
+		on
+		user.id=moment.user_id
+		left join
+		t_comment comment on
+		comment.moment_id=moment.id
+		left join
+		t_thumbs_up
+		thumbs_up on
+		thumbs_up.moment_id=moment.id
+		where
+		moment.user_id
+		in (select
+		tid from
+		t_following where
+		t_following.fid=#{fid,jdbcType=INTEGER})
+		order
+		by
+		moment.created_at
+		limit
+		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+	</select>
 
 	<select id="findNearbyMoment" parameterType="map" resultMap="BaseResultMap">
 		select
 		<include refid="Moment_Column" />
 		,
+		<include refid="User_Column" />
+		,
 		<include refid="Comment_Column" />
 		,
 		<include refid="Thumbs_Up_Column" />
-		from t_moment moment left join t_comment comment on
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		* PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
+
+		from
+		t_moment
+		moment left join t_user user
+		on
+		user.id=moment.user_id
+		left join
+		t_comment comment on
 		comment.moment_id=moment.id
-		left join t_thumbs_up thumbs_up on
+		left join
+		t_thumbs_up
+		thumbs_up on
 		thumbs_up.moment_id=moment.id
-		order by ACOS(SIN((#lat# * 3.1415) / 180
-		) * SIN((mu_latitude * 3.1415) / 180 )
-		+COS((#lat# * 3.1415) / 180 ) *
-		COS((mu_latitude * 3.1415) / 180 )
-		*COS((#lon# * 3.1415) / 180 -
-		(mu_longitud * 3.1415) / 180 ) )
-		* 6380 asc limit
+		<!-- where -->
+		<!-- moment.user_id -->
+		<!-- in (select -->
+		<!-- tid from -->
+		<!-- t_following where -->
+		<!-- t_following.fid=#{fid,jdbcType=INTEGER}) -->
+		order
+		by
+		distance
+		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
@@ -244,20 +265,18 @@
 
 	<insert id="insert" parameterType="qi.yue.entity.Moment"
 		useGeneratedKeys="true" keyProperty="id">
-		insert into t_moment (id,
-		user_id,
-		type,
-		cover, video, created_at,
-		updated_at, msg, thumbs,
-		pictures)
-		values
-		(#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+		insert into t_moment (
+		<include refid="Base_Column_List" />
+		)
+		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
 		#{type,jdbcType=INTEGER},
 		#{cover,jdbcType=VARCHAR},
-		#{video,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
-		#{updatedAt,jdbcType=TIMESTAMP}, #{msg,jdbcType=LONGVARCHAR},
-		#{thumbs,jdbcType=LONGVARCHAR},
-		#{pictures,jdbcType=LONGVARCHAR})
+		#{video,jdbcType=VARCHAR}, #{latitude,jdbcType=DECIMAL},
+		#{longitude,jdbcType=DECIMAL}, #{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{msg,jdbcType=LONGVARCHAR},
+		#{thumbs,jdbcType=LONGVARCHAR}, #{pictures,jdbcType=LONGVARCHAR}
+		)
 	</insert>
 
 </mapper>

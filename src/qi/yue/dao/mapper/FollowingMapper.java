@@ -11,9 +11,11 @@ public interface FollowingMapper {
 
 	List<FollowingDTO> findByFid(int fid);
 
+	FollowingDTO findByFidAndTid(Map<String, Object> map);
+
 	int insert(Following following);
 
 	int deleteByFid(int fid);
 
-	int deleteByFidAndTid(Map<String, Integer> map);
+	int deleteByFidAndTid(Map<String, Object> map);
 }

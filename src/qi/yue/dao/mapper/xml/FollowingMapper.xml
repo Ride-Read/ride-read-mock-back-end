@@ -30,6 +30,15 @@
 		where tid = #{tid,jdbcType=INTEGER}
 	</select>
 
+	<select id="findByFidAndTid" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_following
+		where fid = #{fid,jdbcType=INTEGER} and tid =
+		#{tid,jdbcType=INTEGER}
+	</select>
+
 	<select id="findByFid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
