@@ -20,7 +20,8 @@ import qi.yue.utils.CommonUtil;
 @RequestMapping("/util")
 public class UtilController {
 	@RequestMapping(value = "/qiniu_token", method = RequestMethod.POST)
-	public @ResponseBody Object savePictures(String token, Long timestamp, String filename, Integer uid) {
+
+	public @ResponseBody Object qiniuToken(String token, Long timestamp, String filename, Integer uid) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(filename) || CommonUtil.isNull(timestamp)
 				|| CommonUtil.isNull(uid)) {

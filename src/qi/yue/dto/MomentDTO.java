@@ -39,6 +39,8 @@ public class MomentDTO {
 
 	private BigDecimal distance;
 
+	private String distanceString;
+
 	public Integer getMid() {
 		return mid;
 	}
@@ -175,4 +177,11 @@ public class MomentDTO {
 		this.distance = distance;
 	}
 
+	public String getDistanceString() {
+		return distanceString;
+	}
+
+	public void setDistanceString(String distanceString) {
+		this.distanceString = distanceString;
+	}
 }

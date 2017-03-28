@@ -15,5 +15,5 @@ public interface FollowerMapper {
 
 	int deleteByFid(int fid);
 
-	int deleteByFidAndTid(Map<String, Integer> map);
+	int deleteByFidAndTid(Map<String, Object> map);
 }

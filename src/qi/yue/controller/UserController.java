@@ -55,14 +55,14 @@ public class UserController {
 	// }
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody Object login(String username, String password, BigDecimal latitude, BigDecimal longitude) {
+	public @ResponseBody Object login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude) {
 		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(password) || CommonUtil.isNull(latitude)
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password) || CommonUtil.isNull(latitude)
 				|| CommonUtil.isNull(longitude)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		UserDTO dto = userService.findByUsername(username);
+		UserDTO dto = userService.findByPhonenumber(phonenumber);
 		if (CommonUtil.isNull(dto)) {
 			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
 		} else {
@@ -75,7 +75,7 @@ public class UserController {
 				dto.setToken(token);
 				dto.setLatitude(latitude);
 				dto.setLongitude(longitude);
-				if (CommonUtil.isNullOrEmpty(dto.getTagString())) {
+				if (!CommonUtil.isNullOrEmpty(dto.getTagString())) {
 					dto.setTags(dto.getTagString().split(","));
 				}
 				User user = new User();
@@ -175,46 +175,53 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Object update(String career, String phonenumber, String location, String birthday,
 			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
-			String hometown, Long timestamp) {
+			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
 				|| CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday)
 				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)
 				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(nickname)
-				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNullOrEmpty(hometown)
-				|| CommonUtil.isNull(timestamp)) {
+				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNull(latitude)
+				|| CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNull(timestamp)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		User user = new User();
+		user.setId(uid);
+		user.setCareer(career);
+		user.setPhonenumber(phonenumber);
+		user.setLocation(location);
+		try {
+			user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
+		} catch (ParseException e) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			User user = new User();
-			user.setId(uid);
-			user.setCareer(career);
-			user.setPhonenumber(phonenumber);
-			user.setLocation(location);
-			try {
-				user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
-			} catch (ParseException e) {
-				responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-				return responseDTO;
-			}
-			user.setFaceUrl(face_url);
-			user.setId(uid);
-			// user.setToken(token);
-			user.setSignature(signature);
-			user.setNickname(nickname);
-			user.setSchool(school);
-			user.setSex(sex);
-			user.setHometown(hometown);
-			user.setUpdatedAt(new Date());
-			userService.update(user);
-			UserDTO parameterUser = UserDtoAssembler.toDto(user);
-			responseDTO.setData(parameterUser);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+			return responseDTO;
 		}
+		user.setFaceUrl(face_url);
+		user.setId(uid);
+		user.setToken(token);
+		user.setSignature(signature);
+		user.setNickname(nickname);
+		user.setSchool(school);
+		user.setLatitude(latitude);
+		user.setLongitude(longitude);
+		user.setSex(sex);
+		user.setHometown(hometown);
+		user.setUpdatedAt(new Date());
+		userService.update(user);
+		// UserDTO parameterUser = UserDtoAssembler.toDto(user);
+		UserDTO dto = userService.findByPhonenumber(phonenumber);
+		if (!CommonUtil.isNullOrEmpty(dto.getTagString())) {
+			dto.setTags(dto.getTagString().split(","));
+		}
+		responseDTO.setData(dto);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -293,6 +300,25 @@ public class UserController {
 				responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
 			}
 		}
+		return responseDTO;
+	}
+
+	@RequestMapping(value = "/show_self", method = RequestMethod.POST)
+	public @ResponseBody Object showSelf(Integer uid, String token, Long timestamp) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+			return responseDTO;
+		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDTO user = userService.find(uid);
+		responseDTO.setData(user);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 

@@ -142,14 +142,13 @@ public class MomentController {
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
 		map.put("latitude", latitude);
-		map.put("id", uid);
+		map.put("fid", uid);
+		// map.put(key, value)
 		map.put("longitude", longitude);
-		List<MomentDTO> momentDtos;
-		// List<MomentDTO> momentDtos =
-		// momentService.findFollowingsMoment(pageDTO);
+		List<MomentDTO> momentDtos = null;
 		if (0 == type) {
 			momentDtos = momentService.findFollowingsMoment(map);
-		} else {
+		} else if (1 == type) {
 			momentDtos = momentService.findNearbyMoment(map);
 		}
 		for (MomentDTO momentDTO : momentDtos) {
@@ -157,9 +156,7 @@ public class MomentController {
 				momentDTO.setPictures(momentDTO.getPictureString().split(","));
 			}
 		}
-		// UserDTO userDto = userService.find(user_id);
 		responseDTO.setData(momentDtos);
-		// result.put("user", userDto);
 		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
 		// }
 		return responseDTO;
