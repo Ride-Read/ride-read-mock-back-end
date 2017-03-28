@@ -48,6 +48,8 @@ public class UserDTO {
 
 	private BigDecimal latitude;
 
+	private Integer is_followed;// 0-互相关注，1-单项关注，-1-无效
+
 	public Integer getUid() {
 		return uid;
 	}
@@ -223,4 +225,13 @@ public class UserDTO {
 	public void setLatitude(BigDecimal latitude) {
 		this.latitude = latitude;
 	}
+
+	public Integer getIs_followed() {
+		return is_followed;
+	}
+
+	public void setIs_followed(Integer is_followed) {
+		this.is_followed = is_followed;
+	}
+
 }

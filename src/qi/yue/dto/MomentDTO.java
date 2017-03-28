@@ -41,8 +41,6 @@ public class MomentDTO {
 
 	private String distanceString;
 
-	private Integer is_followed;// 0-互相关注，1-单项关注，-1-无效
-
 	public Integer getMid() {
 		return mid;
 	}
@@ -186,13 +184,4 @@ public class MomentDTO {
 	public void setDistanceString(String distanceString) {
 		this.distanceString = distanceString;
 	}
-
-	public Integer getIs_followed() {
-		return is_followed;
-	}
-
-	public void setIs_followed(Integer is_followed) {
-		this.is_followed = is_followed;
-	}
-
 }

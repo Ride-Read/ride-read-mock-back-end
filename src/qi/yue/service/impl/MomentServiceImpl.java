@@ -60,9 +60,9 @@ public class MomentServiceImpl implements MomentService {
 			mapTemp1.put("tid", momentDTO.getUid());
 			FollowingDTO followingDTO = followingMapper.findByFidAndTid(map);
 			if (CommonUtil.isNull(followingDTO)) {
-				momentDTO.setIs_followed(1);
+				momentDTO.getUser().setIs_followed(1);
 			} else {
-				momentDTO.setIs_followed(0);
+				momentDTO.getUser().setIs_followed(0);
 			}
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 					.doubleValue();
@@ -85,18 +85,16 @@ public class MomentServiceImpl implements MomentService {
 			mapTemp2.put("tid", mapTemp2.get("fid"));
 			FollowingDTO followingDTO2 = followingMapper.findByFidAndTid(mapTemp2);
 			if (CommonUtil.isNull(followingDTO1) && CommonUtil.isNull(followingDTO2)) {
-				momentDTO.setIs_followed(-1);
+				momentDTO.getUser().setIs_followed(-1);
 			} else if (!CommonUtil.isNull(followingDTO1) && !CommonUtil.isNull(followingDTO2)) {
-				momentDTO.setIs_followed(1);
+				momentDTO.getUser().setIs_followed(1);
 			} else {
-				momentDTO.setIs_followed(0);
+				momentDTO.getUser().setIs_followed(0);
 			}
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 					.doubleValue();
 			momentDTO.setDistanceString(distance.toString() + "km");
 		}
-
 		return MomentDTOList;
 	}
-
 }
