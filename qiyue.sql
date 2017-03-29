@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-03-24 18:12:35
+Date: 2017-03-29 15:27:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,23 +31,23 @@ CREATE TABLE `t_comment` (
   `created_at` datetime NOT NULL COMMENT '评论创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='评论数据';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='评论数据';
 
 -- ----------------------------
 -- Table structure for t_follower
 -- ----------------------------
 DROP TABLE IF EXISTS `t_follower`;
 CREATE TABLE `t_follower` (
-  `id` int(11) NOT NULL COMMENT '��˿�б�id',
-  `fid` int(11) NOT NULL COMMENT '��˿�û�id',
-  `tid` int(11) NOT NULL COMMENT '�����û�id',
-  `face_url` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '�û�ͷ��url',
-  `signature` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '�û�ǩ��',
-  `nickname` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '�û��ǳ�',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '粉丝列表id',
+  `fid` int(11) NOT NULL COMMENT '粉丝用户id',
+  `tid` int(11) NOT NULL COMMENT '被粉用户id',
+  `face_url` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '用户头像url',
+  `signature` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '用户签名',
+  `nickname` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '用户昵称',
   `created_at` datetime NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='��˿�б�';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='粉丝列表';
 
 -- ----------------------------
 -- Table structure for t_following
@@ -64,7 +64,7 @@ CREATE TABLE `t_following` (
   `created_at` datetime NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='关注列表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='关注列表';
 
 -- ----------------------------
 -- Table structure for t_moment
@@ -84,7 +84,7 @@ CREATE TABLE `t_moment` (
   `created_at` datetime NOT NULL COMMENT '阅圈创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '阅圈修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='阅圈数据列表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='阅圈数据列表';
 
 -- ----------------------------
 -- Table structure for t_read_circle
@@ -108,14 +108,16 @@ CREATE TABLE `t_read_circle` (
 -- ----------------------------
 DROP TABLE IF EXISTS `t_thumbs_up`;
 CREATE TABLE `t_thumbs_up` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '����id',
-  `user_id` int(11) NOT NULL COMMENT '������id',
-  `nickname` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '�������ǳ�',
-  `moment_id` int(11) NOT NULL COMMENT '���޵���Ȧid',
-  `created_at` datetime NOT NULL COMMENT '���޴���ʱ��',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '�����޸�ʱ��',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '点赞id',
+  `user_id` int(11) NOT NULL COMMENT '点赞者id',
+  `nickname` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '点赞者昵称',
+  `moment_id` int(11) NOT NULL COMMENT '点赞的阅圈id',
+  `face_url` varchar(125) COLLATE utf8_bin DEFAULT NULL COMMENT '用户头像url',
+  `signature` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '用户签名',
+  `created_at` datetime NOT NULL COMMENT '点赞创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '点赞修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='�������ݱ�';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='点赞数据表';
 
 -- ----------------------------
 -- Table structure for t_user
@@ -144,4 +146,4 @@ CREATE TABLE `t_user` (
   `created_at` datetime NOT NULL COMMENT '用户注册时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '用户最后一次登录时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基本数据';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基本数据';
