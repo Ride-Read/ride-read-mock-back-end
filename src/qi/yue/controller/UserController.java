@@ -232,14 +232,15 @@ public class UserController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			List<FollowerDTO> dtoList = followerService.findByTid(uid);
-			responseDTO.setData(dtoList);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		List<FollowerDTO> dtoList = followerService.findByTid(uid);
+		responseDTO.setData(dtoList);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -250,14 +251,15 @@ public class UserController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			List<FollowingDTO> dtoList = followingService.findByFid(uid);
-			responseDTO.setData(dtoList);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		List<FollowingDTO> dtoList = followingService.findByFid(uid);
+		responseDTO.setData(dtoList);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -269,37 +271,38 @@ public class UserController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDTO userFollowed = userService.find(user_id);
+		UserDTO userFollowing = userService.find(uid);
+		if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 		} else {
-			UserDTO userFollowed = userService.find(user_id);
-			UserDTO userFollowing = userService.find(uid);
-			if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
-				responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			} else {
-				Following following = new Following();
-				following.setFid(uid);
-				following.setTid(user_id);
-				following.setFaceUrl(userFollowed.getFace_url());
-				following.setSignature(userFollowed.getSignature());
-				following.setNickname(userFollowed.getNickname());
-				following.setCreatedAt(new Date());
-				following.setUpdatedAt(new Date());
+			Following following = new Following();
+			following.setFid(uid);
+			following.setTid(user_id);
+			following.setFaceUrl(userFollowed.getFace_url());
+			following.setSignature(userFollowed.getSignature());
+			following.setNickname(userFollowed.getNickname());
+			following.setCreatedAt(new Date());
+			following.setUpdatedAt(new Date());
 
-				Follower follower = new Follower();
-				follower.setFid(uid);
-				follower.setTid(user_id);
-				follower.setFaceUrl(userFollowing.getFace_url());
-				follower.setSignature(userFollowing.getSignature());
-				follower.setNickname(userFollowing.getNickname());
-				follower.setCreatedAt(new Date());
-				follower.setUpdatedAt(new Date());
+			Follower follower = new Follower();
+			follower.setFid(uid);
+			follower.setTid(user_id);
+			follower.setFaceUrl(userFollowing.getFace_url());
+			follower.setSignature(userFollowing.getSignature());
+			follower.setNickname(userFollowing.getNickname());
+			follower.setCreatedAt(new Date());
+			follower.setUpdatedAt(new Date());
 
-				followingService.saveFollowingAndFollower(following, follower);
-				responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-			}
+			followingService.saveFollowingAndFollower(following, follower);
+			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
 		}
+		// }
 		return responseDTO;
 	}
 
@@ -330,13 +333,14 @@ public class UserController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			followingService.deleteFollowingAndFollower(uid, user_id);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		followingService.deleteFollowingAndFollower(uid, user_id);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 }

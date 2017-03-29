@@ -14,7 +14,9 @@ public interface UserMapper {
 
 	UserDTO findByPhonenumber(String phonenumber);
 
-	UserDTO find(int id);
+	UserDTO findThumbsUpUserByMid(Integer mid);
+
+	UserDTO find(Integer id);
 
 	int insert(User user);
 

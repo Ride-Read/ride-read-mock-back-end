@@ -52,9 +52,11 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 
-	<insert id="insert" parameterType="qi.yue.entity.Following">
+	<insert id="insert" parameterType="qi.yue.entity.Following"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into t_following (id,
-		fid, tid,
+		fid,
+		tid,
 		face_url, signature, nickname,
 		created_at, updated_at)
 		values

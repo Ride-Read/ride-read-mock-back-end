@@ -41,23 +41,23 @@
 	<resultMap id="UserResultMap" type="qi.yue.dto.MomentDTO"
 		extends="BaseResultMap">
 		<association property="user" javaType="qi.yue.dto.UserDTO">
-			<id column="id" property="uid" jdbcType="INTEGER" />
-			<result column="nickname" property="nickname" jdbcType="VARCHAR" />
-			<result column="sex" property="sex" jdbcType="INTEGER" />
-			<result column="face_url" property="face_url" jdbcType="VARCHAR" />
+			<id column="u_id" property="uid" jdbcType="INTEGER" />
+			<result column="u_nickname" property="nickname" jdbcType="VARCHAR" />
+			<result column="u_sex" property="sex" jdbcType="INTEGER" />
+			<result column="u_face_url" property="face_url" jdbcType="VARCHAR" />
 		</association>
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, user_id, type, cover, video, latitude, longitude, msg,
-		thumbs, pictures,
+		id, user_id, type, cover, video, latitude, longitude,
 		created_at,
-		updated_at
+		updated_at, msg, thumbs, pictures
 	</sql>
 
 	<sql id="User_Column">
-		user.id, user.sex,
-		user.face_url, user.nickname
+		user.id as u_id, user.sex as u_sex,
+		user.face_url as
+		u_face_url, user.nickname as u_nickname
 	</sql>
 
 	<sql id="Moment_Column">
@@ -132,7 +132,7 @@
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
-	<select id="findFollowingsMoment" parameterType="map" resultMap="BaseResultMap">
+	<select id="findFollowingsMoment" parameterType="map" resultMap="UserResultMap">
 		select
 		<include refid="Moment_Column" />
 		,
@@ -194,7 +194,7 @@
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
-	<select id="findNearbyMoment" parameterType="map" resultMap="BaseResultMap">
+	<select id="findNearbyMoment" parameterType="map" resultMap="UserResultMap">
 		select
 		<include refid="Moment_Column" />
 		,

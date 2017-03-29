@@ -82,7 +82,7 @@ public class MomentServiceImpl implements MomentService {
 
 			Map<String, Object> mapTemp2 = new HashMap<String, Object>();
 			mapTemp2.put("fid", momentDTO.getUid());
-			mapTemp2.put("tid", mapTemp2.get("fid"));
+			mapTemp2.put("tid", map.get("fid"));
 			FollowingDTO followingDTO2 = followingMapper.findByFidAndTid(mapTemp2);
 			if (CommonUtil.isNull(followingDTO1) && CommonUtil.isNull(followingDTO2)) {
 				momentDTO.getUser().setIs_followed(-1);

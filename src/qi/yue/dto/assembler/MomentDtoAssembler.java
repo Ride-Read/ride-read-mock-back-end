@@ -18,9 +18,11 @@ public class MomentDtoAssembler {
 			dto.setMid(moment.getId());
 			dto.setMsg(moment.getMsg());
 			dto.setPictureString(moment.getPictures());
-			if (CommonUtil.isNullOrEmpty(moment.getPictures())) {
+			if (!CommonUtil.isNullOrEmpty(moment.getPictures())) {
 				dto.setPictures(moment.getPictures().split(","));
 			}
+			dto.setLatitude(moment.getLatitude());
+			dto.setLongitude(moment.getLongitude());
 			dto.setThumbs(moment.getThumbs());
 			dto.setThumbs_up(null);
 			dto.setType(moment.getType());
