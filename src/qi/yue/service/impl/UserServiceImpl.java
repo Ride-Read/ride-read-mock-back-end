@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO findByUidAndToken(int uid, String token) {
+	public UserDTO findByUidAndToken(Integer uid, String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", uid);
 		map.put("token", token);
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO find(int id) {
+	public UserDTO find(Integer id) {
 		return userMapper.find(id);
 	}
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public int updateTokenById(String token, int id) {
+	public int updateTokenById(String token, Integer id) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("token", token);
 		map.put("id", id);
@@ -87,6 +87,11 @@ public class UserServiceImpl implements UserService {
 		map.put("password", password);
 		map.put("phonenumber", phonenumber);
 		return userMapper.updatePasswordByPhonenumber(map);
+	}
+
+	@Override
+	public UserDTO findThumbsUpUserByMid(Integer mid) {
+		return userMapper.findThumbsUpUserByMid(mid);
 	}
 
 }

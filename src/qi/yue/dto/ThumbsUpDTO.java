@@ -11,6 +11,10 @@ public class ThumbsUpDTO {
 
 	private Integer mid;
 
+	private String face_Url;
+
+	private String signature;
+
 	private Date created_at;
 
 	private Date updated_at;
@@ -45,6 +49,22 @@ public class ThumbsUpDTO {
 
 	public void setMid(Integer mid) {
 		this.mid = mid;
+	}
+
+	public String getFace_Url() {
+		return face_Url;
+	}
+
+	public void setFace_Url(String face_Url) {
+		this.face_Url = face_Url;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 
 	public Date getCreated_at() {

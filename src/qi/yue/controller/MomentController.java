@@ -51,10 +51,11 @@ public class MomentController {
 
 	@RequestMapping(value = "/post_moment", method = RequestMethod.POST)
 	public @ResponseBody Object postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
-			String[] pictures_url, String cover, String token) {
+			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
-				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token)) {
+				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
+				|| CommonUtil.isNull(longitude)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
@@ -81,6 +82,8 @@ public class MomentController {
 			moment.setType(type);
 			moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
 			moment.setCover(cover);
+			moment.setLatitude(latitude);
+			moment.setLongitude(longitude);
 			moment.setCreatedAt(new Date());
 			moment.setUpdatedAt(new Date());
 			momentService.save(moment);
@@ -100,25 +103,26 @@ public class MomentController {
 			result.put("data", "");
 			result.put("status", MessageCommon.STATUS_FAIL);
 		} else {
-			String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-			if (!tokenTemp.equals(token)) {
-				result.put("data", "");
-				result.put("status", MessageCommon.STATUS_FAIL);
-			} else {
-				PageDTO pageDTO = new PageDTO();
-				pageDTO.setId(user_id);
-				pageDTO.setCurrentNumberFromPages(pages);
-				List<MomentDTO> momentDtos = momentService.findByPage(pageDTO);
-				for (MomentDTO momentDTO : momentDtos) {
-					if (CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
-						momentDTO.setPictures(momentDTO.getPictureString().split(","));
-					}
+			// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+			// MessageCommon.PUBLIC_KEY);
+			// if (!tokenTemp.equals(token)) {
+			// result.put("data", "");
+			// result.put("status", MessageCommon.STATUS_FAIL);
+			// } else {
+			PageDTO pageDTO = new PageDTO();
+			pageDTO.setId(user_id);
+			pageDTO.setCurrentNumberFromPages(pages);
+			List<MomentDTO> momentDtos = momentService.findByPage(pageDTO);
+			for (MomentDTO momentDTO : momentDtos) {
+				if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+					momentDTO.setPictures(momentDTO.getPictureString().split(","));
 				}
-				UserDTO userDto = userService.find(user_id);
-				result.put("data", momentDtos);
-				result.put("user", userDto);
-				result.put("status", MessageCommon.STATUS_SUCCESS);
 			}
+			UserDTO userDto = userService.find(user_id);
+			result.put("data", momentDtos);
+			result.put("user", userDto);
+			result.put("status", MessageCommon.STATUS_SUCCESS);
+			// }
 		}
 		return result;
 	}
@@ -171,24 +175,25 @@ public class MomentController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			UserDTO user = userService.find(uid);
-			Comment comment = new Comment();
-			comment.setMomentId(mid);
-			comment.setUserId(uid);
-			comment.setReplyUid(reply_uid);
-			comment.setMsg(msg);
-			comment.setFaceUrl(user.getFace_url());
-			comment.setNickname(user.getNickname());
-			comment.setCreatedAt(new Date());
-			commentService.save(comment);
-			CommentDTO dto = CommentDtoAssembler.toDto(comment);
-			responseDTO.setData(dto);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDTO user = userService.find(uid);
+		Comment comment = new Comment();
+		comment.setMomentId(mid);
+		comment.setUserId(uid);
+		comment.setReplyUid(reply_uid);
+		comment.setMsg(msg);
+		comment.setFaceUrl(user.getFace_url());
+		comment.setNickname(user.getNickname());
+		comment.setCreatedAt(new Date());
+		commentService.save(comment);
+		CommentDTO dto = CommentDtoAssembler.toDto(comment);
+		responseDTO.setData(dto);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -200,13 +205,14 @@ public class MomentController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			commentService.delete(comment_id);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		commentService.delete(comment_id);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -218,21 +224,22 @@ public class MomentController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			UserDTO user = userService.find(uid);
-			ThumbsUp thumbsUp = new ThumbsUp();
-			thumbsUp.setMomentId(mid);
-			thumbsUp.setUserId(uid);
-			thumbsUp.setNickname(user.getNickname());
-			thumbsUp.setCreatedAt(new Date());
-			thumbsUpService.save(thumbsUp);
-			ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
-			responseDTO.setData(dto);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDTO user = userService.find(uid);
+		ThumbsUp thumbsUp = new ThumbsUp();
+		thumbsUp.setMomentId(mid);
+		thumbsUp.setUserId(uid);
+		thumbsUp.setNickname(user.getNickname());
+		thumbsUp.setCreatedAt(new Date());
+		thumbsUpService.save(thumbsUp);
+		ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+		responseDTO.setData(dto);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -244,13 +251,14 @@ public class MomentController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			thumbsUpService.delete(thumbs_up_id);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		thumbsUpService.delete(thumbs_up_id);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 
@@ -262,13 +270,34 @@ public class MomentController {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		momentService.delete(mid);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
+		return responseDTO;
+	}
+
+	@RequestMapping(value = "/show_thumbsup", method = RequestMethod.POST)
+	public @ResponseBody Object showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages) {
+		ResponseDTO responseDTO = new ResponseDTO();
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
+				|| CommonUtil.isNull(pages) || CommonUtil.isNull(timestamp)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			momentService.delete(mid);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+			return responseDTO;
 		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
+		// } else {
+		UserDTO user = userService.findThumbsUpUserByMid(mid);
+		responseDTO.setData(user);
+		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
+		// }
 		return responseDTO;
 	}
 }

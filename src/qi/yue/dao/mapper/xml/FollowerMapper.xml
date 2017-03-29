@@ -29,9 +29,11 @@
 		where fid = #{fid,jdbcType=INTEGER}
 	</select>
 
-	<insert id="insert" parameterType="qi.yue.entity.Follower">
+	<insert id="insert" parameterType="qi.yue.entity.Follower"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into t_follower (id,
-		fid, tid,
+		fid,
+		tid,
 		face_url, signature, nickname,
 		created_at, updated_at)
 		values

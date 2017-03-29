@@ -6,12 +6,16 @@
 		<result column="user_id" property="uid" jdbcType="INTEGER" />
 		<result column="moment_id" property="mid" jdbcType="INTEGER" />
 		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="signature" property="signature" jdbcType="VARCHAR" />
+		<result column="face_url" property="face_Url" jdbcType="VARCHAR" />
 		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
 		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, user_id, nickname, moment_id, created_at, updated_at
+		id, user_id, nickname, moment_id, face_url, signature,
+		created_at,
+		updated_at
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -26,14 +30,14 @@
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_thumbs_up (id,
 		user_id, nickname,
-		moment_id, created_at, updated_at
-		)
-		values
-		(#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+		moment_id, face_url, signature,
+		created_at,
+		updated_at)
+		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
 		#{nickname,jdbcType=VARCHAR},
 		#{momentId,jdbcType=INTEGER},
-		#{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
-		)
+		#{faceUrl,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR},
+		#{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
 	</insert>
 
 	<delete id="delete" parameterType="java.lang.Integer">

@@ -33,6 +33,19 @@
 		latitude,
 		created_at, updated_at
 	</sql>
+
+	<sql id="User_Column">
+		user.id, user.username, user.password, user.sex,
+		user.school, user.phonenumber, user.follower,
+		user.following,
+		user.token, user.hometown,
+		user.face_url, user.signature, user.tags,
+		user.location,
+		user.birthday, user.career, user.nickname,
+		user.longitude,
+		user.latitude,
+		user.created_at, user.updated_at
+	</sql>
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
@@ -71,6 +84,17 @@
 		<include refid="Base_Column_List" />
 		from t_user
 		where phonenumber=#{phonenumber,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findThumbsUpUserByMid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where
+		t_user.id in
+		(select user_id from t_thumbs_up where
+		t_thumbs_up.moment_id=#{mid,jdbcType=INTEGER})
 	</select>
 
 	<insert id="insert" parameterType="qi.yue.entity.User"
