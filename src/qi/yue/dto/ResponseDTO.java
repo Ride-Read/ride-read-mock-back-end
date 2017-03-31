@@ -1,49 +1,33 @@
 package qi.yue.dto;
 
+/**
+ * @Title ResponseDTO
+ * @author WUSINAN
+ * @date 2017年3月30日
+ * Description: 接口返回参数DTO
+ */
 public class ResponseDTO {
-	private Integer status;
+	private String status;
 	private Object data;
-	private Long timestamp;
+	private String msg;
+	
 
-	public ResponseDTO() {
-		super();
-	}
-
-	public ResponseDTO(Integer status, Object data) {
-		super();
-		this.status = status;
-		this.data = data;
-	}
-
-	public ResponseDTO(Integer status, Object data, Long timestamp) {
-		super();
-		this.status = status;
-		this.data = data;
-		this.timestamp = timestamp;
-	}
-
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
-
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
-
 	public Object getData() {
 		return data;
 	}
-
 	public void setData(Object data) {
 		this.data = data;
 	}
-
-	public Long getTimestamp() {
-		return timestamp;
+	public String getMsg() {
+		return msg;
 	}
-
-	public void setTimestamp(Long timestamp) {
-		this.timestamp = timestamp;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
-
 }

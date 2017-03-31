@@ -16,7 +16,7 @@ public class FollowerServiceImpl implements FollowerService {
 	private FollowerMapper followerMapper;
 
 	@Override
-	public List<FollowerDTO> findByTid(int tid) {
+	public List<FollowerDTO> findByTid(int tid){
 		return followerMapper.findByTid(tid);
 	}
 

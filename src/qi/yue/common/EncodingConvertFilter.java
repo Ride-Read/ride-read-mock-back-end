@@ -1,8 +1,3 @@
-/*
- * 
- * 
- * 
- */
 package qi.yue.common;
 
 import java.io.IOException;

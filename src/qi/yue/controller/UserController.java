@@ -22,12 +22,15 @@ import qi.yue.dto.assembler.UserDtoAssembler;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
 import qi.yue.entity.User;
+import qi.yue.exception.BusinessException;
+import qi.yue.exception.ParameterException;
 import qi.yue.service.FollowerService;
 import qi.yue.service.FollowingService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.DateUtil;
 import qi.yue.utils.EncryptionUtil;
+import qi.yue.utils.ResponseUtil;
 
 @Controller
 @RequestMapping("/users")
@@ -40,189 +43,110 @@ public class UserController {
 	@Resource
 	private FollowerService followerService;
 
-	// @RequestMapping("/toAdd.action")
-	// public String toAdd(User user) {
-	// int i = 1;
-	// System.out.println(i);
-	// return "addUser";
-	// }
-	//
-	// @RequestMapping("/save.action")
-	// @Transactional
-	// public String save(User user) {
-	// // userService.add(user);
-	// return "addUser";
-	// }
-
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody Object login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude) {
+		try{
+			
+			UserDTO userDTO = userService.login(phonenumber, password, latitude, longitude);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		UserDTO dto = userService.findByPhonenumber(phonenumber);
-		if (CommonUtil.isNull(dto)) {
-			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
-		} else {
-			password = EncryptionUtil.GetSHACode(password);
-			if (!password.equals(dto.getPassword())) {
-				responseDTO.setStatus(MessageCommon.STATUS_PASSWORD_WRONG);
-			} else {
-				long timestamp = new Date().getTime();
-				String token = EncryptionUtil.GetMD5Code(dto.getUid() + timestamp + MessageCommon.PUBLIC_KEY);
-				dto.setToken(token);
-				dto.setLatitude(latitude);
-				dto.setLongitude(longitude);
-				if (!CommonUtil.isNullOrEmpty(dto.getTagString())) {
-					dto.setTags(dto.getTagString().split(","));
-				}
-				User user = new User();
-				user.setId(dto.getUid());
-				user.setToken(token);
-				user.setLatitude(latitude);
-				user.setLongitude(longitude);
-
-				userService.update(user);
-				responseDTO.setTimestamp(timestamp);
-				responseDTO.setData(dto);
-				responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-			}
-		}
-		return responseDTO;
+		
 	}
 
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
-	public @ResponseBody Object resetPassword(String phonenumber, String new_password, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(new_password)
-				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO resetPassword(String phonenumber, String new_password, Long timestamp) {
+		try{
+			
+			userService.resetPassword(phonenumber, new_password, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse();
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		UserDTO dto = userService.findByPhonenumber(phonenumber);
-		if (CommonUtil.isNull(dto)) {
-			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
-		} else {
-			String passwordSHA = EncryptionUtil.GetSHACode(new_password);
-			userService.updatePasswordByPhonenumber(passwordSHA, phonenumber);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
 	@Transactional
-	public @ResponseBody Object register(String phonenumber, String password, String face_url, String nickname,
+	public @ResponseBody ResponseDTO register(String phonenumber, String password, String face_url, String nickname,
 			String username) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
-				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNullOrEmpty(nickname)
-				|| CommonUtil.isNullOrEmpty(username)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try{
+			UserDTO userDTO = userService.register(phonenumber, password, face_url, nickname, username);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		UserDTO userName = userService.findByUsername(username);
-		UserDTO userPN = userService.findByPhonenumber(phonenumber);
-		if (!CommonUtil.isNull(userName) || !CommonUtil.isNull(userPN)) {
-			if (!CommonUtil.isNull(userName)) {
-				responseDTO.setStatus(MessageCommon.STATUS_USERNAME_EXIST);
-			} else {
-				responseDTO.setStatus(MessageCommon.STATUS_PHONENUMBER_EXIST);
-			}
-		} else {
-			String passwordSHA = EncryptionUtil.GetSHACode(password);
-			User user = new User();
-			user.setUsername(username);
-			user.setPhonenumber(phonenumber);
-			user.setPassword(passwordSHA);
-			user.setFaceUrl(face_url);
-			user.setNickname(nickname);
-
-			Date date = new Date();
-			user.setCreatedAt(date);
-			user.setUpdatedAt(date);
-			userService.save(user);
-
-			long timestamp = date.getTime();
-			String token = EncryptionUtil.GetMD5Code(user.getId() + timestamp + MessageCommon.PUBLIC_KEY);
-			user.setToken(token);
-			userService.updateTokenById(user.getToken(), user.getId());
-			responseDTO.setTimestamp(timestamp);
-			responseDTO.setData(UserDtoAssembler.toDto(user));
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
-	public @ResponseBody Object verify_code(String phonenumber, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO verify_code(String username, Long timestamp) {
+		//TODO not completed. It should be verified By qiyueID, not username; 
+		try{
+			
+			boolean result = userService.verify(username, timestamp);
+			if (result) {
+				return ResponseUtil.ConvertToSuccessResponse();
+			} else {
+				return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_USER_NOT_EXIST,
+						MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
+			}
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		UserDTO dto = userService.findByPhonenumber(phonenumber);
-		if (CommonUtil.isNull(dto)) {
-			responseDTO.setStatus(MessageCommon.STATUS_USER_NOT_EXIST);
-		} else {
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
-		return responseDTO;
 	}
-
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody Object update(String career, String phonenumber, String location, String birthday,
 			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
-				|| CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday)
-				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)
-				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(nickname)
-				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try{
+			
+			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, face_url, 
+					uid, token, signature, nickname, school, sex, latitude, longitude, hometown, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		User user = new User();
-		user.setId(uid);
-		user.setCareer(career);
-		user.setPhonenumber(phonenumber);
-		user.setLocation(location);
-		try {
-			user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
-		} catch (ParseException e) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
-		}
-		user.setFaceUrl(face_url);
-		user.setId(uid);
-		user.setToken(token);
-		user.setSignature(signature);
-		user.setNickname(nickname);
-		user.setSchool(school);
-		user.setLatitude(latitude);
-		user.setLongitude(longitude);
-		user.setSex(sex);
-		user.setHometown(hometown);
-		user.setUpdatedAt(new Date());
-		userService.update(user);
-		// UserDTO parameterUser = UserDtoAssembler.toDto(user);
-		UserDTO dto = userService.findByPhonenumber(phonenumber);
-		if (!CommonUtil.isNullOrEmpty(dto.getTagString())) {
-			dto.setTags(dto.getTagString().split(","));
-		}
-		responseDTO.setData(dto);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
