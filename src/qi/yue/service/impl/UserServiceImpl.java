@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 	 * @return UserDTO
 	 * @throws BusinessException
 	 */
-	private UserDTO findByUsername(String username) throws BusinessException{
+	public UserDTO findByUsername(String username) throws BusinessException{
 		try {
 			return userMapper.findByUsername(username);
 		} catch (BusinessException e) {
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 	 * @return UserDTO
 	 * @throws BusinessException
 	 */
-	private UserDTO findByPhonenumber(String phonenumber) throws BusinessException {
+	public UserDTO findByPhonenumber(String phonenumber) throws BusinessException {
 		try {
 			return userMapper.findByPhonenumber(phonenumber);
 		} catch (BusinessException e) {
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(rollbackFor = BusinessException.class)
-	private int save(User user) throws BusinessException{
+	public int save(User user) throws BusinessException{
 		try {
 			return userMapper.insert(user);
 		}catch(BusinessException e) {
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws BusinessException
 	 */
 	@Transactional(rollbackFor = BusinessException.class)
-	private int update(User user) throws ParameterException, BusinessException {
+	public int update(User user) throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(user)) {
 			throw new ParameterException();
 		}
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
 	 * @throws BusinessException
 	 */
 	@Transactional(rollbackFor = BusinessException.class)
-	private int updatePasswordByPhonenumber(String password, String phonenumber) throws BusinessException{
+	public int updatePasswordByPhonenumber(String password, String phonenumber) throws BusinessException{
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("password", password);

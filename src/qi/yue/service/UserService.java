@@ -14,53 +14,29 @@ public interface UserService {
 
 //	public UserDTO findByUsername(String username);
 
-	/**
-	 * 通过电话号码查询用户信息
-	 * @param String
-	 * @return UserDTO
-	 * @throws BusinessException
-	 */
+	
 //	public UserDTO findByPhonenumber(String phonenumber) throws BusinessException;
 
+	/**
+	 * 通过id查询用户信息
+	 * @param id
+	 * @return
+	 */
 	public UserDTO find(Integer id);
 
 	UserDTO findThumbsUpUserByMid(Integer mid);
 
 //	public int save(User user);
 
-	/**
-	 * 更新user表
-	 * @param user
-	 * @return int
-	 * @throws ParameterException
-	 * @throws BusinessException
-	 */
+	
 //	public int update(User user) throws ParameterException,BusinessException;
 
 	public int updateTokenById(String token, Integer uid);
 
 	public int updatePasswordByUsernamae(String password, String username);
 
-	/**
-	 * 根据电话号码更新用户密码
-	 * @param password
-	 * @param phonenumber
-	 * @return int
-	 * @throws ParameterException
-	 * @throws BusinessException
-	 */
 //	public int updatePasswordByPhonenumber(String password, String phonenumber) throws ParameterException, BusinessException;
-	
-	/**
-	 *  用户登录
-	 * @param phonenumber
-	 * @param password
-	 * @param latitude
-	 * @param longitude
-	 * @return UserDTO
-	 * @throws ParameterException
-	 * @throws BusinessException
-	 */
+
 	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException;
 	
 	/**

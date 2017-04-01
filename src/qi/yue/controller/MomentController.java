@@ -26,12 +26,15 @@ import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
 import qi.yue.entity.Comment;
 import qi.yue.entity.Moment;
 import qi.yue.entity.ThumbsUp;
+import qi.yue.exception.BusinessException;
+import qi.yue.exception.ParameterException;
 import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
 import qi.yue.service.ThumbsUpService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.EncryptionUtil;
+import qi.yue.utils.ResponseUtil;
 import qi.yue.utils.StringUtil;
 
 @Controller
@@ -50,151 +53,84 @@ public class MomentController {
 	private MomentService momentService;
 
 	@RequestMapping(value = "/post_moment", method = RequestMethod.POST)
-	public @ResponseBody Object postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
+	public @ResponseBody ResponseDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
-				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try{
+			
+			momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token, latitude, longitude);
+			return ResponseUtil.ConvertToSuccessResponse();
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		if (!(type >= 0 && type <= 2)) {
-			responseDTO.setStatus(MessageCommon.TYPE_ERROR);
-			return responseDTO;
-		}
-		if (1 == type && CommonUtil.isNullOrEmpty(pictures_url)) {
-			responseDTO.setStatus(MessageCommon.IMAGE_EMPTY);
-			return responseDTO;
-		}
-		if (2 == type && (CommonUtil.isNullOrEmpty(cover) || CommonUtil.isNullOrEmpty(video_url))) {
-			responseDTO.setStatus(MessageCommon.VIDEO_EMPTY);
-			return responseDTO;
-		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			Moment moment = new Moment();
-			moment.setMsg(msg);
-			moment.setUserId(uid);
-			moment.setVideo(video_url);
-			moment.setType(type);
-			moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
-			moment.setCover(cover);
-			moment.setLatitude(latitude);
-			moment.setLongitude(longitude);
-			moment.setCreatedAt(new Date());
-			moment.setUpdatedAt(new Date());
-			momentService.save(moment);
-			MomentDTO dto = MomentDtoAssembler.toDto(moment);
-			responseDTO.setData(dto);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/show_user", method = RequestMethod.POST)
-	public @ResponseBody Object showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
+	public @ResponseBody ResponseDTO showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
 			Integer pages) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp)
-				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
-			result.put("data", "");
-			result.put("status", MessageCommon.STATUS_FAIL);
-		} else {
-			// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-			// MessageCommon.PUBLIC_KEY);
-			// if (!tokenTemp.equals(token)) {
-			// result.put("data", "");
-			// result.put("status", MessageCommon.STATUS_FAIL);
-			// } else {
-			PageDTO pageDTO = new PageDTO();
-			pageDTO.setId(user_id);
-			pageDTO.setCurrentNumberFromPages(pages);
-			List<MomentDTO> momentDtos = momentService.findByPage(pageDTO);
-			for (MomentDTO momentDTO : momentDtos) {
-				if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
-					momentDTO.setPictures(momentDTO.getPictureString().split(","));
-				}
-			}
-			UserDTO userDto = userService.find(user_id);
-			result.put("data", momentDtos);
-			result.put("user", userDto);
-			result.put("status", MessageCommon.STATUS_SUCCESS);
-			// }
+		try{
+			
+			Map<String, Object> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		return result;
 	}
 
 	@RequestMapping(value = "/show_moment", method = RequestMethod.POST)
 	public @ResponseBody Object showMoment(Integer uid, Integer type, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNull(type) || CommonUtil.isNullOrEmpty(timestamp)
-				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try{
+			
+			List<MomentDTO> data = momentService.showMoment(uid, type, timestamp, token, pages, latitude, longitude);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
-		map.put("size", MessageCommon.PAGE_SIZE);
-		map.put("latitude", latitude);
-		map.put("fid", uid);
-		// map.put(key, value)
-		map.put("longitude", longitude);
-		List<MomentDTO> momentDtos = null;
-		if (0 == type) {
-			momentDtos = momentService.findFollowingsMoment(map);
-		} else if (1 == type) {
-			momentDtos = momentService.findNearbyMoment(map);
-		}
-		for (MomentDTO momentDTO : momentDtos) {
-			if (CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
-				momentDTO.setPictures(momentDTO.getPictureString().split(","));
-			}
-		}
-		responseDTO.setData(momentDtos);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
+
 	}
 
 	@RequestMapping(value = "/add_comment", method = RequestMethod.POST)
 	public @ResponseBody Object addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token,
 			Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(uid)
-				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try{
+			
+			CommentDTO data = momentService.addComment(msg, mid, uid, reply_uid, token, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDTO user = userService.find(uid);
-		Comment comment = new Comment();
-		comment.setMomentId(mid);
-		comment.setUserId(uid);
-		comment.setReplyUid(reply_uid);
-		comment.setMsg(msg);
-		comment.setFaceUrl(user.getFace_url());
-		comment.setNickname(user.getNickname());
-		comment.setCreatedAt(new Date());
-		commentService.save(comment);
-		CommentDTO dto = CommentDtoAssembler.toDto(comment);
-		responseDTO.setData(dto);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/remove_comment", method = RequestMethod.POST)

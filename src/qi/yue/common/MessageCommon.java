@@ -1,6 +1,7 @@
 package qi.yue.common;
 
 public class MessageCommon {
+
 	public static final String STATUS_SUCCESS = "0";
 	public static final String STATUS_FAIL = "1";
 	public static final String STATUS_USER_IS_EXIST = "1000";
@@ -11,10 +12,11 @@ public class MessageCommon {
 	public static final String STATUS_QUERY_FAIL = "1006";
 	public static final String STATUS_UPDATE_FAIL = "1007";
 	public static final String STATUS_SAVE_FAIL = "1008";
+	public static final String STATUS_DELETE_FAIL = "1009";
 
-	public static final String TYPE_ERROR = "1001";
-	public static final String IMAGE_EMPTY = "1002";
-	public static final String VIDEO_EMPTY = "1003";
+	public static final String TYPE_ERROR = "1011";
+	public static final String IMAGE_EMPTY = "1012";
+	public static final String VIDEO_EMPTY = "1013";
 
 	public static final String PUBLIC_KEY = "airing";
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -32,6 +34,12 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_QUERY_FAIL = "查询出错";
 	public static final String FAIL_MESSAGE_UPDATE_FAIL = "update语句执行失败";
 	public static final String FAIL_MESSAGE_SAVE_FAIL = "插入失败";
+	public static final String FAIL_MESSAGE_DELETE_FAIL = "删除数据失败";
+	public static final String FAIL_MESSAGE_TYPE_ERROR = "类型错误";
+	public static final String FAIL_MESSAGE_IMAGE_EMPTY = "图片为空";
+	public static final String FAIL_MESSAGE_VIDEO_EMPTY = "视频为空";
 	
 	public static final int PAGE_SIZE = 20;
+	
+	private MessageCommon() {}
 }

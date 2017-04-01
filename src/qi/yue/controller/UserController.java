@@ -128,7 +128,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public @ResponseBody Object update(String career, String phonenumber, String location, String birthday,
+	public @ResponseBody ResponseDTO update(String career, String phonenumber, String location, String birthday,
 			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
 		try{
@@ -150,121 +150,102 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
-	public @ResponseBody Object followers(Integer uid, String token, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO followers(Integer uid, String token, Long timestamp) {
+		try{
+			
+			List<FollowerDTO> followerList = followerService.queryFollower(uid, token, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(followerList);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		List<FollowerDTO> dtoList = followerService.findByTid(uid);
-		responseDTO.setData(dtoList);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
-	public @ResponseBody Object followings(Integer uid, String token, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO followings(Integer uid, String token, Long timestamp) {
+		try{
+			
+			List<FollowingDTO> followingList = followingService.queryFollowing(uid, token, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(followingList);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		List<FollowingDTO> dtoList = followingService.findByFid(uid);
-		responseDTO.setData(dtoList);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
+		
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
-	public @ResponseBody Object follow(Integer uid, String token, Integer user_id, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(user_id)
-				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO follow(Integer uid, String token, Integer user_id, Long timestamp) {
+		try{
+			
+			followingService.follow(uid, token, user_id, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse();
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDTO userFollowed = userService.find(user_id);
-		UserDTO userFollowing = userService.find(uid);
-		if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		} else {
-			Following following = new Following();
-			following.setFid(uid);
-			following.setTid(user_id);
-			following.setFaceUrl(userFollowed.getFace_url());
-			following.setSignature(userFollowed.getSignature());
-			following.setNickname(userFollowed.getNickname());
-			following.setCreatedAt(new Date());
-			following.setUpdatedAt(new Date());
-
-			Follower follower = new Follower();
-			follower.setFid(uid);
-			follower.setTid(user_id);
-			follower.setFaceUrl(userFollowing.getFace_url());
-			follower.setSignature(userFollowing.getSignature());
-			follower.setNickname(userFollowing.getNickname());
-			follower.setCreatedAt(new Date());
-			follower.setUpdatedAt(new Date());
-
-			followingService.saveFollowingAndFollower(following, follower);
-			responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		}
-		// }
-		return responseDTO;
 	}
 
-	@RequestMapping(value = "/show_self", method = RequestMethod.POST)
-	public @ResponseBody Object showSelf(Integer uid, String token, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
-		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDTO user = userService.find(uid);
-		responseDTO.setData(user);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
-	}
 
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
-	public @ResponseBody Object unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(user_id)
-				|| CommonUtil.isNullOrEmpty(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody ResponseDTO unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
+		try{
+			
+			followingService.unfollow(uid, token, user_id, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse();
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		followingService.deleteFollowingAndFollower(uid, user_id);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
+	}
+	
+	@RequestMapping(value = "/show_self", method = RequestMethod.POST)
+	public @ResponseBody Object showSelf(Integer uid, String token, Long timestamp) {
+		try{
+			if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || 
+					CommonUtil.isNullOrEmpty(timestamp)) {
+				throw new ParameterException();
+			}
+			UserDTO user = userService.find(uid);
+			return ResponseUtil.ConvertToSuccessResponse(user);
+			
+		}catch(ParameterException e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}catch(BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(),
+					e.getMessage());
+		}catch(Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
+					MessageCommon.FAIL_MESSAGE);
+		}
 	}
 }
