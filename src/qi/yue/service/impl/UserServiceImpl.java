@@ -44,23 +44,39 @@ public class UserServiceImpl implements UserService {
 		return userMapper.findByUidAndToken(map);
 	}
 
-	
 	/**
 	 * 通过用户名查询用户信息
+	 * 
 	 * @param username
 	 * @return UserDTO
 	 * @throws BusinessException
 	 */
-	public UserDTO findByUsername(String username) throws BusinessException{
+	public UserDTO findByUsername(String username) throws BusinessException {
 		try {
 			return userMapper.findByUsername(username);
-		} catch (BusinessException e) {
+		} catch (Exception e) {
+			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
+		}
+	}
+
+	/**
+	 * 通过骑阅号查询用户信息
+	 * 
+	 * @param rideReadId
+	 * @return UserDTO
+	 * @throws BusinessException
+	 */
+	public UserDTO findRideReadId(String rideReadId) throws BusinessException {
+		try {
+			return userMapper.findByRideReadId(rideReadId);
+		} catch (Exception e) {
 			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
 		}
 	}
 
 	/**
 	 * 通过电话号码查询用户信息
+	 * 
 	 * @param phonenumber
 	 * @return UserDTO
 	 * @throws BusinessException
@@ -68,7 +84,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO findByPhonenumber(String phonenumber) throws BusinessException {
 		try {
 			return userMapper.findByPhonenumber(phonenumber);
-		} catch (BusinessException e) {
+		} catch (Exception e) {
 			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
 		}
 	}
@@ -79,18 +95,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(rollbackFor = BusinessException.class)
-	public int save(User user) throws BusinessException{
+	public int save(User user) throws BusinessException {
 		try {
 			return userMapper.insert(user);
-		}catch(BusinessException e) {
-			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL, 
-					MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
+		} catch (Exception e) {
+			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL, MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
 		}
 
 	}
 
 	/**
 	 * 更新用户表
+	 * 
 	 * @param user
 	 * @return int
 	 * @throws ParameterException
@@ -103,7 +119,7 @@ public class UserServiceImpl implements UserService {
 		}
 		try {
 			return userMapper.update(user);
-		} catch (BusinessException e) {
+		} catch (Exception e) {
 			throw new BusinessException(MessageCommon.STATUS_UPDATE_FAIL, MessageCommon.FAIL_MESSAGE_UPDATE_FAIL);
 		}
 	}
@@ -126,22 +142,22 @@ public class UserServiceImpl implements UserService {
 		return userMapper.updatePasswordByUsernamae(map);
 	}
 
-	
 	/**
 	 * 根据电话号码更新用户密码
+	 * 
 	 * @param password
 	 * @param phonenumber
 	 * @return int
 	 * @throws BusinessException
 	 */
 	@Transactional(rollbackFor = BusinessException.class)
-	public int updatePasswordByPhonenumber(String password, String phonenumber) throws BusinessException{
+	public int updatePasswordByPhonenumber(String password, String phonenumber) throws BusinessException {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("password", password);
 			map.put("phonenumber", phonenumber);
 			return userMapper.updatePasswordByPhonenumber(map);
-		}catch (BusinessException e) {
+		} catch (Exception e) {
 			throw new BusinessException(MessageCommon.STATUS_UPDATE_FAIL, MessageCommon.FAIL_MESSAGE_UPDATE_FAIL);
 		}
 	}
@@ -152,21 +168,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude)
 			throws ParameterException, BusinessException {
-		if(CommonUtil.isNullOrEmpty(phonenumber) ||
-				CommonUtil.isNullOrEmpty(password) ||
-				CommonUtil.isNullOrEmpty(latitude) ||
-				CommonUtil.isNullOrEmpty(longitude)) {
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
+				|| CommonUtil.isNullOrEmpty(latitude) || CommonUtil.isNullOrEmpty(longitude)) {
 			throw new ParameterException();
 		}
-		
+
 		UserDTO userDTO = findByPhonenumber(phonenumber);
-		if (CommonUtil.isNullOrEmpty(userDTO)) {
-			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST,
-					MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
+		if (CommonUtil.isNull(userDTO)) {
+			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
-		
+
 		password = EncryptionUtil.GetSHACode(password);
 		if (!password.equals(userDTO.getPassword())) {
 			throw new BusinessException(MessageCommon.STATUS_PASSWORD_WRONG, MessageCommon.FAIL_MESSAGE_PASSWORD_WRONG);
@@ -179,89 +193,98 @@ public class UserServiceImpl implements UserService {
 		if (!CommonUtil.isNullOrEmpty(userDTO.getTagString())) {
 			userDTO.setTags(userDTO.getTagString().split(","));
 		}
-
 		User user = new User();
 		user.setId(userDTO.getUid());
 		user.setToken(token);
 		user.setLatitude(latitude);
 		user.setLongitude(longitude);
 		update(user);
-
 		return userDTO;
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void resetPassword(String phonenumber, String new_password, Long timestamp)
 			throws ParameterException, BusinessException {
-		if(CommonUtil.isNullOrEmpty(phonenumber) ||
-				CommonUtil.isNullOrEmpty(new_password) ||
-				CommonUtil.isNullOrEmpty(timestamp)) {
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(new_password)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
-
+		UserDTO userDTO = findByPhonenumber(phonenumber);
+		if (CommonUtil.isNull(userDTO)) {
+			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
+		}
 		String passwordSHA = EncryptionUtil.GetSHACode(new_password);
 		updatePasswordByPhonenumber(passwordSHA, phonenumber);
 	}
 
+	// throws ParameterException, BusinessException
 	@Override
-	public UserDTO register(String phonenumber, String password, String face_url, String nickname, String username)
-			throws ParameterException, BusinessException {
-		if (CommonUtil.isNullOrEmpty(phonenumber) || 
-				CommonUtil.isNullOrEmpty(password) || 
-				CommonUtil.isNullOrEmpty(face_url) || 
-				CommonUtil.isNullOrEmpty(nickname) || 
-				CommonUtil.isNullOrEmpty(username)) {
+	@Transactional(rollbackFor = Exception.class)
+	public UserDTO register(String phonenumber, String password, String face_url, String ride_read_id,
+			String username) {
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
+				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNullOrEmpty(ride_read_id)
+				|| CommonUtil.isNullOrEmpty(username)) {
 			throw new ParameterException();
 		}
-		
+
 		UserDTO userByTele = findByPhonenumber(phonenumber);
-		UserDTO userByName = findByUsername(username);
-		if (!CommonUtil.isNullOrEmpty(userByTele) || !CommonUtil.isNullOrEmpty(userByName)) {
-			throw new BusinessException(MessageCommon.STATUS_USER_IS_EXIST,
-					MessageCommon.FAIL_MESSAGE_USER_IS_EXIST);
+		UserDTO userByRideReadId = findRideReadId(ride_read_id);
+		if (!CommonUtil.isNullOrEmpty(userByTele) || !CommonUtil.isNullOrEmpty(userByRideReadId)) {
+			if (!CommonUtil.isNullOrEmpty(userByTele)) {
+				throw new BusinessException(MessageCommon.STATUS_PHONENUMBER_EXIST,
+						MessageCommon.FAIL_MESSAGE_PHONENUMBER_EXIST);
+			} else {
+				throw new BusinessException(MessageCommon.STATUS_RIDE_READ_ID_EXIST,
+						MessageCommon.FAIL_MESSAGE_RIDE_READ_ID_EXIST);
+			}
 		}
-		
+
 		String passwordSHA = EncryptionUtil.GetSHACode(password);
 		User user = new User();
+		user.setRideReadId(ride_read_id);
 		user.setUsername(username);
 		user.setPhonenumber(phonenumber);
 		user.setPassword(passwordSHA);
 		user.setFaceUrl(face_url);
-		user.setNickname(nickname);
+		// user.setNickname(nickname);
 
-		//其实createdAt和updatedAt 可以直接写在SQL脚本里面，因为一般这个值都是固定为插入的日期，所以直接
-		//在脚本里面插入sys_date到这个字段就行
+		// 其实createdAt和updatedAt 可以直接写在SQL脚本里面，因为一般这个值都是固定为插入的日期，所以直接
+		// 在脚本里面插入sys_date到这个字段就行
 		Date date = new Date();
 		user.setCreatedAt(date);
 		user.setUpdatedAt(date);
 		save(user);
-		
 		return UserDtoAssembler.toDto(user);
 	}
 
 	@Override
-	public boolean verify(String username, Long timestamp) throws ParameterException, BusinessException {
-		if (CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(timestamp)) {
+	public boolean verify(String ride_read_id, Long timestamp) throws ParameterException, BusinessException {
+		if (CommonUtil.isNullOrEmpty(ride_read_id) || CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
-		
-		UserDTO userDTO = findByUsername(username);
-		return !CommonUtil.isNullOrEmpty(userDTO);
+		UserDTO userDTO = findRideReadId(ride_read_id);
+		return !CommonUtil.isNull(userDTO);
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String face_url,
-			Integer uid, String token, String signature, String nickname, String school, Integer sex,
-			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
-					throws ParameterException, BusinessException {
+			Integer uid, String token, String signature, String school, Integer sex, BigDecimal latitude,
+			BigDecimal longitude, String hometown, Long timestamp) throws ParameterException, BusinessException {
 
-		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber) || 
-				CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday) || 
-				CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || 
-				CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(nickname) || 
-				CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNull(latitude) ||
-				CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNull(timestamp)) {
+		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
+				|| CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday)
+				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)
+				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex)
+				|| CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown)
+				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
+		}
+		UserDTO userDTO = find(uid);
+		if (CommonUtil.isNull(userDTO)) {
+			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
 		User user = new User();
 		user.setId(uid);
@@ -272,7 +295,7 @@ public class UserServiceImpl implements UserService {
 		user.setId(uid);
 		user.setToken(token);
 		user.setSignature(signature);
-		user.setNickname(nickname);
+		// user.setNickname(nickname);
 		user.setSchool(school);
 		user.setLatitude(latitude);
 		user.setLongitude(longitude);
@@ -282,7 +305,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
 		} catch (ParseException e) {
-			throw new BusinessException();
+			throw new BusinessException(MessageCommon.STATUS_DATE_FORMAT_ERROR,
+					MessageCommon.FAIL_MESSAGE_DATE_FORMAT_ERROR);
 		}
 		update(user);
 		UserDTO dto = findByPhonenumber(phonenumber);

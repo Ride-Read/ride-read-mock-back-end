@@ -44,208 +44,184 @@ public class UserController {
 	private FollowerService followerService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody ResponseDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude) {
-		try{
-			
+	public @ResponseBody ResponseDTO login(String phonenumber, String password, BigDecimal latitude,
+			BigDecimal longitude) {
+		try {
 			UserDTO userDTO = userService.login(phonenumber, password, latitude, longitude);
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		
+
 	}
 
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO resetPassword(String phonenumber, String new_password, Long timestamp) {
-		try{
-			
+		try {
+
 			userService.resetPassword(phonenumber, new_password, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
 	@Transactional
-	public @ResponseBody ResponseDTO register(String phonenumber, String password, String face_url, String nickname,
+	public @ResponseBody ResponseDTO register(String phonenumber, String password, String face_url, String ride_read_id,
 			String username) {
-		try{
-			UserDTO userDTO = userService.register(phonenumber, password, face_url, nickname, username);
+		try {
+			UserDTO userDTO = userService.register(phonenumber, password, face_url, ride_read_id, username);
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 
-	@RequestMapping(value = "/verify_code", method = RequestMethod.POST)
-	public @ResponseBody ResponseDTO verify_code(String username, Long timestamp) {
-		//TODO not completed. It should be verified By qiyueID, not username; 
-		try{
-			
-			boolean result = userService.verify(username, timestamp);
+	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	public @ResponseBody ResponseDTO verify(String ride_read_id, Long timestamp) {
+		// TODO not completed. It should be verified By qiyueID, not username;
+		try {
+
+			boolean result = userService.verify(ride_read_id, timestamp);
 			if (result) {
 				return ResponseUtil.ConvertToSuccessResponse();
 			} else {
 				return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_USER_NOT_EXIST,
 						MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 			}
-			
-		}catch(ParameterException e) {
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
-	
+
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO update(String career, String phonenumber, String location, String birthday,
-			String face_url, Integer uid, String token, String signature, String nickname, String school, Integer sex,
+			String face_url, Integer uid, String token, String signature, String school, Integer sex,
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
-		try{
-			
-			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, face_url, 
-					uid, token, signature, nickname, school, sex, latitude, longitude, hometown, timestamp);
+		try {
+			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, face_url, uid, token,
+					signature, school, sex, latitude, longitude, hometown, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO followers(Integer uid, String token, Long timestamp) {
-		try{
-			
+		try {
+
 			List<FollowerDTO> followerList = followerService.queryFollower(uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(followerList);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO followings(Integer uid, String token, Long timestamp) {
-		try{
-			
+		try {
+
 			List<FollowingDTO> followingList = followingService.queryFollowing(uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(followingList);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		
+
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO follow(Integer uid, String token, Integer user_id, Long timestamp) {
-		try{
-			
+		try {
+
 			followingService.follow(uid, token, user_id, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
-
 
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
-		try{
-			
+		try {
+
 			followingService.unfollow(uid, token, user_id, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
-	
+
 	@RequestMapping(value = "/show_self", method = RequestMethod.POST)
 	public @ResponseBody Object showSelf(Integer uid, String token, Long timestamp) {
-		try{
-			if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || 
-					CommonUtil.isNullOrEmpty(timestamp)) {
+		try {
+			if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
 				throw new ParameterException();
 			}
 			UserDTO user = userService.find(uid);
 			return ResponseUtil.ConvertToSuccessResponse(user);
-			
-		}catch(ParameterException e) {
+
+		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
-		}catch(BusinessException e) {
-			return ResponseUtil.ConvertToFailResponse(e.getCode(),
-					e.getMessage());
-		}catch(Exception e) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL,
-					MessageCommon.FAIL_MESSAGE);
+		} catch (BusinessException e) {
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 }

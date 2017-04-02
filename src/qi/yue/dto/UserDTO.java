@@ -38,8 +38,6 @@ public class UserDTO {
 
 	private String career;
 
-	private String nickname;
-
 	private String tagString;
 
 	private String[] tags;
@@ -49,6 +47,8 @@ public class UserDTO {
 	private BigDecimal latitude;
 
 	private Integer is_followed;// 0-互相关注，1-单项关注，-1-无效
+
+	private String rideReadId;
 
 	public Integer getUid() {
 		return uid;
@@ -186,14 +186,6 @@ public class UserDTO {
 		this.career = career;
 	}
 
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
 	public String getTagString() {
 		return tagString;
 	}
@@ -234,4 +226,11 @@ public class UserDTO {
 		this.is_followed = is_followed;
 	}
 
+	public String getRideReadId() {
+		return rideReadId;
+	}
+
+	public void setRideReadId(String rideReadId) {
+		this.rideReadId = rideReadId;
+	}
 }

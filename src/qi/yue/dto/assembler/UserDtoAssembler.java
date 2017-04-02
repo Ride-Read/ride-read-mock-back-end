@@ -20,7 +20,6 @@ public class UserDtoAssembler {
 			dto.setFollowing(user.getFollowing());
 			dto.setHometown(user.getHometown());
 			dto.setLocation(user.getLocation());
-			dto.setNickname(user.getNickname());
 			dto.setPassword(user.getPassword());
 			dto.setPhonenumber(user.getPhonenumber());
 			dto.setSchool(user.getSchool());
@@ -36,6 +35,7 @@ public class UserDtoAssembler {
 			dto.setUid(user.getId());
 			dto.setUpdated_at(user.getUpdatedAt());
 			dto.setUsername(user.getUsername());
+			dto.setRideReadId(user.getRideReadId());
 		}
 
 		return dto;

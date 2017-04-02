@@ -22,16 +22,18 @@
 		<result column="longitude" jdbcType="DECIMAL" property="longitude" />
 		<result column="latitude" jdbcType="DECIMAL" property="latitude" />
 		<result column="career" property="career" jdbcType="VARCHAR" />
-		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<!-- <result column="nickname" property="nickname" jdbcType="VARCHAR" /> -->
+		<result column="ride_read_id" property="rideReadId" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		id, username, password, sex, school, phonenumber, follower,
 		following, token, hometown,
 		face_url, signature, tags, location,
-		birthday, career, nickname, longitude,
+		birthday, career, longitude,
 		latitude,
-		created_at, updated_at
+		created_at,
+		updated_at,ride_read_id
 	</sql>
 
 	<sql id="User_Column">
@@ -44,7 +46,8 @@
 		user.birthday, user.career, user.nickname,
 		user.longitude,
 		user.latitude,
-		user.created_at, user.updated_at
+		user.created_at,
+		user.updated_at,user.ride_read_id
 	</sql>
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
@@ -86,6 +89,14 @@
 		where phonenumber=#{phonenumber,jdbcType=VARCHAR}
 	</select>
 
+	<select id="findByRideReadId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where ride_read_id=#{rideReadId,jdbcType=VARCHAR}
+	</select>
+
 	<select id="findThumbsUpUserByMid" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
@@ -106,8 +117,8 @@
 		hometown, face_url, signature,
 		tags, location, birthday,
 		career,
-		nickname, longitude,
-		latitude, created_at, updated_at
+		longitude,
+		latitude, created_at, updated_at,ride_read_id
 		)
 		values
 		(#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
@@ -121,10 +132,11 @@
 		#{tags,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
 		#{birthday,jdbcType=TIMESTAMP},
 		#{career,jdbcType=VARCHAR},
-		#{nickname,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL},
-		#{latitude,jdbcType=DECIMAL}, #{createdAt,jdbcType=TIMESTAMP},
-		#{updatedAt,jdbcType=TIMESTAMP}
-		)
+		#{longitude,jdbcType=DECIMAL},
+		#{latitude,jdbcType=DECIMAL},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP},
+		#{rideReadId,jdbcType=VARCHAR})
 	</insert>
 
 	<update id="update" parameterType="qi.yue.entity.User">
@@ -175,9 +187,6 @@
 			<if test="career != null">
 				career = #{career,jdbcType=VARCHAR},
 			</if>
-			<if test="nickname != null">
-				nickname = #{nickname,jdbcType=VARCHAR},
-			</if>
 			<if test="longitude != null">
 				longitude = #{longitude,jdbcType=DECIMAL},
 			</if>
@@ -189,6 +198,9 @@
 			</if>
 			<if test="updatedAt != null">
 				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rideReadId != null">
+				ride_read_id,
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}

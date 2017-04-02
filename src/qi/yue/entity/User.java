@@ -36,7 +36,7 @@ public class User {
 
 	private String career;
 
-	private String nickname;
+//	private String nickname;
 
 	private BigDecimal longitude;
 
@@ -45,6 +45,8 @@ public class User {
 	private Date createdAt;
 
 	private Date updatedAt;
+
+	private String rideReadId;
 
 	public Integer getId() {
 		return id;
@@ -174,13 +176,13 @@ public class User {
 		this.career = career == null ? null : career.trim();
 	}
 
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname == null ? null : nickname.trim();
-	}
+	// public String getNickname() {
+	// return nickname;
+	// }
+	//
+	// public void setNickname(String nickname) {
+	// this.nickname = nickname == null ? null : nickname.trim();
+	// }
 
 	public BigDecimal getLongitude() {
 		return longitude;
@@ -213,4 +215,13 @@ public class User {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	public String getRideReadId() {
+		return rideReadId;
+	}
+
+	public void setRideReadId(String rideReadId) {
+		this.rideReadId = rideReadId;
+	}
+
 }

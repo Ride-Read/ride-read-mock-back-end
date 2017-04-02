@@ -39,27 +39,27 @@ public class MomentServiceImpl implements MomentService {
 
 	@Resource
 	private FollowingMapper followingMapper;
-	
+
 	@Resource
 	private UserService userService;
-	
+
 	@Resource
 	private CommentService commentService;
 
 	/**
 	 * 插入到悦圈内容表
+	 * 
 	 * @param moment
 	 * @return int
 	 * @throws BusinessException
 	 */
-	public int save(Moment moment) throws BusinessException{
+	public int save(Moment moment) throws BusinessException {
 		try {
 			return momentMapper.insert(moment);
-		}catch(BusinessException e) {
-			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL,
-					MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
+		} catch (BusinessException e) {
+			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL, MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
 		}
-		
+
 	}
 
 	@Override
@@ -77,23 +77,23 @@ public class MomentServiceImpl implements MomentService {
 		return momentMapper.delete(id);
 	}
 
-	public List<MomentDTO> findByPage(PageDTO pageDTO) throws BusinessException{
+	public List<MomentDTO> findByPage(PageDTO pageDTO) throws BusinessException {
 		try {
 			return momentMapper.findByPage(pageDTO);
-		}catch(BusinessException e) {
-			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL,
-					MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
+		} catch (BusinessException e) {
+			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
 		}
-		
+
 	}
 
 	/**
 	 * 查询所有关注人的悦圈内容
+	 * 
 	 * @param map
 	 * @return List<MomentDTO>
 	 * @throws BusinessException
 	 */
-	public List<MomentDTO> findFollowingsMoment(Map<String, Object> map) throws BusinessException{
+	public List<MomentDTO> findFollowingsMoment(Map<String, Object> map) throws BusinessException {
 		List<MomentDTO> MomentDTOList = momentMapper.findFollowingsMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
 			Map<String, Object> mapTemp1 = new HashMap<String, Object>();
@@ -114,11 +114,12 @@ public class MomentServiceImpl implements MomentService {
 
 	/**
 	 * 查询附近人的悦圈内容
+	 * 
 	 * @param map
 	 * @return List<MomentDTO>
 	 * @throws BusinessException
 	 */
-	public List<MomentDTO> findNearbyMoment(Map<String, Object> map) throws BusinessException{
+	public List<MomentDTO> findNearbyMoment(Map<String, Object> map) throws BusinessException {
 		try {
 			List<MomentDTO> MomentDTOList = momentMapper.findNearbyMoment(map);
 			for (MomentDTO momentDTO : MomentDTOList) {
@@ -143,26 +144,27 @@ public class MomentServiceImpl implements MomentService {
 				momentDTO.setDistanceString(distance.toString() + "km");
 			}
 			return MomentDTOList;
-		}catch(BusinessException e) {
+		} catch (BusinessException e) {
 			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
 		}
-		
+
 	}
 
 	@Override
 	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude)
-					throws ParameterException, BusinessException {
+			throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
 				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
 				|| CommonUtil.isNull(longitude)) {
 			throw new ParameterException();
 		}
 		ResponseDTO checkResult = checkType(type, pictures_url, cover, video_url, uid, timestamp, token);
-		if(!checkResult.getStatus().equals(MessageCommon.STATUS_SUCCESS)) {
+		if (!checkResult.getStatus().equals(MessageCommon.STATUS_SUCCESS)) {
 			throw new BusinessException(checkResult.getStatus(), checkResult.getMsg());
-		};
-		
+		}
+		;
+
 		Moment moment = new Moment();
 		moment.setMsg(msg);
 		moment.setUserId(uid);
@@ -175,14 +177,13 @@ public class MomentServiceImpl implements MomentService {
 		moment.setCreatedAt(new Date());
 		moment.setUpdatedAt(new Date());
 		save(moment);
-		
+
 	}
-	
-	private ResponseDTO checkType(Integer type, String[] pictures_url, String cover, 
-			String video_url, Integer uid, Long timestamp, String token) {
+
+	private ResponseDTO checkType(Integer type, String[] pictures_url, String cover, String video_url, Integer uid,
+			Long timestamp, String token) {
 		if (!(type >= 0 && type <= 2)) {
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.TYPE_ERROR, 
-					MessageCommon.FAIL_MESSAGE_TYPE_ERROR);
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.TYPE_ERROR, MessageCommon.FAIL_MESSAGE_TYPE_ERROR);
 		}
 		if (1 == type && CommonUtil.isNullOrEmpty(pictures_url)) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.IMAGE_EMPTY,
@@ -202,13 +203,13 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
 			throws ParameterException, BusinessException {
-		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp) || 
-				CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
+		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp)
+				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
 			throw new ParameterException();
 		}
 		PageDTO pageDTO = new PageDTO();
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
 		pageDTO.setId(user_id);
 		pageDTO.setCurrentNumberFromPages(pages);
 		List<MomentDTO> momentDtos = findByPage(pageDTO);
@@ -231,7 +232,7 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(longitude)) {
 			throw new ParameterException();
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
@@ -259,7 +260,7 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
-		
+
 		UserDTO user = userService.find(uid);
 		Comment comment = new Comment();
 		comment.setMomentId(mid);
@@ -267,7 +268,7 @@ public class MomentServiceImpl implements MomentService {
 		comment.setReplyUid(reply_uid);
 		comment.setMsg(msg);
 		comment.setFaceUrl(user.getFace_url());
-		comment.setNickname(user.getNickname());
+		// comment.setNickname(user.getNickname());
 		comment.setCreatedAt(new Date());
 		commentService.save(comment);
 		CommentDTO dto = CommentDtoAssembler.toDto(comment);
