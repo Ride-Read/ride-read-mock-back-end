@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : bos19
-Source Server Version : 50717
+Source Server Version : 50712
 Source Host           : localhost:3306
 Source Database       : qiyue
 
 Target Server Type    : MYSQL
-Target Server Version : 50717
+Target Server Version : 50712
 File Encoding         : 65001
 
-Date: 2017-03-29 15:27:39
+Date: 2017-04-02 23:17:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `t_comment` (
   `created_at` datetime NOT NULL COMMENT '评论创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='评论数据';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='评论数据';
 
 -- ----------------------------
 -- Table structure for t_follower
@@ -47,7 +47,7 @@ CREATE TABLE `t_follower` (
   `created_at` datetime NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='粉丝列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='粉丝列表';
 
 -- ----------------------------
 -- Table structure for t_following
@@ -64,7 +64,7 @@ CREATE TABLE `t_following` (
   `created_at` datetime NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='关注列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='关注列表';
 
 -- ----------------------------
 -- Table structure for t_moment
@@ -84,24 +84,7 @@ CREATE TABLE `t_moment` (
   `created_at` datetime NOT NULL COMMENT '阅圈创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '阅圈修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='阅圈数据列表';
-
--- ----------------------------
--- Table structure for t_read_circle
--- ----------------------------
-DROP TABLE IF EXISTS `t_read_circle`;
-CREATE TABLE `t_read_circle` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `comment` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  `cover` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  `pictures` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  `thumbs_up` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  `video` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `thumbs` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  `msg` varchar(1000) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='��Ȧ��������';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='阅圈数据列表';
 
 -- ----------------------------
 -- Table structure for t_thumbs_up
@@ -117,7 +100,7 @@ CREATE TABLE `t_thumbs_up` (
   `created_at` datetime NOT NULL COMMENT '点赞创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '点赞修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='点赞数据表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='点赞数据表';
 
 -- ----------------------------
 -- Table structure for t_user
@@ -125,6 +108,7 @@ CREATE TABLE `t_thumbs_up` (
 DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户id',
+  `ride_read_id` varchar(45) COLLATE utf8_bin NOT NULL COMMENT 'ride_read_id',
   `username` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '用户名',
   `password` varchar(125) COLLATE utf8_bin NOT NULL COMMENT '用户密码',
   `sex` int(11) DEFAULT NULL COMMENT '用户性别',
@@ -140,10 +124,9 @@ CREATE TABLE `t_user` (
   `location` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '用户地区',
   `birthday` datetime DEFAULT NULL COMMENT '用户生日',
   `career` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '用户职业',
-  `nickname` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '用户昵称',
   `longitude` decimal(7,3) DEFAULT NULL COMMENT '用户登录地点的经度',
   `latitude` decimal(7,3) DEFAULT NULL COMMENT '用户登录地点的纬度',
   `created_at` datetime NOT NULL COMMENT '用户注册时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '用户最后一次登录时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基本数据';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基本数据';
