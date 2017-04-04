@@ -19,7 +19,7 @@
 		<collection property="comment" ofType="qi.yue.dto.CommentDTO">
 			<id column="c_id" jdbcType="INTEGER" property="comment_id" />
 			<result column="c_user_id" jdbcType="INTEGER" property="uid" />
-			<result column="c_nickname" jdbcType="VARCHAR" property="nickname" />
+			<result column="c_username" jdbcType="VARCHAR" property="nickname" />
 			<result column="c_moment_id" jdbcType="INTEGER" property="mid" />
 			<result column="c_face_url" jdbcType="VARCHAR" property="face_url" />
 			<result column="c_reply_uid" jdbcType="INTEGER" property="reply_uid" />
@@ -42,7 +42,7 @@
 		extends="BaseResultMap">
 		<association property="user" javaType="qi.yue.dto.UserDTO">
 			<id column="u_id" property="uid" jdbcType="INTEGER" />
-			<result column="u_nickname" property="nickname" jdbcType="VARCHAR" />
+			<result column="u_username" property="username" jdbcType="VARCHAR" />
 			<result column="u_sex" property="sex" jdbcType="INTEGER" />
 			<result column="u_face_url" property="face_url" jdbcType="VARCHAR" />
 		</association>
@@ -57,7 +57,7 @@
 	<sql id="User_Column">
 		user.id as u_id, user.sex as u_sex,
 		user.face_url as
-		u_face_url, user.nickname as u_nickname
+		u_face_url, user.username as u_username
 	</sql>
 
 	<sql id="Moment_Column">

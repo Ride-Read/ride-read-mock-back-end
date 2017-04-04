@@ -56,7 +56,6 @@ public class MomentController {
 	public @ResponseBody ResponseDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude) {
 		try {
-
 			momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token, latitude,
 					longitude);
 			return ResponseUtil.ConvertToSuccessResponse();

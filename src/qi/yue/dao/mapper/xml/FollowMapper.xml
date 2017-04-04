@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.FollowMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.FollowDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="fid" property="fid" jdbcType="INTEGER" />
+		<result column="follower_face_url" property="follower_face_url"
+			jdbcType="VARCHAR" />
+		<result column="follower_signature" property="follower_signature"
+			jdbcType="VARCHAR" />
+		<result column="follower_username" property="follower_username"
+			jdbcType="VARCHAR" />
+		<result column="tid" property="tid" jdbcType="INTEGER" />
+		<result column="followed_face_url" property="followed_face_url"
+			jdbcType="VARCHAR" />
+		<result column="followed_signature" property="followed_signature"
+			jdbcType="VARCHAR" />
+		<result column="followed_username" property="followed_username"
+			jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, fid, follower_face_url, follower_signature,
+		follower_username, tid,
+		followed_face_url,
+		followed_signature,
+		followed_username, created_at, updated_at
+	</sql>
+	<select id="findByTid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_follow
+		where tid = #{tid,jdbcType=INTEGER}
+	</select>
+	<select id="findByFid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_follow
+		where fid = #{fid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByFid" parameterType="java.lang.Integer">
+		delete
+		from t_follow
+		where
+		fid = #{fid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="qi.yue.entity.Follow">
+		insert into t_follow (id, fid,
+		follower_face_url,
+		follower_signature, follower_username, tid,
+		followed_face_url, followed_signature, followed_username,
+		created_at,
+		updated_at)
+		values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER},
+		#{followerFaceUrl,jdbcType=VARCHAR},
+		#{followerSignature,jdbcType=VARCHAR},
+		#{followerUsername,jdbcType=VARCHAR}, #{tid,jdbcType=INTEGER},
+		#{followedFaceUrl,jdbcType=VARCHAR},
+		#{followedSignature,jdbcType=VARCHAR},
+		#{followedUsername,jdbcType=VARCHAR},
+		#{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP})
+	</insert>
+</mapper>

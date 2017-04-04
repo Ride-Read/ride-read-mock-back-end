@@ -163,7 +163,6 @@ public class MomentServiceImpl implements MomentService {
 		if (!checkResult.getStatus().equals(MessageCommon.STATUS_SUCCESS)) {
 			throw new BusinessException(checkResult.getStatus(), checkResult.getMsg());
 		}
-		;
 
 		Moment moment = new Moment();
 		moment.setMsg(msg);
@@ -177,7 +176,6 @@ public class MomentServiceImpl implements MomentService {
 		moment.setCreatedAt(new Date());
 		moment.setUpdatedAt(new Date());
 		save(moment);
-
 	}
 
 	private ResponseDTO checkType(Integer type, String[] pictures_url, String cover, String video_url, Integer uid,

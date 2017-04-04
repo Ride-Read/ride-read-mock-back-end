@@ -1,8 +1,6 @@
 package qi.yue.controller;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,22 +12,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import qi.yue.common.MessageCommon;
-import qi.yue.dto.FollowerDTO;
-import qi.yue.dto.FollowingDTO;
+import qi.yue.dto.FollowDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.UserDtoAssembler;
-import qi.yue.entity.Follower;
-import qi.yue.entity.Following;
-import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
+import qi.yue.service.FollowService;
 import qi.yue.service.FollowerService;
 import qi.yue.service.FollowingService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
-import qi.yue.utils.DateUtil;
-import qi.yue.utils.EncryptionUtil;
 import qi.yue.utils.ResponseUtil;
 
 @Controller
@@ -42,6 +34,8 @@ public class UserController {
 	private FollowingService followingService;
 	@Resource
 	private FollowerService followerService;
+	@Resource
+	private FollowService followService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO login(String phonenumber, String password, BigDecimal latitude,
@@ -49,13 +43,15 @@ public class UserController {
 		try {
 			UserDTO userDTO = userService.login(phonenumber, password, latitude, longitude);
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
-
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 
@@ -69,11 +65,14 @@ public class UserController {
 			return ResponseUtil.ConvertToSuccessResponse();
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -87,11 +86,14 @@ public class UserController {
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -109,11 +111,14 @@ public class UserController {
 						MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 			}
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -128,11 +133,14 @@ public class UserController {
 			return ResponseUtil.ConvertToSuccessResponse(userDTO);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -141,15 +149,18 @@ public class UserController {
 	public @ResponseBody ResponseDTO followers(Integer uid, String token, Long timestamp) {
 		try {
 
-			List<FollowerDTO> followerList = followerService.queryFollower(uid, token, timestamp);
+			List<FollowDTO> followerList = followService.queryFollower(uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(followerList);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -157,34 +168,35 @@ public class UserController {
 	@RequestMapping(value = "/followings", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO followings(Integer uid, String token, Long timestamp) {
 		try {
-
-			List<FollowingDTO> followingList = followingService.queryFollowing(uid, token, timestamp);
+			List<FollowDTO> followingList = followService.queryFollowed(uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(followingList);
-
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-
 	}
 
 	@RequestMapping(value = "/follow", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO follow(Integer uid, String token, Integer user_id, Long timestamp) {
 		try {
-
-			followingService.follow(uid, token, user_id, timestamp);
+			followService.follow(uid, token, user_id, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -193,15 +205,18 @@ public class UserController {
 	public @ResponseBody ResponseDTO unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
 		try {
 
-			followingService.unfollow(uid, token, user_id, timestamp);
+			followService.unfollow(uid, token, user_id, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -216,11 +231,14 @@ public class UserController {
 			return ResponseUtil.ConvertToSuccessResponse(user);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
