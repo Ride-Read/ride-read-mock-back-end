@@ -17,12 +17,12 @@ public class CommentDtoAssembler {
 			dto.setFace_url(comment.getFaceUrl());
 			dto.setMid(comment.getMomentId());
 			dto.setMsg(comment.getMsg());
-			dto.setNickname(comment.getNickname());
+			dto.setReply_uid(comment.getReplyUid());
+			dto.setReply_username(comment.getReplyUsername());
+			dto.setUsername(comment.getUsername());
 			dto.setUid(comment.getUserId());
 			dto.setUpdated_at(comment.getUpdatedAt());
 		}
-
 		return dto;
-
 	}
 }

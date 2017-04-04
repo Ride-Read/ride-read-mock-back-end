@@ -74,16 +74,18 @@ public class MomentController {
 	public @ResponseBody ResponseDTO showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
 			Integer pages) {
 		try {
-
-			Map<String, Object> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages);
+			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages);
 			return ResponseUtil.ConvertToSuccessResponse(data);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
@@ -92,16 +94,18 @@ public class MomentController {
 	public @ResponseBody Object showMoment(Integer uid, Integer type, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) {
 		try {
-
 			List<MomentDTO> data = momentService.showMoment(uid, type, timestamp, token, pages, latitude, longitude);
 			return ResponseUtil.ConvertToSuccessResponse(data);
 
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 
@@ -111,89 +115,80 @@ public class MomentController {
 	public @ResponseBody Object addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token,
 			Long timestamp) {
 		try {
-
 			CommentDTO data = momentService.addComment(msg, mid, uid, reply_uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(data);
-
 		} catch (ParameterException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
 		} catch (BusinessException e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
 
 	@RequestMapping(value = "/remove_comment", method = RequestMethod.POST)
 	public @ResponseBody Object removeComment(String token, Integer uid, Integer comment_id, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(comment_id)
-				|| CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try {
+			momentService.removeComment(token, uid, comment_id, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(null);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		commentService.delete(comment_id);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/add_thumbsup", method = RequestMethod.POST)
 	public @ResponseBody Object addThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
-				|| CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try {
+			ThumbsUpDTO data = momentService.addThumbsup(token, uid, mid, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDTO user = userService.find(uid);
-		ThumbsUp thumbsUp = new ThumbsUp();
-		thumbsUp.setMomentId(mid);
-		thumbsUp.setUserId(uid);
-		// thumbsUp.setNickname(user.getNickname());
-		thumbsUp.setCreatedAt(new Date());
-		thumbsUpService.save(thumbsUp);
-		ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
-		responseDTO.setData(dto);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/remove_thumbsup", method = RequestMethod.POST)
 	public @ResponseBody Object removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(thumbs_up_id)
-				|| CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try {
+			momentService.removeThumbsup(token, uid, thumbs_up_id, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(null);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		thumbsUpService.delete(thumbs_up_id);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
+
 	}
 
 	@RequestMapping(value = "/remove_moment", method = RequestMethod.POST)
-	public @ResponseBody Object removeMoment(String token, Integer uid, Integer mid, Long timestamp) {
+	public @ResponseBody Object removeMoment(String token, Integer uid, Integer comment_id, Long timestamp) {
 		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(uid)
 				|| CommonUtil.isNull(timestamp)) {
 			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 			return responseDTO;
@@ -203,7 +198,7 @@ public class MomentController {
 		// if (!tokenTemp.equals(token)) {
 		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
 		// } else {
-		momentService.delete(mid);
+		momentService.delete(uid);
 		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
 		// }
 		return responseDTO;
@@ -211,21 +206,19 @@ public class MomentController {
 
 	@RequestMapping(value = "/show_thumbsup", method = RequestMethod.POST)
 	public @ResponseBody Object showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
-				|| CommonUtil.isNull(pages) || CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+		try {
+			List<ThumbsUpDTO> data = momentService.showThumbsup(token, uid, mid, timestamp, pages);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		UserDTO user = userService.findThumbsUpUserByMid(mid);
-		responseDTO.setData(user);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 }

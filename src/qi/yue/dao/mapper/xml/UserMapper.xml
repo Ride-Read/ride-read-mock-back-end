@@ -98,7 +98,7 @@
 	</select>
 
 	<select id="findThumbsUpUserByMid" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+		parameterType="map">
 		select
 		<include refid="Base_Column_List" />
 		from t_user
@@ -106,6 +106,8 @@
 		t_user.id in
 		(select user_id from t_thumbs_up where
 		t_thumbs_up.moment_id=#{mid,jdbcType=INTEGER})
+		limit
+		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
 
 	<insert id="insert" parameterType="qi.yue.entity.User"

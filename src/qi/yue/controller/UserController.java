@@ -204,10 +204,8 @@ public class UserController {
 	@RequestMapping(value = "/unfollow", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO unfollow(Integer uid, String token, Integer user_id, Long timestamp) {
 		try {
-
 			followService.unfollow(uid, token, user_id, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,

@@ -1,5 +1,6 @@
 package qi.yue.dao.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import qi.yue.dto.UserDTO;
@@ -16,7 +17,7 @@ public interface UserMapper {
 
 	UserDTO findByRideReadId(String rideReadId);
 
-	UserDTO findThumbsUpUserByMid(Integer mid);
+	List<UserDTO> findThumbsUpUserByMid(Map<String, Object> map);
 
 	UserDTO find(Integer id);
 

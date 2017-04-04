@@ -2,20 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.CommentMapper">
 	<resultMap id="BaseResultMap" type="qi.yue.dto.CommentDTO">
-		<id column="id" jdbcType="INTEGER" property="comment_id" />
-		<result column="user_id" jdbcType="INTEGER" property="uid" />
-		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
-		<result column="moment_id" jdbcType="INTEGER" property="mid" />
-		<result column="face_url" jdbcType="VARCHAR" property="face_url" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="moment_id" property="moment_id" jdbcType="INTEGER" />
+		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 		<result column="reply_uid" property="reply_uid" jdbcType="INTEGER" />
-		<result column="created_at" jdbcType="TIMESTAMP" property="created_at" />
-		<result column="updated_at" jdbcType="TIMESTAMP" property="updated_at" />
+		<result column="reply_username" property="reply_username"
+			jdbcType="VARCHAR" />
+		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 
 		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, nickname, moment_id, face_url, reply_uid,
-		reply_nickname,
+		id, user_id, username, moment_id, face_url, reply_uid,
+		reply_username,
 		created_at,
 		updated_at
 	</sql>
@@ -36,17 +38,17 @@
 	<insert id="insert" parameterType="qi.yue.entity.Comment"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_comment (id,
-		user_id, nickname,
+		user_id, username,
 		moment_id, face_url, reply_uid,
-		reply_nickname,
+		reply_username,
 		created_at, updated_at,
 		msg)
 		values (#{id,jdbcType=INTEGER},
 		#{userId,jdbcType=INTEGER},
-		#{nickname,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR},
 		#{momentId,jdbcType=INTEGER}, #{faceUrl,jdbcType=VARCHAR},
 		#{replyUid,jdbcType=INTEGER},
-		#{replyNickname,jdbcType=VARCHAR},
+		#{replyUsername,jdbcType=VARCHAR},
 		#{createdAt,jdbcType=TIMESTAMP},
 		#{updatedAt,jdbcType=TIMESTAMP},
 		#{msg,jdbcType=LONGVARCHAR})

@@ -12,18 +12,26 @@ import org.springframework.stereotype.Service;
 
 import qi.yue.entity.Comment;
 import qi.yue.entity.Moment;
+import qi.yue.entity.ThumbsUp;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.common.MessageCommon;
+import qi.yue.dao.mapper.CommentMapper;
+import qi.yue.dao.mapper.FollowMapper;
 import qi.yue.dao.mapper.FollowingMapper;
 import qi.yue.dao.mapper.MomentMapper;
+import qi.yue.dao.mapper.ThumbsUpMapper;
+import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.CommentDTO;
+import qi.yue.dto.FollowDTO;
 import qi.yue.dto.FollowingDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.PageDTO;
 import qi.yue.dto.ResponseDTO;
+import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.CommentDtoAssembler;
+import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
 import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
 import qi.yue.service.UserService;
@@ -38,7 +46,19 @@ public class MomentServiceImpl implements MomentService {
 	private MomentMapper momentMapper;
 
 	@Resource
+	private CommentMapper commentMapper;
+
+	@Resource
+	private ThumbsUpMapper thumbsUpMapper;
+
+	@Resource
+	private FollowMapper followMapper;
+
+	@Resource
 	private FollowingMapper followingMapper;
+
+	@Resource
+	private UserMapper userMapper;
 
 	@Resource
 	private UserService userService;
@@ -97,10 +117,10 @@ public class MomentServiceImpl implements MomentService {
 		List<MomentDTO> MomentDTOList = momentMapper.findFollowingsMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
 			Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			mapTemp1.put("fid", map.get("fid"));
-			mapTemp1.put("tid", momentDTO.getUid());
-			FollowingDTO followingDTO = followingMapper.findByFidAndTid(map);
-			if (CommonUtil.isNull(followingDTO)) {
+			mapTemp1.put("fid", momentDTO.getUid());
+			mapTemp1.put("tid", map.get("fid"));
+			FollowDTO followDTO = followMapper.findByFidAndTid(mapTemp1);
+			if (CommonUtil.isNull(followDTO)) {
 				momentDTO.getUser().setIs_followed(1);
 			} else {
 				momentDTO.getUser().setIs_followed(0);
@@ -126,15 +146,15 @@ public class MomentServiceImpl implements MomentService {
 				Map<String, Object> mapTemp1 = new HashMap<String, Object>();
 				mapTemp1.put("fid", map.get("fid"));
 				mapTemp1.put("tid", momentDTO.getUid());
-				FollowingDTO followingDTO1 = followingMapper.findByFidAndTid(mapTemp1);
+				FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
 
 				Map<String, Object> mapTemp2 = new HashMap<String, Object>();
 				mapTemp2.put("fid", momentDTO.getUid());
 				mapTemp2.put("tid", map.get("fid"));
-				FollowingDTO followingDTO2 = followingMapper.findByFidAndTid(mapTemp2);
-				if (CommonUtil.isNull(followingDTO1) && CommonUtil.isNull(followingDTO2)) {
+				FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
+				if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
 					momentDTO.getUser().setIs_followed(-1);
-				} else if (!CommonUtil.isNull(followingDTO1) && !CommonUtil.isNull(followingDTO2)) {
+				} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
 					momentDTO.getUser().setIs_followed(1);
 				} else {
 					momentDTO.getUser().setIs_followed(0);
@@ -147,7 +167,6 @@ public class MomentServiceImpl implements MomentService {
 		} catch (BusinessException e) {
 			throw new BusinessException(MessageCommon.STATUS_QUERY_FAIL, MessageCommon.FAIL_MESSAGE_QUERY_FAIL);
 		}
-
 	}
 
 	@Override
@@ -169,7 +188,9 @@ public class MomentServiceImpl implements MomentService {
 		moment.setUserId(uid);
 		moment.setVideo(video_url);
 		moment.setType(type);
-		moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
+		if (!CommonUtil.isNullOrEmpty(pictures_url)) {
+			moment.setPictures(StringUtil.arrayToString(pictures_url, ","));
+		}
 		moment.setCover(cover);
 		moment.setLatitude(latitude);
 		moment.setLongitude(longitude);
@@ -191,35 +212,42 @@ public class MomentServiceImpl implements MomentService {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.VIDEO_EMPTY,
 					MessageCommon.FAIL_MESSAGE_VIDEO_EMPTY);
 		}
-		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-		if (!tokenTemp.equals(token)) {
-			return ResponseUtil.ConvertToFailResponse();
-		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
+		// if (!tokenTemp.equals(token)) {
+		// return ResponseUtil.ConvertToFailResponse();
+		// }
 		return ResponseUtil.ConvertToSuccessResponse();
 	}
 
 	@Override
-	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
+	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp)
 				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
 			throw new ParameterException();
 		}
-		PageDTO pageDTO = new PageDTO();
+		// PageDTO pageDTO = new PageDTO();
+		Map<String, Object> map = new HashMap<String, Object>();
+		UserDTO user = userMapper.find(uid);
 		Map<String, Object> result = new HashMap<String, Object>();
-
-		pageDTO.setId(user_id);
-		pageDTO.setCurrentNumberFromPages(pages);
-		List<MomentDTO> momentDtos = findByPage(pageDTO);
+		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
+		map.put("size", MessageCommon.PAGE_SIZE);
+		map.put("latitude", user.getLatitude());
+		map.put("user_id", user_id);
+		map.put("longitude", user.getLongitude());
+		// pageDTO.setId(user_id);
+		// pageDTO.setCurrentNumberFromPages(pages);
+		List<MomentDTO> momentDtos = momentMapper.findUserMoment(map);
 		for (MomentDTO momentDTO : momentDtos) {
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
 				momentDTO.setPictures(momentDTO.getPictureString().split(","));
 			}
 		}
-		UserDTO userDto = userService.find(user_id);
-		result.put("user", userDto);
-		result.put("moment", momentDtos);
-		return result;
+		// UserDTO userDto = userService.find(user_id);
+		// result.put("user", userDto);
+//		result.put("moment", momentDtos);
+		return momentDtos;
 	}
 
 	@Override
@@ -252,13 +280,12 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public CommentDTO addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token, Long timestamp)
-			throws ParameterException, BusinessException {
+	public CommentDTO addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token,
+			Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(uid)
 				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
-
 		UserDTO user = userService.find(uid);
 		Comment comment = new Comment();
 		comment.setMomentId(mid);
@@ -266,10 +293,60 @@ public class MomentServiceImpl implements MomentService {
 		comment.setReplyUid(reply_uid);
 		comment.setMsg(msg);
 		comment.setFaceUrl(user.getFace_url());
-		// comment.setNickname(user.getNickname());
+		comment.setUsername(user.getUsername());
 		comment.setCreatedAt(new Date());
 		commentService.save(comment);
 		CommentDTO dto = CommentDtoAssembler.toDto(comment);
 		return dto;
+	}
+
+	@Override
+	public void removeComment(String token, Integer uid, Integer comment_id, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(comment_id)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
+			throw new ParameterException();
+		}
+		commentMapper.delete(comment_id);
+	}
+
+	@Override
+	public ThumbsUpDTO addThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
+				|| CommonUtil.isNull(timestamp)) {
+			throw new ParameterException();
+		}
+		UserDTO user = userService.find(uid);
+		ThumbsUp thumbsUp = new ThumbsUp();
+		thumbsUp.setMomentId(mid);
+		thumbsUp.setUserId(uid);
+		thumbsUp.setUsername(user.getUsername());
+		thumbsUp.setFaceUrl(user.getFace_url());
+		thumbsUp.setSignature(user.getSignature());
+		thumbsUp.setCreatedAt(new Date());
+		thumbsUpMapper.insert(thumbsUp);
+		ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+		return dto;
+	}
+
+	@Override
+	public void removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(thumbs_up_id)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
+			throw new ParameterException();
+		}
+		thumbsUpMapper.delete(thumbs_up_id);
+	}
+
+	@Override
+	public List<ThumbsUpDTO> showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
+				|| CommonUtil.isNull(pages) || CommonUtil.isNull(timestamp)) {
+			throw new ParameterException();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mid", mid);
+		map.put("size", MessageCommon.PAGE_SIZE);
+		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
+		return thumbsUpMapper.findThumbsUpByMid(map);
 	}
 }

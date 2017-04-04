@@ -162,10 +162,10 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
-	public UserDTO findThumbsUpUserByMid(Integer mid) {
-		return userMapper.findThumbsUpUserByMid(mid);
-	}
+//	@Override
+//	public UserDTO findThumbsUpUserByMid(Integer mid) {
+//		return userMapper.findThumbsUpUserByMid(mid);
+//	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

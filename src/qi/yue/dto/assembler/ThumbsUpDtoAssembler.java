@@ -14,7 +14,9 @@ public class ThumbsUpDtoAssembler {
 		if (!CommonUtil.isNull(thumbsUp)) {
 			dto.setCreated_at(thumbsUp.getCreatedAt());
 			dto.setMid(thumbsUp.getMomentId());
-			dto.setNickname(thumbsUp.getNickname());
+			dto.setUsername(thumbsUp.getUsername());
+			dto.setFace_Url(thumbsUp.getFaceUrl());
+			dto.setSignature(thumbsUp.getSignature());
 			dto.setThumbs_up_id(thumbsUp.getId());
 			dto.setUid(thumbsUp.getUserId());
 			dto.setUpdated_at(thumbsUp.getUpdatedAt());

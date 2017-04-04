@@ -5,7 +5,7 @@ import java.util.Date;
 public class ThumbsUpDTO {
 	private Integer thumbs_up_id;
 
-	private String nickname;
+	private String username;
 
 	private Integer uid;
 
@@ -27,12 +27,12 @@ public class ThumbsUpDTO {
 		this.thumbs_up_id = thumbs_up_id;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public Integer getUid() {

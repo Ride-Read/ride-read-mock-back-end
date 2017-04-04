@@ -19,11 +19,11 @@
 		<collection property="comment" ofType="qi.yue.dto.CommentDTO">
 			<id column="c_id" jdbcType="INTEGER" property="comment_id" />
 			<result column="c_user_id" jdbcType="INTEGER" property="uid" />
-			<result column="c_username" jdbcType="VARCHAR" property="nickname" />
+			<result column="c_username" jdbcType="VARCHAR" property="username" />
 			<result column="c_moment_id" jdbcType="INTEGER" property="mid" />
 			<result column="c_face_url" jdbcType="VARCHAR" property="face_url" />
 			<result column="c_reply_uid" jdbcType="INTEGER" property="reply_uid" />
-			<result column="c_reply_nickname" jdbcType="VARCHAR" property="reply_nickname" />
+			<result column="c_reply_username" jdbcType="VARCHAR" property="reply_username" />
 			<result column="c_created_at" jdbcType="TIMESTAMP" property="created_at" />
 			<result column="c_updated_at" jdbcType="TIMESTAMP" property="updated_at" />
 			<result column="c_msg" property="msg" jdbcType="LONGVARCHAR" />
@@ -32,7 +32,7 @@
 			<id column="t_id" property="thumbs_up_id" jdbcType="INTEGER" />
 			<result column="t_user_id" property="uid" jdbcType="INTEGER" />
 			<result column="t_moment_id" property="mid" jdbcType="INTEGER" />
-			<result column="t_nickname" property="nickname" jdbcType="VARCHAR" />
+			<result column="t_username" property="username" jdbcType="VARCHAR" />
 			<result column="t_created_at" property="created_at" jdbcType="TIMESTAMP" />
 			<result column="t_updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 		</collection>
@@ -70,10 +70,10 @@
 
 	<sql id="Comment_Column">
 		comment.id as c_id, comment.user_id as c_user_id,
-		comment.nickname as c_nickname,
+		comment.username as c_username,
 		comment.moment_id as c_moment_id,
 		comment.face_url as c_face_url,comment.reply_uid as
-		c_reply_uid,comment.reply_nickname as c_reply_nickname,
+		c_reply_uid,comment.reply_username as c_reply_username,
 		comment.created_at as c_created_at,
 		comment.updated_at as c_updated_at,
 		comment.msg as c_msg
@@ -81,7 +81,7 @@
 
 	<sql id="Thumbs_Up_Column">
 		thumbs_up.id as t_id, thumbs_up.user_id as t_user_id,
-		thumbs_up.nickname as t_nickname,
+		thumbs_up.username as t_username,
 		thumbs_up.moment_id as t_moment_id,
 		thumbs_up.created_at as t_created_at, thumbs_up.updated_at as
 		t_updated_at
@@ -120,14 +120,95 @@
 		<include refid="Comment_Column" />
 		,
 		<include refid="Thumbs_Up_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		* PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
 
-		from t_moment moment left join t_comment comment on
+		from
+		t_moment moment left join t_comment comment on
 		comment.moment_id=moment.id
 		left join t_thumbs_up thumbs_up on
 		thumbs_up.moment_id=moment.id
 		where
 		moment.user_id
 		=#{id,jdbcType=INTEGER}
+		limit
+		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+	</select>
+
+	<select id="findUserMoment" parameterType="qi.yue.dto.PageDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		<include refid="User_Column" />
+		,
+		<include refid="Comment_Column" />
+		,
+		<include refid="Thumbs_Up_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		* PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
+
+		from
+		t_moment moment left join t_user user
+		on user.id=moment.user_id left
+		join t_comment comment on
+		comment.moment_id=moment.id
+		left join
+		t_thumbs_up thumbs_up on
+		thumbs_up.moment_id=moment.id
+		where
+		moment.user_id
+		=#{user_id,jdbcType=INTEGER}
 		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
@@ -185,8 +266,8 @@
 		moment.user_id
 		in (select
 		tid from
-		t_following where
-		t_following.fid=#{fid,jdbcType=INTEGER})
+		t_follow where
+		t_follow.fid=#{fid,jdbcType=INTEGER})
 		order
 		by
 		moment.created_at

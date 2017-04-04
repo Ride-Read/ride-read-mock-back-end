@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class CommentDTO {
 	private Integer comment_id;
-	private String nickname;
+	private String username;
 	private Integer uid;
 	private Integer mid;
 	private String face_url;
 	private Integer reply_uid;
-	private String reply_nickname;
+	private String reply_username;
 	private Date created_at;
 	private String msg;
 	private Date updated_at;
@@ -22,12 +22,12 @@ public class CommentDTO {
 		this.comment_id = comment_id;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public Integer getUid() {
@@ -86,12 +86,11 @@ public class CommentDTO {
 		this.reply_uid = reply_uid;
 	}
 
-	public String getReply_nickname() {
-		return reply_nickname;
+	public String getReply_username() {
+		return reply_username;
 	}
 
-	public void setReply_nickname(String reply_nickname) {
-		this.reply_nickname = reply_nickname;
+	public void setReply_username(String reply_username) {
+		this.reply_username = reply_username;
 	}
-
 }

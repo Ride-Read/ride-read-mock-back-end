@@ -7,7 +7,7 @@ public class Comment {
 
 	private Integer userId;
 
-	private String nickname;
+	private String username;
 
 	private Integer momentId;
 
@@ -15,7 +15,7 @@ public class Comment {
 
 	private Integer replyUid;
 
-	private String replyNickname;
+	private String replyUsername;
 
 	private Date createdAt;
 
@@ -39,12 +39,12 @@ public class Comment {
 		this.userId = userId;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname == null ? null : nickname.trim();
+	public void setUsername(String username) {
+		this.username = username == null ? null : username.trim();
 	}
 
 	public Integer getMomentId() {
@@ -71,12 +71,12 @@ public class Comment {
 		this.replyUid = replyUid;
 	}
 
-	public String getReplyNickname() {
-		return replyNickname;
+	public String getReplyUsername() {
+		return replyUsername;
 	}
 
-	public void setReplyNickname(String replyNickname) {
-		this.replyNickname = replyNickname;
+	public void setReplyUsername(String replyUsername) {
+		this.replyUsername = replyUsername == null ? null : replyUsername.trim();
 	}
 
 	public Date getCreatedAt() {

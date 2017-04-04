@@ -21,6 +21,8 @@ public class FollowDTO {
 
 	private String followed_username;
 
+	private String followed_remark;
+
 	private Date createdAt;
 
 	private Date updatedAt;
@@ -95,6 +97,14 @@ public class FollowDTO {
 
 	public void setFollowed_username(String followed_username) {
 		this.followed_username = followed_username;
+	}
+
+	public String getFollowed_remark() {
+		return followed_remark;
+	}
+
+	public void setFollowed_remark(String followed_remark) {
+		this.followed_remark = followed_remark;
 	}
 
 	public Date getCreatedAt() {

@@ -25,7 +25,7 @@ public interface UserService {
 	 */
 	public UserDTO find(Integer id);
 
-	UserDTO findThumbsUpUserByMid(Integer mid);
+	// UserDTO findThumbsUpUserByMid(Integer mid);
 
 	// public int save(User user);
 

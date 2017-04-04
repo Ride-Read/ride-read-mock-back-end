@@ -7,6 +7,8 @@ import java.util.Map;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.PageDTO;
+import qi.yue.dto.ThumbsUpDTO;
+import qi.yue.dto.UserDTO;
 import qi.yue.entity.Moment;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
@@ -17,16 +19,17 @@ public interface MomentService {
 
 	List<MomentDTO> findByUserId(int userId);
 
-//	List<MomentDTO> findByPage(PageDTO pageDTO);
+	// List<MomentDTO> findByPage(PageDTO pageDTO);
 
 	int delete(int id);
 
-//	List<MomentDTO> findFollowingsMoment(Map<String, Object> map);
+	// List<MomentDTO> findFollowingsMoment(Map<String, Object> map);
 
-//	List<MomentDTO> findNearbyMoment(Map<String, Object> map);
-	
+	// List<MomentDTO> findNearbyMoment(Map<String, Object> map);
+
 	/**
 	 * 发送悦圈内容
+	 * 
 	 * @param msg
 	 * @param uid
 	 * @param video_url
@@ -42,10 +45,11 @@ public interface MomentService {
 	 */
 	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude)
-					throws ParameterException, BusinessException;
-	
+			throws ParameterException, BusinessException;
+
 	/**
 	 * 展示用户悦圈内容
+	 * 
 	 * @param user_id
 	 * @param uid
 	 * @param timestamp
@@ -55,11 +59,12 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
-			Integer pages) throws ParameterException, BusinessException;
-	
+	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
+			throws ParameterException, BusinessException;
+
 	/**
 	 * 展示悦圈内容
+	 * 
 	 * @param uid
 	 * @param type
 	 * @param timestamp
@@ -73,9 +78,10 @@ public interface MomentService {
 	 */
 	public List<MomentDTO> showMoment(Integer uid, Integer type, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException;
-	
+
 	/**
-	 * 添加悦圈内容
+	 * 添加评论内容
+	 * 
 	 * @param msg
 	 * @param mid
 	 * @param uid
@@ -86,6 +92,30 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public CommentDTO addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token,
-			Long timestamp) throws ParameterException, BusinessException;
+	public CommentDTO addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token, Long timestamp)
+			throws ParameterException, BusinessException;
+
+	/**
+	 * 删除评论内容
+	 * 
+	 * @param uid
+	 * @param comment_id
+	 * @param token
+	 * @param timestamp
+	 */
+	public void removeComment(String token, Integer uid, Integer comment_id, Long timestamp);
+
+	/**
+	 * 删除评论内容
+	 * 
+	 * @param uid
+	 * @param mid
+	 * @param token
+	 * @param timestamp
+	 */
+	ThumbsUpDTO addThumbsup(String token, Integer uid, Integer mid, Long timestamp);
+
+	public void removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp);
+
+	public List<ThumbsUpDTO> showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages);
 }

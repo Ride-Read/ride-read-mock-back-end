@@ -21,6 +21,8 @@ public class Follow {
 
 	private String followedUsername;
 
+	private String followedRemark;
+
 	private Date createdAt;
 
 	private Date updatedAt;
@@ -95,6 +97,14 @@ public class Follow {
 
 	public void setFollowedUsername(String followedUsername) {
 		this.followedUsername = followedUsername == null ? null : followedUsername.trim();
+	}
+
+	public String getFollowedRemark() {
+		return followedRemark;
+	}
+
+	public void setFollowedRemark(String followedRemark) {
+		this.followedRemark = followedRemark;
 	}
 
 	public Date getCreatedAt() {

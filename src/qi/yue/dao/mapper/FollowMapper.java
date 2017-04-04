@@ -1,6 +1,7 @@
 package qi.yue.dao.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import qi.yue.dto.FollowDTO;
 import qi.yue.entity.Follow;
@@ -11,6 +12,8 @@ public interface FollowMapper {
 	List<FollowDTO> findByTid(Integer tid);
 
 	List<FollowDTO> findByFid(Integer fid);
+
+	FollowDTO findByFidAndTid(Map<String, Object> map);
 
 	int deleteByFid(Integer fid);
 }

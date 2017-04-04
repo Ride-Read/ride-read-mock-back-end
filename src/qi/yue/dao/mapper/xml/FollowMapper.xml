@@ -17,6 +17,8 @@
 			jdbcType="VARCHAR" />
 		<result column="followed_username" property="followed_username"
 			jdbcType="VARCHAR" />
+		<result column="followed_remark" property="followed_remark"
+			jdbcType="VARCHAR" />
 		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
 		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
 	</resultMap>
@@ -25,7 +27,7 @@
 		follower_username, tid,
 		followed_face_url,
 		followed_signature,
-		followed_username, created_at, updated_at
+		followed_username, followed_remark, created_at, updated_at
 	</sql>
 	<select id="findByTid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
@@ -39,6 +41,14 @@
 		from t_follow
 		where fid = #{fid,jdbcType=INTEGER}
 	</select>
+	<select id="findByFidAndTid" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_follow
+		where fid = #{fid,jdbcType=INTEGER} and tid =
+		#{tid,jdbcType=INTEGER}
+	</select>
 	<delete id="deleteByFid" parameterType="java.lang.Integer">
 		delete
 		from t_follow
@@ -50,16 +60,18 @@
 		follower_face_url,
 		follower_signature, follower_username, tid,
 		followed_face_url, followed_signature, followed_username,
-		created_at,
-		updated_at)
-		values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER},
+		followed_remark, created_at, updated_at
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER},
 		#{followerFaceUrl,jdbcType=VARCHAR},
 		#{followerSignature,jdbcType=VARCHAR},
 		#{followerUsername,jdbcType=VARCHAR}, #{tid,jdbcType=INTEGER},
 		#{followedFaceUrl,jdbcType=VARCHAR},
 		#{followedSignature,jdbcType=VARCHAR},
 		#{followedUsername,jdbcType=VARCHAR},
-		#{createdAt,jdbcType=TIMESTAMP},
-		#{updatedAt,jdbcType=TIMESTAMP})
+		#{followedRemark,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP},
+		#{updatedAt,jdbcType=TIMESTAMP}
+		)
 	</insert>
 </mapper>
