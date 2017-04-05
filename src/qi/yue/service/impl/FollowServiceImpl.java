@@ -16,6 +16,7 @@ import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.FollowDTO;
 import qi.yue.dto.FollowerDTO;
 import qi.yue.dto.UserDTO;
+import qi.yue.dto.assembler.FollowDTOAssembler;
 import qi.yue.entity.Follow;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;

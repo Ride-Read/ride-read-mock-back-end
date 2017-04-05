@@ -20,9 +20,9 @@ import qi.yue.dto.PageDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.CommentDtoAssembler;
-import qi.yue.dto.assembler.MomentDtoAssembler;
-import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
+import qi.yue.dto.assembler.CommentDTOAssembler;
+import qi.yue.dto.assembler.MomentDTOAssembler;
+import qi.yue.dto.assembler.ThumbsUpDTOAssembler;
 import qi.yue.entity.Comment;
 import qi.yue.entity.Moment;
 import qi.yue.entity.ThumbsUp;
@@ -72,11 +72,11 @@ public class MomentController {
 
 	@RequestMapping(value = "/show_user", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
-			Integer pages) {
+			Integer pages, BigDecimal latitude, BigDecimal longitude) {
 		try {
-			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages);
+			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
+					longitude);
 			return ResponseUtil.ConvertToSuccessResponse(data);
-
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,

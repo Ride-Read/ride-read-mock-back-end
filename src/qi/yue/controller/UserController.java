@@ -1,6 +1,7 @@
 package qi.yue.controller;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -40,19 +41,20 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO login(String phonenumber, String password, BigDecimal latitude,
 			BigDecimal longitude) {
+		Long timestamp = new Date().getTime();
 		try {
-			UserDTO userDTO = userService.login(phonenumber, password, latitude, longitude);
-			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			UserDTO userDTO = userService.login(phonenumber, password, latitude, longitude, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO, timestamp);
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
-					MessageCommon.FAIL_MESSAGE_PARAMETER);
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
 		}
 
 	}
@@ -60,10 +62,8 @@ public class UserController {
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO resetPassword(String phonenumber, String new_password, Long timestamp) {
 		try {
-
 			userService.resetPassword(phonenumber, new_password, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse();
-
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
@@ -81,20 +81,21 @@ public class UserController {
 	@Transactional
 	public @ResponseBody ResponseDTO register(String phonenumber, String password, String face_url, String ride_read_id,
 			String username) {
+		Long timestamp = new Date().getTime();
 		try {
 			UserDTO userDTO = userService.register(phonenumber, password, face_url, ride_read_id, username);
-			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO, timestamp);
 
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
-					MessageCommon.FAIL_MESSAGE_PARAMETER);
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
 		}
 	}
 
@@ -125,23 +126,23 @@ public class UserController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO update(String career, String phonenumber, String location, String birthday,
-			String face_url, Integer uid, String token, String signature, String school, Integer sex,
+			String username, String face_url, Integer uid, String token, String signature, String school, Integer sex,
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
 		try {
-			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, face_url, uid, token,
-					signature, school, sex, latitude, longitude, hometown, timestamp);
-			return ResponseUtil.ConvertToSuccessResponse(userDTO);
+			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, username, face_url,
+					uid, token, signature, school, sex, latitude, longitude, hometown, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(userDTO, timestamp);
 
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
-					MessageCommon.FAIL_MESSAGE_PARAMETER);
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
 		}
 	}
 
@@ -191,13 +192,13 @@ public class UserController {
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
-					MessageCommon.FAIL_MESSAGE_PARAMETER);
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
 		}
 	}
 

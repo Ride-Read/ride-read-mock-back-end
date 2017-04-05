@@ -13,8 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.UserMapper;
+import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.UserDtoAssembler;
+import qi.yue.dto.assembler.UserDTOAssembler;
 import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
@@ -162,17 +163,18 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-//	@Override
-//	public UserDTO findThumbsUpUserByMid(Integer mid) {
-//		return userMapper.findThumbsUpUserByMid(mid);
-//	}
+	// @Override
+	// public UserDTO findThumbsUpUserByMid(Integer mid) {
+	// return userMapper.findThumbsUpUserByMid(mid);
+	// }
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude)
+	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude, Long timestamp)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
-				|| CommonUtil.isNullOrEmpty(latitude) || CommonUtil.isNullOrEmpty(longitude)) {
+				|| CommonUtil.isNullOrEmpty(latitude) || CommonUtil.isNullOrEmpty(longitude)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
 
@@ -185,7 +187,6 @@ public class UserServiceImpl implements UserService {
 		if (!password.equals(userDTO.getPassword())) {
 			throw new BusinessException(MessageCommon.STATUS_PASSWORD_WRONG, MessageCommon.FAIL_MESSAGE_PASSWORD_WRONG);
 		}
-		long timestamp = new Date().getTime();
 		String token = EncryptionUtil.GetMD5Code(userDTO.getUid() + timestamp + MessageCommon.PUBLIC_KEY);
 		userDTO.setToken(token);
 		userDTO.setLatitude(latitude);
@@ -248,15 +249,13 @@ public class UserServiceImpl implements UserService {
 		user.setPhonenumber(phonenumber);
 		user.setPassword(passwordSHA);
 		user.setFaceUrl(face_url);
-		// user.setNickname(nickname);
-
 		// 其实createdAt和updatedAt 可以直接写在SQL脚本里面，因为一般这个值都是固定为插入的日期，所以直接
 		// 在脚本里面插入sys_date到这个字段就行
 		Date date = new Date();
 		user.setCreatedAt(date);
 		user.setUpdatedAt(date);
 		save(user);
-		return UserDtoAssembler.toDto(user);
+		return UserDTOAssembler.toDto(user);
 	}
 
 	@Override
@@ -270,22 +269,25 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String face_url,
-			Integer uid, String token, String signature, String school, Integer sex, BigDecimal latitude,
-			BigDecimal longitude, String hometown, Long timestamp) throws ParameterException, BusinessException {
+	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
+			String face_url, Integer uid, String token, String signature, String school, Integer sex,
+			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
+			throws ParameterException, BusinessException {
 
 		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
 				|| CommonUtil.isNullOrEmpty(location) || CommonUtil.isNullOrEmpty(birthday)
-				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token)
-				|| CommonUtil.isNullOrEmpty(signature) || CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex)
-				|| CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown)
-				|| CommonUtil.isNull(timestamp)) {
+				|| CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid)
+				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(signature)
+				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNull(latitude)
+				|| CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
 		UserDTO userDTO = find(uid);
 		if (CommonUtil.isNull(userDTO)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
+		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
+		// MessageCommon.PUBLIC_KEY);
 		User user = new User();
 		user.setId(uid);
 		user.setCareer(career);
@@ -295,7 +297,7 @@ public class UserServiceImpl implements UserService {
 		user.setId(uid);
 		user.setToken(token);
 		user.setSignature(signature);
-		// user.setNickname(nickname);
+		user.setUsername(username);
 		user.setSchool(school);
 		user.setLatitude(latitude);
 		user.setLongitude(longitude);

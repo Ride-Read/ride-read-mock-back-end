@@ -4,7 +4,7 @@ import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 import qi.yue.utils.CommonUtil;
 
-public class UserDtoAssembler {
+public class UserDTOAssembler {
 	/**
 	 * @param thumbsUp
 	 * @return

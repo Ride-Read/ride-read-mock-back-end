@@ -7,7 +7,7 @@ public class MessageCommon {
 	public static final String STATUS_USER_IS_EXIST = "1000";// 用户已存在
 	public static final String STATUS_USER_NOT_EXIST = "1002";// 用户不存在
 	public static final String STATUS_PASSWORD_WRONG = "1003";// 密码错误
-	public static final String STATUS_PHONENUMBER_EXIST = "1004";// 手机号已存在
+	public static final String STATUS_PHONENUMBER_EXIST = "1004";// 手机号已注册
 	public static final String STATUS_PARAMETER_WRONG = "1005";// 参数错误或者为空
 	public static final String STATUS_QUERY_FAIL = "1006";// 查询出错
 	public static final String STATUS_UPDATE_FAIL = "1007";// update语句执行失败
@@ -40,7 +40,7 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_TYPE_ERROR = "类型错误";
 	public static final String FAIL_MESSAGE_IMAGE_EMPTY = "图片为空";
 	public static final String FAIL_MESSAGE_VIDEO_EMPTY = "视频为空";
-	public static final String FAIL_MESSAGE_PHONENUMBER_EXIST = "手机号已存在";
+	public static final String FAIL_MESSAGE_PHONENUMBER_EXIST = "手机号已注册";
 	public static final String FAIL_MESSAGE_RIDE_READ_ID_EXIST = "骑阅号已存在";
 	public static final String FAIL_MESSAGE_DATE_FORMAT_ERROR = "日期格式错误";
 

@@ -59,8 +59,8 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
-			throws ParameterException, BusinessException;
+	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
+			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException;
 
 	/**
 	 * 展示悦圈内容

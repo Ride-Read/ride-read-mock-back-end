@@ -19,8 +19,8 @@
 			jdbcType="VARCHAR" />
 		<result column="followed_remark" property="followed_remark"
 			jdbcType="VARCHAR" />
-		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
-		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, fid, follower_face_url, follower_signature,

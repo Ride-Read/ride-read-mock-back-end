@@ -2,6 +2,7 @@ package qi.yue.service;
 
 import java.math.BigDecimal;
 
+import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
@@ -38,7 +39,7 @@ public interface UserService {
 	// public int updatePasswordByPhonenumber(String password, String
 	// phonenumber) throws ParameterException, BusinessException;
 
-	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude)
+	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude, Long timestamp)
 			throws ParameterException, BusinessException;
 
 	/**
@@ -101,7 +102,8 @@ public interface UserService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String face_url,
-			Integer uid, String token, String signature, String school, Integer sex, BigDecimal latitude,
-			BigDecimal longitude, String hometown, Long timestamp) throws ParameterException, BusinessException;
+	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
+			String face_url, Integer uid, String token, String signature, String school, Integer sex,
+			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
+			throws ParameterException, BusinessException;
 }

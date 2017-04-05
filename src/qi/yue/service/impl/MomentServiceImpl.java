@@ -30,8 +30,8 @@ import qi.yue.dto.PageDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.CommentDtoAssembler;
-import qi.yue.dto.assembler.ThumbsUpDtoAssembler;
+import qi.yue.dto.assembler.CommentDTOAssembler;
+import qi.yue.dto.assembler.ThumbsUpDTOAssembler;
 import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
 import qi.yue.service.UserService;
@@ -221,21 +221,20 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages)
-			throws ParameterException, BusinessException {
+	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
+			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp)
 				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
 			throw new ParameterException();
 		}
 		// PageDTO pageDTO = new PageDTO();
 		Map<String, Object> map = new HashMap<String, Object>();
-		UserDTO user = userMapper.find(uid);
-		Map<String, Object> result = new HashMap<String, Object>();
+		// UserDTO user = userMapper.find(uid);
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
-		map.put("latitude", user.getLatitude());
+		map.put("latitude", latitude);
 		map.put("user_id", user_id);
-		map.put("longitude", user.getLongitude());
+		map.put("longitude", longitude);
 		// pageDTO.setId(user_id);
 		// pageDTO.setCurrentNumberFromPages(pages);
 		List<MomentDTO> momentDtos = momentMapper.findUserMoment(map);
@@ -243,10 +242,10 @@ public class MomentServiceImpl implements MomentService {
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
 				momentDTO.setPictures(momentDTO.getPictureString().split(","));
 			}
+			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
+					.doubleValue();
+			momentDTO.setDistanceString(distance.toString() + "km");
 		}
-		// UserDTO userDto = userService.find(user_id);
-		// result.put("user", userDto);
-//		result.put("moment", momentDtos);
 		return momentDtos;
 	}
 
@@ -296,7 +295,7 @@ public class MomentServiceImpl implements MomentService {
 		comment.setUsername(user.getUsername());
 		comment.setCreatedAt(new Date());
 		commentService.save(comment);
-		CommentDTO dto = CommentDtoAssembler.toDto(comment);
+		CommentDTO dto = CommentDTOAssembler.toDto(comment);
 		return dto;
 	}
 
@@ -324,7 +323,7 @@ public class MomentServiceImpl implements MomentService {
 		thumbsUp.setSignature(user.getSignature());
 		thumbsUp.setCreatedAt(new Date());
 		thumbsUpMapper.insert(thumbsUp);
-		ThumbsUpDTO dto = ThumbsUpDtoAssembler.toDto(thumbsUp);
+		ThumbsUpDTO dto = ThumbsUpDTOAssembler.toDto(thumbsUp);
 		return dto;
 	}
 

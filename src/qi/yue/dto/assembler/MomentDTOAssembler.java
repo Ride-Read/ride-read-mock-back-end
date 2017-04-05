@@ -4,7 +4,7 @@ import qi.yue.dto.MomentDTO;
 import qi.yue.entity.Moment;
 import qi.yue.utils.CommonUtil;
 
-public class MomentDtoAssembler {
+public class MomentDTOAssembler {
 	/**
 	 * @param moment
 	 * @return MomentDto

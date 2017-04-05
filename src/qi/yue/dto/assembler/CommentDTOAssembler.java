@@ -4,7 +4,7 @@ import qi.yue.dto.CommentDTO;
 import qi.yue.entity.Comment;
 import qi.yue.utils.CommonUtil;
 
-public class CommentDtoAssembler {
+public class CommentDTOAssembler {
 	/**
 	 * @param comment
 	 * @return
