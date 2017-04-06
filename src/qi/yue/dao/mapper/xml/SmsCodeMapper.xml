@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.SmsCodeMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.SmsCodeDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="phonenumber" property="phonenumber" jdbcType="VARCHAR" />
+		<result column="rand_code" property="rand_code" jdbcType="VARCHAR" />
+		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="SmsCodeMap" extends="BaseResultMap" type="qi.yue.dto.SmsCodeDTO">
+		<id column="count" property="count" jdbcType="INTEGER" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, phonenumber, rand_code, created_at
+	</sql>
+
+	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_sms_code where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByPhonenumber" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_sms_code where phonenumber = #{phonenumber,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findDayRecordByPhonenumber" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_sms_code where phonenumber = #{phonenumber,jdbcType=VARCHAR}
+		and to_days(created_at)=to_days(now())
+		order by created_at desc
+	</select>
+
+	<insert id="insert" parameterType="qi.yue.entity.SmsCode">
+		insert into t_sms_code (id,
+		phonenumber, rand_code,
+		created_at)
+		values (#{id,jdbcType=INTEGER},
+		#{phonenumber,jdbcType=VARCHAR},
+		#{randCode,jdbcType=VARCHAR},
+		#{createdAt,jdbcType=TIMESTAMP})
+	</insert>
+</mapper>

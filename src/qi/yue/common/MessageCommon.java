@@ -15,6 +15,8 @@ public class MessageCommon {
 	public static final String STATUS_DELETE_FAIL = "1009";// 删除数据失败
 	public static final String STATUS_RIDE_READ_ID_EXIST = "1010";// 骑阅号已存在
 	public static final String STATUS_DATE_FORMAT_ERROR = "1011";// 日期格式错误
+	public static final String STATUS_SMS_CODE_MAX_ERROR = "1012";// 每日只能获取五条验证码，现已用完，请明天再试
+	public static final String STATUS_MIN_INTERVAL_ERROR = "1013";// 六十秒内不能重复获取验证码，请稍后再试
 
 	public static final String TYPE_ERROR = "1011";// 类型错误
 	public static final String IMAGE_EMPTY = "1012";// 图片为空
@@ -43,8 +45,13 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_PHONENUMBER_EXIST = "手机号已注册";
 	public static final String FAIL_MESSAGE_RIDE_READ_ID_EXIST = "骑阅号已存在";
 	public static final String FAIL_MESSAGE_DATE_FORMAT_ERROR = "日期格式错误";
+	public static final String FAIL_MESSAGE_SMS_CODE_MAX_ERROR = "每日只能获取五条验证码，现已用完，请明天再试";
+	public static final String FAIL_MESSAGE_MIN_INTERVAL_ERROR = "六十秒内不能重复获取验证码，请稍后再试";
 
 	public static final int PAGE_SIZE = 20;
+
+	public static final String YUN_PIAN_APIKEY = "d1854b3aa962e88c4880bbcd10014877";
+	public static final Integer RAND_LENGTH = 6;
 
 	private MessageCommon() {
 	}

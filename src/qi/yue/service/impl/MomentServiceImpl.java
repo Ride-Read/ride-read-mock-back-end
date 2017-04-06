@@ -271,7 +271,7 @@ public class MomentServiceImpl implements MomentService {
 			momentDtos = findNearbyMoment(map);
 		}
 		for (MomentDTO momentDTO : momentDtos) {
-			if (CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
 				momentDTO.setPictures(momentDTO.getPictureString().split(","));
 			}
 		}

@@ -83,6 +83,17 @@ public class StringUtil {
 			}
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 将数组转换成字符串
+	 * 
+	 * @param strs
+	 * @param interval
+	 * @return
+	 */
+	public static String getYunPianCode(String randCode) {
+		return "【骑阅APP】您的验证码是" + randCode;
 
 	}
 

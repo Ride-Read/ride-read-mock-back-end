@@ -44,12 +44,13 @@
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 		<!-- 指定数据库表 -->
-	<!-- <table tableName="t_user"></table> -->
+		<!-- <table tableName="t_user"></table> -->
 		<!-- <table tableName="t_read_circle"></table> -->
 		<!-- <table tableName="t_following"></table> -->
-<!-- 		<table tableName="t_follow"></table> -->
-	<table tableName="t_thumbs_up"></table>
-	<!-- <table tableName="t_comment"></table> -->
-<!-- 		<table tableName="t_moment"></table> -->
+		<!-- <table tableName="t_follow"></table> -->
+	<!-- <table tableName="t_thumbs_up"></table> -->
+		<!-- <table tableName="t_comment"></table> -->
+		<!-- <table tableName="t_moment"></table> -->
+		<table tableName="t_sms_code"></table>
 	</context>
 </generatorConfiguration>
