@@ -1,11 +1,7 @@
 package qi.yue.controller;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -16,16 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
-import qi.yue.dto.PageDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
-import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.CommentDTOAssembler;
-import qi.yue.dto.assembler.MomentDTOAssembler;
-import qi.yue.dto.assembler.ThumbsUpDTOAssembler;
-import qi.yue.entity.Comment;
-import qi.yue.entity.Moment;
-import qi.yue.entity.ThumbsUp;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.CommentService;
@@ -33,9 +21,7 @@ import qi.yue.service.MomentService;
 import qi.yue.service.ThumbsUpService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
-import qi.yue.utils.EncryptionUtil;
 import qi.yue.utils.ResponseUtil;
-import qi.yue.utils.StringUtil;
 
 @Controller
 @RequestMapping("/moments")
@@ -59,7 +45,6 @@ public class MomentController {
 			momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token, latitude,
 					longitude);
 			return ResponseUtil.ConvertToSuccessResponse();
-
 		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);

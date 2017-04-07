@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.FollowMapper;
@@ -20,6 +21,7 @@ import qi.yue.dto.assembler.FollowDTOAssembler;
 import qi.yue.entity.Follow;
 import qi.yue.entity.Follower;
 import qi.yue.entity.Following;
+import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.FollowService;
@@ -35,6 +37,7 @@ public class FollowServiceImpl implements FollowService {
 	@Resource
 	private FollowerMapper followerMapper;
 
+	@Transactional(rollbackFor = Exception.class)
 	public void follow(Integer uid, String token, Integer user_id, Long timestamp)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(user_id)
@@ -60,6 +63,18 @@ public class FollowServiceImpl implements FollowService {
 		follow.setCreatedAt(new Date());
 		follow.setUpdatedAt(new Date());
 		followMapper.insert(follow);
+
+		Integer follower = userFollowed.getFollower() + 1;
+		User usered = new User();
+		usered.setId(userFollowed.getUid());
+		usered.setFollower(follower);
+		userMapper.update(usered);
+
+		Integer following = userFollowing.getFollowing() + 1;
+		User usering = new User();
+		usering.setId(userFollowing.getUid());
+		usering.setFollowing(following);
+		userMapper.update(usering);
 	}
 
 	@Override
@@ -89,14 +104,31 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void unfollow(Integer fid, String token, Integer user_id, Long timestamp)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNull(fid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(user_id)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
+		UserDTO userFollowed = userMapper.find(user_id);
+		UserDTO userFollowing = userMapper.find(fid);
+		if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
+			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
+		}
 		try {
 			followMapper.deleteByFid(fid);
+			Integer follower = userFollowed.getFollower() - 1;
+			User usered = new User();
+			usered.setId(userFollowed.getUid());
+			usered.setFollower(follower);
+			userMapper.update(usered);
+
+			Integer following = userFollowed.getFollowing() - 1;
+			User usering = new User();
+			usering.setId(userFollowing.getUid());
+			usering.setFollowing(following);
+			userMapper.update(usering);
 		} catch (BusinessException e) {
 			throw new BusinessException(MessageCommon.STATUS_DELETE_FAIL, MessageCommon.FAIL_MESSAGE_DELETE_FAIL);
 		}
@@ -129,6 +161,7 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteByFid(int fid) {
 		return followerMapper.deleteByFid(fid);
 	}

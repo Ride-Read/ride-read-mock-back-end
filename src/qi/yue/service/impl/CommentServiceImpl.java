@@ -3,6 +3,7 @@ package qi.yue.service.impl;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.CommentMapper;
@@ -17,17 +18,18 @@ public class CommentServiceImpl implements CommentService {
 	private CommentMapper commentMapper;
 
 	@Override
-	public int save(Comment comment) throws BusinessException{
+	@Transactional(rollbackFor = Exception.class)
+	public int save(Comment comment) throws BusinessException {
 		try {
-			return commentMapper.insert(comment);	
-		}catch(BusinessException e) {
-			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL,
-					MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
+			return commentMapper.insert(comment);
+		} catch (BusinessException e) {
+			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL, MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
 		}
-		
+
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int delete(Integer id) {
 		return commentMapper.delete(id);
 	}

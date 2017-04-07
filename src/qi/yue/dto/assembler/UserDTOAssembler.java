@@ -35,7 +35,7 @@ public class UserDTOAssembler {
 			dto.setUid(user.getId());
 			dto.setUpdated_at(user.getUpdatedAt());
 			dto.setUsername(user.getUsername());
-			dto.setRideReadId(user.getRideReadId());
+			dto.setRide_read_id(user.getRideReadId());
 		}
 
 		return dto;

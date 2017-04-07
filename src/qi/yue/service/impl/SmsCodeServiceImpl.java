@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yunpian.sdk.model.ResultDO;
 import com.yunpian.sdk.model.SendSingleSmsInfo;
@@ -33,6 +34,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	}
 
 	@Override
+	@Transactional
 	public int save(SmsCode smsCode) {
 		// TODO Auto-generated method stub
 		return smsCodeMapper.insert(smsCode);

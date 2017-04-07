@@ -50,7 +50,7 @@ public class UtilController {
 			Auth auth = Auth.create(MessageCommon.QI_NIU_ACCESS_KEY, MessageCommon.QI_NIU_SECRE_KEY);
 			String upToken = auth.uploadToken(MessageCommon.QI_NIU_BUCKET, filename);
 			Map<String, String> map = new HashMap<>();
-			map.put("upToken", upToken);
+			map.put("up_token", upToken);
 			return ResponseUtil.ConvertToSuccessResponse(map);
 			// }
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class UtilController {
 				smsCode.setCreatedAt(new Date());
 				smsCodeService.save(smsCode);
 				Map<String, String> map = new HashMap<>();
-				map.put("randCode", randCode);
+				map.put("rand_code", randCode);
 				return ResponseUtil.ConvertToSuccessResponse(map);
 			} else {
 				return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);

@@ -22,8 +22,7 @@
 		<result column="longitude" jdbcType="DECIMAL" property="longitude" />
 		<result column="latitude" jdbcType="DECIMAL" property="latitude" />
 		<result column="career" property="career" jdbcType="VARCHAR" />
-		<!-- <result column="nickname" property="nickname" jdbcType="VARCHAR" /> -->
-		<result column="ride_read_id" property="rideReadId" jdbcType="VARCHAR" />
+		<result column="ride_read_id" property="ride_read_id" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -109,7 +108,6 @@
 		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
-
 	<insert id="insert" parameterType="qi.yue.entity.User"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_user (id, username,

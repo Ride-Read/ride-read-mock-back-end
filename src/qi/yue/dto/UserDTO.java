@@ -48,7 +48,7 @@ public class UserDTO {
 
 	private Integer is_followed;// 0-互相关注，1-单项关注，-1-无效
 
-	private String rideReadId;
+	private String ride_read_id;
 
 	public Integer getUid() {
 		return uid;
@@ -226,11 +226,11 @@ public class UserDTO {
 		this.is_followed = is_followed;
 	}
 
-	public String getRideReadId() {
-		return rideReadId;
+	public String getRide_read_id() {
+		return ride_read_id;
 	}
 
-	public void setRideReadId(String rideReadId) {
-		this.rideReadId = rideReadId;
+	public void setRide_read_id(String ride_read_id) {
+		this.ride_read_id = ride_read_id;
 	}
 }

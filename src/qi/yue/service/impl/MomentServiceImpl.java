@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.entity.Comment;
 import qi.yue.entity.Moment;
@@ -73,6 +74,7 @@ public class MomentServiceImpl implements MomentService {
 	 * @return int
 	 * @throws BusinessException
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	public int save(Moment moment) throws BusinessException {
 		try {
 			return momentMapper.insert(moment);
@@ -93,6 +95,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int delete(int id) {
 		return momentMapper.delete(id);
 	}
@@ -127,7 +130,7 @@ public class MomentServiceImpl implements MomentService {
 			}
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 					.doubleValue();
-			momentDTO.setDistanceString(distance.toString() + "km");
+			momentDTO.setDistance_string(distance.toString() + "km");
 		}
 		return MomentDTOList;
 	}
@@ -161,7 +164,7 @@ public class MomentServiceImpl implements MomentService {
 				}
 				Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 						.doubleValue();
-				momentDTO.setDistanceString(distance.toString() + "km");
+				momentDTO.setDistance_string(distance.toString() + "km");
 			}
 			return MomentDTOList;
 		} catch (BusinessException e) {
@@ -170,6 +173,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude)
 			throws ParameterException, BusinessException {
@@ -244,7 +248,7 @@ public class MomentServiceImpl implements MomentService {
 			}
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 					.doubleValue();
-			momentDTO.setDistanceString(distance.toString() + "km");
+			momentDTO.setDistance_string(distance.toString() + "km");
 		}
 		return momentDtos;
 	}
@@ -279,6 +283,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public CommentDTO addComment(String msg, Integer mid, Integer uid, Integer reply_uid, String token,
 			Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(uid)
@@ -300,6 +305,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void removeComment(String token, Integer uid, Integer comment_id, Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(comment_id)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
@@ -309,6 +315,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ThumbsUpDTO addThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
@@ -328,6 +335,7 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(thumbs_up_id)
 				|| CommonUtil.isNullOrEmpty(timestamp)) {

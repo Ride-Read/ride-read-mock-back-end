@@ -28,7 +28,6 @@ import qi.yue.utils.ResponseUtil;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-
 	@Resource
 	private UserService userService;
 	@Resource

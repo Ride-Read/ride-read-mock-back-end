@@ -254,6 +254,9 @@ public class UserServiceImpl implements UserService {
 		Date date = new Date();
 		user.setCreatedAt(date);
 		user.setUpdatedAt(date);
+		user.setSex(0);
+		user.setFollower(0);
+		user.setFollowing(0);
 		save(user);
 		return UserDTOAssembler.toDto(user);
 	}
