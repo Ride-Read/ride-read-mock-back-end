@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.FollowerMapper;
 import qi.yue.dao.mapper.FollowingMapper;
-import qi.yue.dto.FollowerDTO;
 import qi.yue.dto.FollowingDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.entity.Follower;

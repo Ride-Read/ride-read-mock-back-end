@@ -40,7 +40,7 @@
 
 	<resultMap id="UserResultMap" type="qi.yue.dto.MomentDTO"
 		extends="BaseResultMap">
-		<association property="user" javaType="qi.yue.dto.UserDTO">
+		<association property="user" javaType="qi.yue.dto.SimplifyUserDTO">
 			<id column="u_id" property="uid" jdbcType="INTEGER" />
 			<result column="u_username" property="username" jdbcType="VARCHAR" />
 			<result column="u_sex" property="sex" jdbcType="INTEGER" />
@@ -161,7 +161,7 @@
 	</select>
 
 	<select id="findUserMoment" parameterType="qi.yue.dto.PageDTO"
-		resultMap="BaseResultMap">
+		resultMap="UserResultMap">
 		select
 		<include refid="Moment_Column" />
 		,

@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
 		user.setSex(0);
 		user.setFollower(0);
 		user.setFollowing(0);
-		save(user);
+		userMapper.insert(user);
 		return UserDTOAssembler.toDto(user);
 	}
 

@@ -27,7 +27,7 @@ public class MomentDTO {
 
 	private String[] pictures;
 
-	private UserDTO user;
+	private SimplifyUserDTO user;
 
 	private List<CommentDTO> comment;
 
@@ -145,11 +145,11 @@ public class MomentDTO {
 		this.thumbs_up = thumbs_up;
 	}
 
-	public UserDTO getUser() {
+	public SimplifyUserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(UserDTO user) {
+	public void setUser(SimplifyUserDTO user) {
 		this.user = user;
 	}
 

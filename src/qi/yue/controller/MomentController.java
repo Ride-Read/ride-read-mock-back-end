@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
@@ -56,12 +58,17 @@ public class MomentController {
 	}
 
 	@RequestMapping(value = "/show_user", method = RequestMethod.POST)
-	public @ResponseBody ResponseDTO showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
+	public @ResponseBody Object showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
 			Integer pages, BigDecimal latitude, BigDecimal longitude) {
 		try {
 			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
 					longitude);
-			return ResponseUtil.ConvertToSuccessResponse(data);
+			ResponseDTO responseDTO = ResponseUtil.ConvertToSuccessResponse(data);
+			String[] excludes = new String[] { "data" };
+			JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.setExcludes(excludes);
+			JSONObject jsonObject = JSONObject.fromObject(responseDTO, jsonConfig);
+			return responseDTO;
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
