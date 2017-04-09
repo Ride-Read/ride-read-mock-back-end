@@ -225,22 +225,18 @@ public class MomentServiceImpl implements MomentService {
 	}
 
 	@Override
-	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
+	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(user_id) || CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(timestamp)
 				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
 			throw new ParameterException();
 		}
-		// PageDTO pageDTO = new PageDTO();
 		Map<String, Object> map = new HashMap<String, Object>();
-		// UserDTO user = userMapper.find(uid);
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
 		map.put("latitude", latitude);
 		map.put("user_id", user_id);
 		map.put("longitude", longitude);
-		// pageDTO.setId(user_id);
-		// pageDTO.setCurrentNumberFromPages(pages);
 		List<MomentDTO> momentDtos = momentMapper.findUserMoment(map);
 		for (MomentDTO momentDTO : momentDtos) {
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
@@ -250,7 +246,27 @@ public class MomentServiceImpl implements MomentService {
 					.doubleValue();
 			momentDTO.setDistance_string(distance.toString() + "km");
 		}
-		return momentDtos;
+		UserDTO user = userMapper.find(user_id);
+		Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+		mapTemp1.put("fid", user_id);
+		mapTemp1.put("tid", uid);
+		FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
+
+		Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+		mapTemp2.put("fid", uid);
+		mapTemp2.put("tid", user_id);
+		FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
+		if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
+			user.setIs_followed(-1);
+		} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
+			user.setIs_followed(1);
+		} else {
+			user.setIs_followed(0);
+		}
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("moments", momentDtos);
+		data.put("user", user);
+		return data;
 	}
 
 	@Override

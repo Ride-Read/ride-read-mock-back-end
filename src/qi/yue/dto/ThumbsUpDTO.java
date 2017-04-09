@@ -11,7 +11,7 @@ public class ThumbsUpDTO {
 
 	private Integer mid;
 
-	private String face_Url;
+	private String face_url;
 
 	private String signature;
 
@@ -51,12 +51,12 @@ public class ThumbsUpDTO {
 		this.mid = mid;
 	}
 
-	public String getFace_Url() {
-		return face_Url;
+	public String getFace_url() {
+		return face_url;
 	}
 
-	public void setFace_Url(String face_Url) {
-		this.face_Url = face_Url;
+	public void setFace_url(String face_url) {
+		this.face_url = face_url;
 	}
 
 	public String getSignature() {

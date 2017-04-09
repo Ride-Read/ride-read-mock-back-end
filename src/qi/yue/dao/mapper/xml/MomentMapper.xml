@@ -161,11 +161,9 @@
 	</select>
 
 	<select id="findUserMoment" parameterType="qi.yue.dto.PageDTO"
-		resultMap="UserResultMap">
+		resultMap="BaseResultMap">
 		select
 		<include refid="Moment_Column" />
-		,
-		<include refid="User_Column" />
 		,
 		<include refid="Comment_Column" />
 		,
@@ -199,8 +197,7 @@
 		distance
 
 		from
-		t_moment moment left join t_user user
-		on user.id=moment.user_id left
+		t_moment moment left
 		join t_comment comment on
 		comment.moment_id=moment.id
 		left join
@@ -209,6 +206,10 @@
 		where
 		moment.user_id
 		=#{user_id,jdbcType=INTEGER}
+		group by id
+		order
+		by
+		moment.created_at
 		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>
@@ -268,6 +269,8 @@
 		tid from
 		t_follow where
 		t_follow.fid=#{fid,jdbcType=INTEGER})
+		
+		group by id
 		order
 		by
 		moment.created_at
@@ -330,6 +333,7 @@
 		<!-- tid from -->
 		<!-- t_following where -->
 		<!-- t_following.fid=#{fid,jdbcType=INTEGER}) -->
+		group by id
 		order
 		by
 		distance

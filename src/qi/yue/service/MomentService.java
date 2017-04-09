@@ -6,10 +6,7 @@ import java.util.Map;
 
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
-import qi.yue.dto.PageDTO;
 import qi.yue.dto.ThumbsUpDTO;
-import qi.yue.dto.UserDTO;
-import qi.yue.entity.Moment;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 
@@ -59,7 +56,7 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
+	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException;
 
 	/**

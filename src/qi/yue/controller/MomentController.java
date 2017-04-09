@@ -2,6 +2,8 @@ package qi.yue.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
+import qi.yue.dto.UserDTO;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.CommentService;
@@ -61,13 +64,9 @@ public class MomentController {
 	public @ResponseBody Object showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
 			Integer pages, BigDecimal latitude, BigDecimal longitude) {
 		try {
-			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
+			Map<String, Object> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
 					longitude);
 			ResponseDTO responseDTO = ResponseUtil.ConvertToSuccessResponse(data);
-			String[] excludes = new String[] { "data" };
-			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(excludes);
-			JSONObject jsonObject = JSONObject.fromObject(responseDTO, jsonConfig);
 			return responseDTO;
 		} catch (ParameterException e) {
 			e.printStackTrace();
