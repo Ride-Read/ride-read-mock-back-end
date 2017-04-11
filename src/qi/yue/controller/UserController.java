@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,8 +20,6 @@ import qi.yue.dto.UserDTO;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.FollowService;
-import qi.yue.service.FollowerService;
-import qi.yue.service.FollowingService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.ResponseUtil;
@@ -32,10 +29,6 @@ import qi.yue.utils.ResponseUtil;
 public class UserController {
 	@Resource
 	private UserService userService;
-	@Resource
-	private FollowingService followingService;
-	@Resource
-	private FollowerService followerService;
 	@Resource
 	private FollowService followService;
 

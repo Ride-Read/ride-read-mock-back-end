@@ -12,15 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.FollowMapper;
-import qi.yue.dao.mapper.FollowerMapper;
 import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.FollowDTO;
-import qi.yue.dto.FollowerDTO;
 import qi.yue.dto.UserDTO;
-import qi.yue.dto.assembler.FollowDTOAssembler;
 import qi.yue.entity.Follow;
-import qi.yue.entity.Follower;
-import qi.yue.entity.Following;
 import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
@@ -33,9 +28,6 @@ public class FollowServiceImpl implements FollowService {
 	private FollowMapper followMapper;
 	@Resource
 	private UserMapper userMapper;
-
-	@Resource
-	private FollowerMapper followerMapper;
 
 	@Transactional(rollbackFor = Exception.class)
 	public void follow(Integer uid, String token, Integer user_id, Long timestamp)
@@ -151,22 +143,6 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public int save(Follower follower) {
-		return followerMapper.insert(follower);
-	}
-
-	@Override
-	public List<FollowerDTO> findByFid(int fid) {
-		return followerMapper.findByFid(fid);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int deleteByFid(int fid) {
-		return followerMapper.deleteByFid(fid);
-	}
-
-	@Override
 	public Map<String, Object> searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
@@ -183,5 +159,4 @@ public class FollowServiceImpl implements FollowService {
 		data.put("followeds", followeds);
 		return data;
 	}
-
 }
