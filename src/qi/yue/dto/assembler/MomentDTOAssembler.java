@@ -29,6 +29,7 @@ public class MomentDTOAssembler {
 			dto.setUid(moment.getUserId());
 			dto.setUpdated_at(moment.getUpdatedAt());
 			dto.setVideo(moment.getVideo());
+			dto.setMoment_location(moment.getMoment_location());
 		}
 
 		return dto;

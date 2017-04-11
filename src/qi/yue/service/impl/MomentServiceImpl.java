@@ -185,11 +185,11 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
-			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude)
-			throws ParameterException, BusinessException {
+			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
+			String moment_location) throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
 				|| CommonUtil.isNull(timestamp) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude)) {
+				|| CommonUtil.isNull(longitude) || CommonUtil.isNull(moment_location)) {
 			throw new ParameterException();
 		}
 		ResponseDTO checkResult = checkType(type, pictures_url, cover, video_url, uid, timestamp, token);
@@ -208,6 +208,7 @@ public class MomentServiceImpl implements MomentService {
 		moment.setCover(cover);
 		moment.setLatitude(latitude);
 		moment.setLongitude(longitude);
+		moment.setMoment_location(moment_location);
 		moment.setCreatedAt(new Date());
 		moment.setUpdatedAt(new Date());
 		save(moment);

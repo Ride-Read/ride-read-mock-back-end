@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.UserMapper;
+import qi.yue.dto.SimplifyUserDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.UserDTOAssembler;
 import qi.yue.entity.User;
@@ -324,7 +325,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
+	public List<SimplifyUserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
 			throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
 				|| CommonUtil.isNullOrEmpty(userIds)) {
@@ -332,7 +333,7 @@ public class UserServiceImpl implements UserService {
 		}
 		String[] userIdList = userIds.split(",");
 		List<String> list = Arrays.asList(userIdList);
-		List<UserDTO> data = userMapper.findByIds(list);
+		List<SimplifyUserDTO> data = userMapper.findByIds(list);
 		return data;
 	}
 }

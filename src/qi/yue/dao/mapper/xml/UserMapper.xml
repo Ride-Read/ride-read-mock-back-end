@@ -25,6 +25,13 @@
 		<result column="ride_read_id" property="ride_read_id" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<resultMap id="SimplifyResultMap" type="qi.yue.dto.SimplifyUserDTO">
+		<id column="id" property="uid" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 		id, username, password, sex, school, phonenumber, follower,
 		following, token, hometown,
@@ -48,10 +55,10 @@
 		user.created_at,
 		user.updated_at,user.ride_read_id
 	</sql>
-
-	<select id="findByIds" resultMap="BaseResultMap" parameterType="list">
+	<select id="findByIds" resultMap="SimplifyResultMap"
+		parameterType="list">
 		select
-		<include refid="Base_Column_List" />
+		id, username,sex,face_url
 		from t_user
 		where id in
 		<foreach collection="list" item="userId" index="index" open="("
@@ -59,7 +66,6 @@
 			#{userId}
 		</foreach>
 	</select>
-
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />

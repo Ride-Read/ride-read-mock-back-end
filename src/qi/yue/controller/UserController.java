@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.FollowDTO;
 import qi.yue.dto.ResponseDTO;
+import qi.yue.dto.SimplifyUserDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
@@ -272,9 +273,8 @@ public class UserController {
 	@RequestMapping(value = "/show_user_info_list", method = RequestMethod.POST)
 	public @ResponseBody Object showUserInfoList(Integer uid, String token, Long timestamp, String user_ids) {
 		try {
-			List<UserDTO> data = userService.findMoreUser(uid, token, timestamp, user_ids);
+			List<SimplifyUserDTO> data = userService.findMoreUser(uid, token, timestamp, user_ids);
 			return ResponseUtil.ConvertToSuccessResponse(data);
-
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,

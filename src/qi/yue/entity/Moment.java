@@ -24,6 +24,8 @@ public class Moment {
 
 	private BigDecimal longitude;
 
+	private String moment_location;
+
 	private Date createdAt;
 
 	private Date updatedAt;
@@ -124,4 +126,11 @@ public class Moment {
 		this.longitude = longitude;
 	}
 
+	public String getMoment_location() {
+		return moment_location;
+	}
+
+	public void setMoment_location(String moment_location) {
+		this.moment_location = moment_location;
+	}
 }

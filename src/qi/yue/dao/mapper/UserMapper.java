@@ -3,6 +3,7 @@ package qi.yue.dao.mapper;
 import java.util.List;
 import java.util.Map;
 
+import qi.yue.dto.SimplifyUserDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 
@@ -21,7 +22,7 @@ public interface UserMapper {
 
 	UserDTO find(Integer id);
 
-	List<UserDTO> findByIds(List<String> ids);
+	List<SimplifyUserDTO> findByIds(List<String> ids);
 
 	int insert(User user);
 

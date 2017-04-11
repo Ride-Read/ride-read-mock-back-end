@@ -45,10 +45,11 @@ public class MomentController {
 
 	@RequestMapping(value = "/post_moment", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
-			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude) {
+			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
+			String moment_location) {
 		try {
 			momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token, latitude,
-					longitude);
+					longitude, moment_location);
 			return ResponseUtil.ConvertToSuccessResponse();
 		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,

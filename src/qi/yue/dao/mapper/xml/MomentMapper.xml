@@ -12,6 +12,7 @@
 		<result column="distance" property="distance" jdbcType="DECIMAL" />
 		<result column="created_at" jdbcType="TIMESTAMP" property="created_at" />
 		<result column="updated_at" jdbcType="TIMESTAMP" property="updated_at" />
+		<result column="moment_location" jdbcType="VARCHAR" property="moment_location" />
 
 		<result column="msg" jdbcType="LONGVARCHAR" property="msg" />
 		<result column="thumbs" jdbcType="LONGVARCHAR" property="thumbs" />
@@ -51,7 +52,7 @@
 	<sql id="Base_Column_List">
 		id, user_id, type, cover, video, latitude, longitude,
 		created_at,
-		updated_at, msg, thumbs, pictures
+		updated_at, msg, thumbs, pictures, moment_location
 	</sql>
 
 	<sql id="User_Column">
@@ -65,7 +66,7 @@
 		moment.video, moment.created_at, moment.updated_at,
 		moment.msg,
 		moment.thumbs, moment.pictures,
-		moment.latitude,moment.longitude
+		moment.latitude,moment.longitude,moment.moment_location
 	</sql>
 
 	<sql id="Comment_Column">
@@ -355,7 +356,8 @@
 		#{longitude,jdbcType=DECIMAL}, #{createdAt,jdbcType=TIMESTAMP},
 		#{updatedAt,jdbcType=TIMESTAMP},
 		#{msg,jdbcType=LONGVARCHAR},
-		#{thumbs,jdbcType=LONGVARCHAR}, #{pictures,jdbcType=LONGVARCHAR}
+		#{thumbs,jdbcType=LONGVARCHAR},
+		#{pictures,jdbcType=LONGVARCHAR},#{moment_location,jdbcType=VARCHAR}
 		)
 	</insert>
 

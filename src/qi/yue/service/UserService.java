@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import qi.yue.dto.ResponseDTO;
+import qi.yue.dto.SimplifyUserDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.entity.User;
 import qi.yue.exception.BusinessException;
@@ -109,6 +110,6 @@ public interface UserService {
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
 			throws ParameterException, BusinessException;
 
-	public List<UserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
+	public List<SimplifyUserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
 			throws ParameterException, BusinessException;
 }

@@ -41,8 +41,8 @@ public interface MomentService {
 	 * @throws BusinessException
 	 */
 	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
-			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude)
-			throws ParameterException, BusinessException;
+			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
+			String moment_location) throws ParameterException, BusinessException;
 
 	/**
 	 * 展示用户悦圈内容

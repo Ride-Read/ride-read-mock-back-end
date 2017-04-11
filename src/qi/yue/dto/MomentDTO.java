@@ -41,6 +41,8 @@ public class MomentDTO {
 
 	private String distance_string;
 
+	private String moment_location;
+
 	public Integer getMid() {
 		return mid;
 	}
@@ -183,5 +185,13 @@ public class MomentDTO {
 
 	public void setDistance_string(String distance_string) {
 		this.distance_string = distance_string;
+	}
+
+	public String getMoment_location() {
+		return moment_location;
+	}
+
+	public void setMoment_location(String moment_location) {
+		this.moment_location = moment_location;
 	}
 }
