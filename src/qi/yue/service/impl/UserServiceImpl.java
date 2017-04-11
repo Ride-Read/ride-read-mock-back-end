@@ -2,8 +2,11 @@ package qi.yue.service.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -13,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
 import qi.yue.dao.mapper.UserMapper;
-import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.UserDTOAssembler;
 import qi.yue.entity.User;
@@ -319,5 +321,18 @@ public class UserServiceImpl implements UserService {
 			dto.setTags(dto.getTagString().split(","));
 		}
 		return dto;
+	}
+
+	@Override
+	public List<UserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
+			throws ParameterException, BusinessException {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
+				|| CommonUtil.isNullOrEmpty(userIds)) {
+			throw new ParameterException();
+		}
+		String[] userIdList = userIds.split(",");
+		List<String> list = Arrays.asList(userIdList);
+		List<UserDTO> data = userMapper.findByIds(list);
+		return data;
 	}
 }

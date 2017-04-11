@@ -16,4 +16,9 @@ public interface FollowMapper {
 	FollowDTO findByFidAndTid(Map<String, Object> map);
 
 	int deleteByFid(Integer fid);
+
+	List<FollowDTO> searchFollower(Map<String, Object> map);
+
+	List<FollowDTO> searchFollowing(Map<String, Object> map);
+
 }

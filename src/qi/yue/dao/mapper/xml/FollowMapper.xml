@@ -35,12 +35,27 @@
 		from t_follow
 		where tid = #{tid,jdbcType=INTEGER}
 	</select>
-	<select id="findByFid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+
+	<select id="searchFollower" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from t_follow
-		where fid = #{fid,jdbcType=INTEGER}
+		where follower_username LIKE
+		'%${shortname}%' and tid =
+		#{uid,jdbcType=INTEGER}
 	</select>
+
+	<select id="searchFollowing" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_follow
+		where followed_username LIKE
+		'%${shortname}%' and fid =
+		#{uid,jdbcType=INTEGER}
+	</select>
+
 	<select id="findByFidAndTid" resultMap="BaseResultMap"
 		parameterType="map">
 		select
@@ -49,6 +64,14 @@
 		where fid = #{fid,jdbcType=INTEGER} and tid =
 		#{tid,jdbcType=INTEGER}
 	</select>
+
+	<select id="findByFid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_follow
+		where fid = #{fid,jdbcType=INTEGER}
+	</select>
+
 	<delete id="deleteByFid" parameterType="java.lang.Integer">
 		delete
 		from t_follow

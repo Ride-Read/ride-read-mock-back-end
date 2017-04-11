@@ -64,7 +64,7 @@ public class MomentController {
 	public @ResponseBody Object showUserMoment(Integer user_id, Integer uid, Long timestamp, String token,
 			Integer pages, BigDecimal latitude, BigDecimal longitude) {
 		try {
-			Map<String, Object> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
+			List<MomentDTO> data = momentService.showUserMoment(user_id, uid, timestamp, token, pages, latitude,
 					longitude);
 			ResponseDTO responseDTO = ResponseUtil.ConvertToSuccessResponse(data);
 			return responseDTO;

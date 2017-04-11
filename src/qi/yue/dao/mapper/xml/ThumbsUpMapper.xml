@@ -7,7 +7,7 @@
 		<result column="moment_id" property="mid" jdbcType="INTEGER" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="signature" property="signature" jdbcType="VARCHAR" />
-		<result column="face_url" property="face_Url" jdbcType="VARCHAR" />
+		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 		<result column="created_at" property="created_at" jdbcType="TIMESTAMP" />
 		<result column="updated_at" property="updated_at" jdbcType="TIMESTAMP" />
 	</resultMap>
@@ -26,6 +26,17 @@
 		where id = #{id,jdbcType=INTEGER}
 	</select>
 
+	<select id="findByMomentId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_thumbs_up
+		where
+		moment_id=#{mid,jdbcType=INTEGER}
+		order by
+		created_at desc
+	</select>
+
 	<select id="findThumbsUpByMid" resultMap="BaseResultMap"
 		parameterType="map">
 		select
@@ -34,7 +45,7 @@
 		where
 		moment_id=#{mid,jdbcType=INTEGER}
 		order by
-		created_at
+		created_at desc
 		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>

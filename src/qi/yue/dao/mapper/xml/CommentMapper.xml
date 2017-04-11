@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="qi.yue.dao.mapper.CommentMapper">
 	<resultMap id="BaseResultMap" type="qi.yue.dto.CommentDTO">
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<id column="id" property="comment_id" jdbcType="INTEGER" />
+		<result column="user_id" property="uid" jdbcType="INTEGER" />
 		<result column="username" property="username" jdbcType="VARCHAR" />
-		<result column="moment_id" property="moment_id" jdbcType="INTEGER" />
+		<result column="moment_id" property="mid" jdbcType="INTEGER" />
 		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 		<result column="reply_uid" property="reply_uid" jdbcType="INTEGER" />
 		<result column="reply_username" property="reply_username"
@@ -16,11 +16,20 @@
 		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, username, moment_id, face_url, reply_uid,
+		id, user_id, username, moment_id, face_url, reply_uid,msg,
 		reply_username,
 		created_at,
 		updated_at
 	</sql>
+
+	<select id="findByMomentId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_comment
+		where moment_id =
+		#{momentId,jdbcType=INTEGER}  order by created_at desc
+	</select>
 
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select

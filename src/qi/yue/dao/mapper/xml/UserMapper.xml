@@ -48,6 +48,18 @@
 		user.created_at,
 		user.updated_at,user.ride_read_id
 	</sql>
+
+	<select id="findByIds" resultMap="BaseResultMap" parameterType="list">
+		select
+		<include refid="Base_Column_List" />
+		from t_user
+		where id in
+		<foreach collection="list" item="userId" index="index" open="("
+			close=")" separator=",">
+			#{userId}
+		</foreach>
+	</select>
+
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />

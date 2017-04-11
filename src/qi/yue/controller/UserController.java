@@ -3,6 +3,7 @@ package qi.yue.controller;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -77,7 +78,6 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, headers = "Accept=application/json")
-	@Transactional
 	public @ResponseBody ResponseDTO register(String phonenumber, String password, String face_url, String ride_read_id,
 			String username) {
 		Long timestamp = new Date().getTime();
@@ -219,14 +219,61 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/show_self", method = RequestMethod.POST)
-	public @ResponseBody Object showSelf(Integer uid, String token, Long timestamp) {
+	@RequestMapping(value = "/show_user_info", method = RequestMethod.POST)
+	public @ResponseBody Object showUserInfo(Integer uid, String token, Long timestamp, Integer user_id, Integer type) {
 		try {
-			if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			if (CommonUtil.isNull(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
+					|| CommonUtil.isNullOrEmpty(type)) {
 				throw new ParameterException();
 			}
-			UserDTO user = userService.find(uid);
+			UserDTO user = null;
+			if (1 == type) {
+				user = userService.find(uid);
+			} else if (2 == type) {
+				if (CommonUtil.isNullOrEmpty(user_id)) {
+					throw new ParameterException();
+				}
+				user = userService.find(user_id);
+			}
 			return ResponseUtil.ConvertToSuccessResponse(user);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
+	@RequestMapping(value = "/search_follower_or_following", method = RequestMethod.POST)
+	public @ResponseBody Object searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname) {
+		try {
+
+			Map<String, Object> data = followService.searchFollowerOrFollowing(uid, token, timestamp, shortname);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
+	@RequestMapping(value = "/show_user_info_list", method = RequestMethod.POST)
+	public @ResponseBody Object showUserInfoList(Integer uid, String token, Long timestamp, String user_ids) {
+		try {
+			List<UserDTO> data = userService.findMoreUser(uid, token, timestamp, user_ids);
+			return ResponseUtil.ConvertToSuccessResponse(data);
 
 		} catch (ParameterException e) {
 			e.printStackTrace();

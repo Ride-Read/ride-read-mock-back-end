@@ -56,7 +56,7 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public Map<String, Object> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
+	public List<MomentDTO> showUserMoment(Integer user_id, Integer uid, Long timestamp, String token, Integer pages,
 			BigDecimal latitude, BigDecimal longitude) throws ParameterException, BusinessException;
 
 	/**

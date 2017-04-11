@@ -21,6 +21,8 @@ public interface UserMapper {
 
 	UserDTO find(Integer id);
 
+	List<UserDTO> findByIds(List<String> ids);
+
 	int insert(User user);
 
 	int update(User user);

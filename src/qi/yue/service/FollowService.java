@@ -1,6 +1,7 @@
 package qi.yue.service;
 
 import java.util.List;
+import java.util.Map;
 
 import qi.yue.dto.FollowDTO;
 import qi.yue.dto.FollowerDTO;
@@ -38,4 +39,6 @@ public interface FollowService {
 
 	public void unfollow(Integer uid, String token, Integer user_id, Long timestamp)
 			throws ParameterException, BusinessException;
+
+	public Map<String, Object> searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname);
 }

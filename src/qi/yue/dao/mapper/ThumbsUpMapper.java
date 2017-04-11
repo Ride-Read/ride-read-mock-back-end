@@ -12,5 +12,7 @@ public interface ThumbsUpMapper {
 
 	List<ThumbsUpDTO> findThumbsUpByMid(Map<String, Object> map);
 
+	List<ThumbsUpDTO> findByMomentId(Integer momentId);
+
 	int delete(Integer id);
 }

@@ -166,4 +166,22 @@ public class FollowServiceImpl implements FollowService {
 		return followerMapper.deleteByFid(fid);
 	}
 
+	@Override
+	public Map<String, Object> searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname)
+			throws ParameterException, BusinessException {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
+				|| CommonUtil.isNullOrEmpty(shortname)) {
+			throw new ParameterException();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("uid", uid);
+		map.put("shortname", shortname);
+		List<FollowDTO> followers = followMapper.searchFollower(map);
+		List<FollowDTO> followeds = followMapper.searchFollowing(map);
+		Map<String, Object> data = new HashMap<>();
+		data.put("followers", followers);
+		data.put("followeds", followeds);
+		return data;
+	}
+
 }

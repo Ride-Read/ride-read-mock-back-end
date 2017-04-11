@@ -1,6 +1,8 @@
 package qi.yue.service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.UserDTO;
@@ -105,5 +107,8 @@ public interface UserService {
 	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
 			String face_url, Integer uid, String token, String signature, String school, Integer sex,
 			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
+			throws ParameterException, BusinessException;
+
+	public List<UserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
 			throws ParameterException, BusinessException;
 }
