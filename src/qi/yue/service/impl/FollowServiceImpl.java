@@ -159,4 +159,10 @@ public class FollowServiceImpl implements FollowService {
 		data.put("followeds", followeds);
 		return data;
 	}
+
+	@Override
+	public FollowDTO findByFidAndTid(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return followMapper.findByFidAndTid(map);
+	}
 }

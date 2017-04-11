@@ -30,4 +30,6 @@ public interface FollowService {
 			throws ParameterException, BusinessException;
 
 	public Map<String, Object> searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname);
+
+	public FollowDTO findByFidAndTid(Map<String, Object> map);
 }

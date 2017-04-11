@@ -2,6 +2,7 @@ package qi.yue.controller;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -228,6 +229,24 @@ public class UserController {
 					throw new ParameterException();
 				}
 				user = userService.find(user_id);
+
+				Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+				mapTemp1.put("fid", uid);
+				mapTemp1.put("tid", user_id);
+				FollowDTO followDTO1 = followService.findByFidAndTid(mapTemp1);
+
+				Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+				mapTemp2.put("fid", user_id);
+				mapTemp2.put("tid", uid);
+				FollowDTO followDTO2 = followService.findByFidAndTid(mapTemp1);
+				if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
+					user.setIs_followed(-1);
+				} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
+					user.setIs_followed(0);
+				} else {
+					user.setIs_followed(1);
+				}
+
 			}
 			return ResponseUtil.ConvertToSuccessResponse(user);
 		} catch (ParameterException e) {
