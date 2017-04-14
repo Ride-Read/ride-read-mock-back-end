@@ -115,4 +115,6 @@ public interface MomentService {
 	public void removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp);
 
 	public List<ThumbsUpDTO> showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages);
+
+	ThumbsUpDTO updateThumbsup(String token, Integer uid, Integer mid, Long timestamp);
 }

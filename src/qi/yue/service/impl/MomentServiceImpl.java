@@ -383,4 +383,33 @@ public class MomentServiceImpl implements MomentService {
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		return thumbsUpMapper.findThumbsUpByMid(map);
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public ThumbsUpDTO updateThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
+				|| CommonUtil.isNull(timestamp)) {
+			throw new ParameterException();
+		}
+		UserDTO user = userService.find(uid);
+		Map<String, Object> map = new HashMap<>();
+		map.put("mid", mid);
+		map.put("uid", uid);
+		ThumbsUpDTO thumbsUpDTO = thumbsUpMapper.findByMidAndUid(map);
+		if (CommonUtil.isNull(thumbsUpDTO)) {
+			ThumbsUp thumbsUp = new ThumbsUp();
+			thumbsUp.setMomentId(mid);
+			thumbsUp.setUserId(uid);
+			thumbsUp.setUsername(user.getUsername());
+			thumbsUp.setFaceUrl(user.getFace_url());
+			thumbsUp.setSignature(user.getSignature());
+			thumbsUp.setCreatedAt(new Date());
+			thumbsUpMapper.insert(thumbsUp);
+			ThumbsUpDTO dto = ThumbsUpDTOAssembler.toDto(thumbsUp);
+			return dto;
+		} else {
+			thumbsUpMapper.delete(thumbsUpDTO.getThumbs_up_id());
+			return null;
+		}
+	}
 }

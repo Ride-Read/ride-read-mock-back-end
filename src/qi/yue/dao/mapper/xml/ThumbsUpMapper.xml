@@ -37,6 +37,17 @@
 		created_at desc
 	</select>
 
+	<select id="findByMidAndUid" resultMap="BaseResultMap"
+		parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_thumbs_up
+		where
+		moment_id=#{mid,jdbcType=INTEGER}
+		and
+		user_id=#{uid,jdbcType=INTEGER}
+	</select>
+
 	<select id="findThumbsUpByMid" resultMap="BaseResultMap"
 		parameterType="map">
 		select

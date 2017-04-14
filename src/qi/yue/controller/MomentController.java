@@ -213,4 +213,41 @@ public class MomentController {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
+
+	@RequestMapping(value = "/collect_moment", method = RequestMethod.POST)
+	public @ResponseBody Object collectMoment(String token, Integer uid, Integer mid, Long timestamp) {
+		try {
+			Integer pages = 0;
+			List<ThumbsUpDTO> data = momentService.showThumbsup(token, uid, mid, timestamp, pages);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
+	@RequestMapping(value = "/update_thumbsup", method = RequestMethod.POST)
+	public @ResponseBody Object updateThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
+		try {
+			ThumbsUpDTO data = momentService.updateThumbsup(token, uid, mid, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
 }
