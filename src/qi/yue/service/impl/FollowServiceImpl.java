@@ -42,31 +42,39 @@ public class FollowServiceImpl implements FollowService {
 		if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
-		Follow follow = new Follow();
-		follow.setFid(uid);
-		follow.setTid(user_id);
-		follow.setFollowerFaceUrl(userFollowing.getFace_url());
-		follow.setFollowerSignature(userFollowing.getSignature());
-		follow.setFollowerUsername(userFollowing.getUsername());
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("fid", uid);
+		map.put("tid", user_id);
+		FollowDTO followDTO = followMapper.findByFidAndTid(map);
+		if (CommonUtil.isNullOrEmpty(followDTO)) {
+			Follow follow = new Follow();
+			follow.setFid(uid);
+			follow.setTid(user_id);
+			follow.setFollowerFaceUrl(userFollowing.getFace_url());
+			follow.setFollowerSignature(userFollowing.getSignature());
+			follow.setFollowerUsername(userFollowing.getUsername());
 
-		follow.setFollowedFaceUrl(userFollowed.getFace_url());
-		follow.setFollowedSignature(userFollowed.getSignature());
-		follow.setFollowedUsername(userFollowed.getUsername());
-		follow.setCreatedAt(new Date());
-		follow.setUpdatedAt(new Date());
-		followMapper.insert(follow);
+			follow.setFollowedFaceUrl(userFollowed.getFace_url());
+			follow.setFollowedSignature(userFollowed.getSignature());
+			follow.setFollowedUsername(userFollowed.getUsername());
+			follow.setCreatedAt(new Date());
+			follow.setUpdatedAt(new Date());
+			followMapper.insert(follow);
 
-		Integer follower = userFollowed.getFollower() + 1;
-		User usered = new User();
-		usered.setId(userFollowed.getUid());
-		usered.setFollower(follower);
-		userMapper.update(usered);
+			Integer follower = userFollowed.getFollower() + 1;
+			User usered = new User();
+			usered.setId(userFollowed.getUid());
+			usered.setFollower(follower);
+			userMapper.update(usered);
 
-		Integer following = userFollowing.getFollowing() + 1;
-		User usering = new User();
-		usering.setId(userFollowing.getUid());
-		usering.setFollowing(following);
-		userMapper.update(usering);
+			Integer following = userFollowing.getFollowing() + 1;
+			User usering = new User();
+			usering.setId(userFollowing.getUid());
+			usering.setFollowing(following);
+			userMapper.update(usering);
+		} else {
+			throw new BusinessException(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE_REPEAT_FOLLOW);
+		}
 	}
 
 	@Override
@@ -162,7 +170,6 @@ public class FollowServiceImpl implements FollowService {
 
 	@Override
 	public FollowDTO findByFidAndTid(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return followMapper.findByFidAndTid(map);
 	}
 }

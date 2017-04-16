@@ -17,6 +17,8 @@ public class MessageCommon {
 	public static final String STATUS_DATE_FORMAT_ERROR = "1011";// 日期格式错误
 	public static final String STATUS_SMS_CODE_MAX_ERROR = "1012";// 每日只能获取五条验证码，现已用完，请明天再试
 	public static final String STATUS_MIN_INTERVAL_ERROR = "1013";// 六十秒内不能重复获取验证码，请稍后再试
+	public static final String STATUS_REPEAT_FOLLOW = "1014";// 重复关注
+	public static final String STATUS_REPEAT_COLLECT = "1015";// 重复收藏
 
 	public static final String TYPE_ERROR = "1011";// 类型错误
 	public static final String IMAGE_EMPTY = "1012";// 图片为空
@@ -47,6 +49,8 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_DATE_FORMAT_ERROR = "日期格式错误";
 	public static final String FAIL_MESSAGE_SMS_CODE_MAX_ERROR = "每日只能获取五条验证码，现已用完，请明天再试";
 	public static final String FAIL_MESSAGE_MIN_INTERVAL_ERROR = "六十秒内不能重复获取验证码，请稍后再试";
+	public static final String FAIL_MESSAGE_REPEAT_FOLLOW = "重复关注";
+	public static final String FAIL_MESSAGE_REPEAT_COLLECT = "重复收藏";
 
 	public static final int PAGE_SIZE = 20;
 

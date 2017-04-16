@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import qi.yue.common.MessageCommon;
+import qi.yue.dto.CollectionDTO;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.ResponseDTO;
@@ -21,6 +22,7 @@ import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
+import qi.yue.service.CollectionService;
 import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
 import qi.yue.service.ThumbsUpService;
@@ -42,6 +44,9 @@ public class MomentController {
 
 	@Resource
 	private MomentService momentService;
+
+	@Resource
+	private CollectionService collectionService;
 
 	@RequestMapping(value = "/post_moment", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
@@ -215,10 +220,27 @@ public class MomentController {
 	}
 
 	@RequestMapping(value = "/collect_moment", method = RequestMethod.POST)
-	public @ResponseBody Object collectMoment(String token, Integer uid, Integer mid, Long timestamp) {
+	public @ResponseBody Object collectMoment(String token, Integer uid, Integer mid, Integer type, Long timestamp) {
 		try {
-			Integer pages = 0;
-			List<ThumbsUpDTO> data = momentService.showThumbsup(token, uid, mid, timestamp, pages);
+			CollectionDTO data = collectionService.save(token, uid, mid, type, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
+	@RequestMapping(value = "/show_collection", method = RequestMethod.POST)
+	public @ResponseBody Object showCollection(String token, Integer uid, Long timestamp) {
+		try {
+			List<CollectionDTO> data = collectionService.showCollections(token, uid, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(data);
 		} catch (ParameterException e) {
 			e.printStackTrace();

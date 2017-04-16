@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.CollectionMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.CollectionDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mid" property="mid" jdbcType="INTEGER" />
+		<result column="uid" property="uid" jdbcType="INTEGER" />
+		<result column="first_picture" property="first_picture"
+			jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="create_at" property="create_at" jdbcType="TIMESTAMP" />
+		<result column="update_at" property="update_at" jdbcType="TIMESTAMP" />
+		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, mid, uid, first_picture, username, type,msg, create_at,
+		update_at
+
+	</sql>
+	<select id="findCollectionsByUid" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_collection where uid=#{uid,jdbcType=INTEGER}
+	</select>
+
+	<select id="findIdAndMid" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_collection where uid=#{uid,jdbcType=INTEGER} and
+		mid=#{mid,jdbcType=INTEGER}
+	</select>
+
+	<insert id="insert" parameterType="qi.yue.entity.Collection"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_collection (id,
+		mid,
+		uid,
+		first_picture, username, type,
+		create_at, update_at, msg
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER},
+		#{uid,jdbcType=INTEGER},
+		#{firstPicture,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+		#{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP},
+		#{msg,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+</mapper>
