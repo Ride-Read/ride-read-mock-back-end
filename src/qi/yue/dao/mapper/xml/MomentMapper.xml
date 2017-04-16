@@ -88,6 +88,22 @@
 		t_updated_at
 	</sql>
 
+
+
+	<select id="findUserMap" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+
+		from
+		t_moment
+		where
+		user_id=#{userId,jdbcType=INTEGER}
+		order
+		by
+		created_at
+		desc
+	</select>
 	<select id="find" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />

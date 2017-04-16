@@ -36,13 +36,35 @@ public class DistanceUtil {
 	}
 
 	/**
-	 * test
+	 * 生成以中心点为中心的四方形经纬度
 	 * 
-	 * @param args
+	 * @param lat
+	 *            纬度
+	 * @param lon
+	 *            精度
+	 * @param raidus
+	 *            半径（以米为单位）
+	 * @return
 	 */
-	public static void main(String[] args) {
-		double distance = getDistance(121.491909, 31.233234, 121.411994, 31.206134);
-		System.out.println("Distance is:" + distance);
+	public static Double[] getAround(double lat, double lon, int raidus) {
+
+		Double latitude = lat;
+		Double longitude = lon;
+
+		Double degree = (24901 * 1609) / 360.0;
+		double raidusMile = raidus;
+
+		Double dpmLat = 1 / degree;
+		Double radiusLat = dpmLat * raidusMile;
+		Double minLat = latitude - radiusLat;
+		Double maxLat = latitude + radiusLat;
+
+		Double mpdLng = degree * Math.cos(latitude * (Math.PI / 180));
+		Double dpmLng = 1 / mpdLng;
+		Double radiusLng = dpmLng * raidusMile;
+		Double minLng = longitude - radiusLng;
+		Double maxLng = longitude + radiusLng;
+		return new Double[] { minLat, minLng, maxLat, maxLng };
 	}
 
 }

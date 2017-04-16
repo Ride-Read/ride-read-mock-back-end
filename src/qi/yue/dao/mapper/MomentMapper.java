@@ -13,11 +13,11 @@ public interface MomentMapper {
 
 	int insert(Moment moment);
 
-	MomentDTO find(int id);
+	MomentDTO find(Integer id);
 
-	List<MomentDTO> findByUserId(int userId);
+	List<MomentDTO> findByUserId(Integer userId);
 
-	int delete(int id);
+	int delete(Integer id);
 
 	List<MomentDTO> findByPage(PageDTO pageDTO);
 
@@ -26,5 +26,9 @@ public interface MomentMapper {
 	List<MomentDTO> findNearbyMoment(Map<String, Object> map);
 
 	List<MomentDTO> findUserMoment(Map<String, Object> map);
+
+	List<MomentDTO> findUserMap(Integer userId);
+
+	List<MomentDTO> findNearMap(Map<String, Object> map);
 
 }

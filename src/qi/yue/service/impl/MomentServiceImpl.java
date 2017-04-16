@@ -35,6 +35,7 @@ import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
+import qi.yue.utils.DistanceUtil;
 import qi.yue.utils.ResponseUtil;
 import qi.yue.utils.StringUtil;
 
@@ -411,5 +412,35 @@ public class MomentServiceImpl implements MomentService {
 			thumbsUpMapper.delete(thumbsUpDTO.getThumbs_up_id());
 			return null;
 		}
+	}
+
+	@Override
+	public List<MomentDTO> findUserMap(Integer uid, Long timestamp, String token) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)) {
+			throw new ParameterException();
+		}
+		return momentMapper.findUserMap(uid);
+
+	}
+
+	@Override
+	public List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token, BigDecimal latitude,
+			BigDecimal longitude) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)
+				|| CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude)) {
+			throw new ParameterException();
+		}
+		Double lat = latitude.doubleValue();
+		Double lon = longitude.doubleValue();
+		Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon, MessageCommon.DISTANCE_AROUND);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("minLat", maxLatAndLog[0]);
+		map.put("minLng", maxLatAndLog[1]);
+		map.put("maxLat", maxLatAndLog[2]);
+		map.put("maxLng", maxLatAndLog[3]);
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+
+		return momentMapper.findNearMap(map);
 	}
 }

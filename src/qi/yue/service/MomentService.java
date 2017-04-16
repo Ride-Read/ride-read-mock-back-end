@@ -117,4 +117,8 @@ public interface MomentService {
 	public List<ThumbsUpDTO> showThumbsup(String token, Integer uid, Integer mid, Long timestamp, Integer pages);
 
 	ThumbsUpDTO updateThumbsup(String token, Integer uid, Integer mid, Long timestamp);
+
+	List<MomentDTO> findUserMap(Integer uid, Long timestamp, String token);
+
+	List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token, BigDecimal latitude, BigDecimal longitude);
 }

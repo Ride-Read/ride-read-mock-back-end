@@ -20,17 +20,6 @@ public class MessageCommon {
 	public static final String STATUS_REPEAT_FOLLOW = "1014";// 重复关注
 	public static final String STATUS_REPEAT_COLLECT = "1015";// 重复收藏
 
-	public static final String TYPE_ERROR = "1011";// 类型错误
-	public static final String IMAGE_EMPTY = "1012";// 图片为空
-	public static final String VIDEO_EMPTY = "1013";// 视频为空
-
-	public static final String PUBLIC_KEY = "airing";
-	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-	public static final String QI_NIU_ACCESS_KEY = "fbVYMBeuMglXqIDmW1H_tlOkb4CrxlLCIUPjGsRV";
-	public static final String QI_NIU_SECRE_KEY = "UfLYZXK0ihHkaqTA2QQdzbn1FkDHH0G8oVCaRXMf";
-	public static final String QI_NIU_BUCKET = "rideread";
-
 	public static final String SUCCESS_MESSAGE = "返回成功";
 	public static final String FAIL_MESSAGE = "返回失败";
 	public static final String FAIL_MESSAGE_PARAMETER = "参数错误或者为空";
@@ -52,7 +41,19 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_REPEAT_FOLLOW = "重复关注";
 	public static final String FAIL_MESSAGE_REPEAT_COLLECT = "重复收藏";
 
+	public static final String TYPE_ERROR = "1011";// 类型错误
+	public static final String IMAGE_EMPTY = "1012";// 图片为空
+	public static final String VIDEO_EMPTY = "1013";// 视频为空
+
+	public static final String PUBLIC_KEY = "airing";
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	public static final String QI_NIU_ACCESS_KEY = "fbVYMBeuMglXqIDmW1H_tlOkb4CrxlLCIUPjGsRV";
+	public static final String QI_NIU_SECRE_KEY = "UfLYZXK0ihHkaqTA2QQdzbn1FkDHH0G8oVCaRXMf";
+	public static final String QI_NIU_BUCKET = "rideread";
+
 	public static final int PAGE_SIZE = 20;
+	public static final int DISTANCE_AROUND = 1000;
 
 	public static final String YUN_PIAN_APIKEY = "d1854b3aa962e88c4880bbcd10014877";
 	public static final Integer RAND_LENGTH = 6;

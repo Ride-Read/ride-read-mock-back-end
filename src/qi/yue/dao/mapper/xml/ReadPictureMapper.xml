@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="temp.mapper.TReadPictureMapper">
-	<resultMap id="BaseResultMap" type="temp.po.TReadPicture">
+<mapper namespace="qi.yue.dao.mapper.ReadPictureMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.ReadPictureDTO">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="uid" property="uid" jdbcType="INTEGER" />
 		<result column="latitude" property="latitude" jdbcType="DECIMAL" />
@@ -12,7 +12,7 @@
 		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
 	</resultMap>
 
-	<insert id="insert" parameterType="temp.po.TReadPicture">
+	<insert id="insert" parameterType="qi.yue.entity.ReadPicture">
 		insert into t_read_picture
 		(id, uid, latitude,
 		longitude, create_at, update_at,
