@@ -43,6 +43,8 @@ public class MomentDTO {
 
 	private String moment_location;
 
+	private String first_picture;
+
 	public Integer getMid() {
 		return mid;
 	}
@@ -194,4 +196,13 @@ public class MomentDTO {
 	public void setMoment_location(String moment_location) {
 		this.moment_location = moment_location;
 	}
+
+	public String getFirst_picture() {
+		return first_picture;
+	}
+
+	public void setFirst_picture(String first_picture) {
+		this.first_picture = first_picture;
+	}
+
 }

@@ -21,6 +21,7 @@ public class CollectionDTOAssembler {
 			dto.setType(entity.getType());
 			dto.setCreate_at(entity.getCreateAt());
 			dto.setUpdate_at(entity.getUpdateAt());
+			dto.setFace_url(entity.getFaceUrl());
 		}
 		return dto;
 	}

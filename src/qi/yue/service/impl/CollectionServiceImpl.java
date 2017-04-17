@@ -74,6 +74,7 @@ public class CollectionServiceImpl implements CollectionService {
 		collection.setUid(uid);
 		collection.setUpdateAt(new Date());
 		collection.setUsername(userOfMoment.getUsername());
+		collection.setFaceUrl(userOfMoment.getFace_url());
 		collectionMapper.insert(collection);
 		return CollectionDTOAssembler.toDto(collection);
 	}

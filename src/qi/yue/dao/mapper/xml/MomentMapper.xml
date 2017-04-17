@@ -87,7 +87,52 @@
 		thumbs_up.created_at as t_created_at, thumbs_up.updated_at as
 		t_updated_at
 	</sql>
-
+	<select id="findNearMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		*
+		PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
+		from
+		t_moment moment
+		where moment.longitude &gt; #{minLat}
+		and
+		moment.longitude
+		&lt;
+		#{maxLat}
+		and
+		moment.latitude &gt; #{minLng} and
+		moment.latitude &lt;
+		#{maxLng}
+		order
+		by
+		created_at desc
+	</select>
 
 
 	<select id="findUserMap" parameterType="java.lang.Integer"
@@ -348,7 +393,7 @@
 		<!-- t_following.fid=#{fid,jdbcType=INTEGER}) -->
 		order
 		by
-		distance
+		moment.created_at desc
 		limit
 		#{currentNumber,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
 	</select>

@@ -349,6 +349,14 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("mid", mid);
+		map.put("uid", uid);
+		ThumbsUpDTO thumbsUpDTO = thumbsUpMapper.findByMidAndUid(map);
+		if (!CommonUtil.isNullOrEmpty(thumbsUpDTO)) {
+			throw new BusinessException(MessageCommon.STATUS_REPEAT_THUMBS_UP,
+					MessageCommon.FAIL_MESSAGE_REPEAT_THUMBS_UP);
+		}
 		UserDTO user = userService.find(uid);
 		ThumbsUp thumbsUp = new ThumbsUp();
 		thumbsUp.setMomentId(mid);
@@ -419,8 +427,14 @@ public class MomentServiceImpl implements MomentService {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)) {
 			throw new ParameterException();
 		}
-		return momentMapper.findUserMap(uid);
-
+		List<MomentDTO> momentDTOList = momentMapper.findUserMap(uid);
+		for (MomentDTO momentDTO : momentDTOList) {
+			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+				String[] pictures = momentDTO.getPictureString().split(",");
+				momentDTO.setFirst_picture(pictures[0]);
+			}
+		}
+		return momentDTOList;
 	}
 
 	@Override
@@ -440,7 +454,13 @@ public class MomentServiceImpl implements MomentService {
 		map.put("maxLng", maxLatAndLog[3]);
 		map.put("latitude", latitude);
 		map.put("longitude", longitude);
-
-		return momentMapper.findNearMap(map);
+		List<MomentDTO> moments = momentMapper.findNearMap(map);
+		for (MomentDTO momentDTO : moments) {
+			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+				String[] pictures = momentDTO.getPictureString().split(",");
+				momentDTO.setFirst_picture(pictures[0]);
+			}
+		}
+		return moments;
 	}
 }

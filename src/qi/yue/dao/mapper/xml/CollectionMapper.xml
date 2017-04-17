@@ -12,10 +12,12 @@
 		<result column="create_at" property="create_at" jdbcType="TIMESTAMP" />
 		<result column="update_at" property="update_at" jdbcType="TIMESTAMP" />
 		<result column="msg" property="msg" jdbcType="LONGVARCHAR" />
+		<result column="face_url" property="face_url" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, mid, uid, first_picture, username, type,msg, create_at,
+		id, mid, uid, first_picture, username, type,msg,face_url,
+		create_at,
 		update_at
 
 	</sql>
@@ -40,7 +42,7 @@
 		mid,
 		uid,
 		first_picture, username, type,
-		create_at, update_at, msg
+		create_at, update_at, msg,face_url
 		)
 		values
 		(#{id,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER},
@@ -48,7 +50,7 @@
 		#{firstPicture,jdbcType=VARCHAR},
 		#{username,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
 		#{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP},
-		#{msg,jdbcType=LONGVARCHAR}
+		#{msg,jdbcType=LONGVARCHAR},#{faceUrl,jdbcType=VARCHAR}
 		)
 	</insert>
 </mapper>

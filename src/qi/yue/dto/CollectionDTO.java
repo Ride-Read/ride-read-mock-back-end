@@ -21,6 +21,8 @@ public class CollectionDTO {
 
 	private String msg;
 
+	private String face_url;
+
 	public Integer getId() {
 		return id;
 	}
@@ -93,4 +95,11 @@ public class CollectionDTO {
 		this.msg = msg;
 	}
 
+	public String getFace_url() {
+		return face_url;
+	}
+
+	public void setFace_url(String face_url) {
+		this.face_url = face_url;
+	}
 }

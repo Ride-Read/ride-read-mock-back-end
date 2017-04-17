@@ -21,6 +21,8 @@ public class Collection {
 
 	private String msg;
 
+	private String faceUrl;
+
 	public Integer getId() {
 		return id;
 	}
@@ -91,5 +93,13 @@ public class Collection {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public String getFaceUrl() {
+		return faceUrl;
+	}
+
+	public void setFaceUrl(String faceUrl) {
+		this.faceUrl = faceUrl;
 	}
 }
