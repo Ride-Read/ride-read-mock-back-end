@@ -121,10 +121,10 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO update(String career, String phonenumber, String location, String birthday,
 			String username, String face_url, Integer uid, String token, String signature, String school, Integer sex,
-			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp) {
+			BigDecimal latitude, BigDecimal longitude, String hometown, String[] tags, Long timestamp) {
 		try {
 			UserDTO userDTO = userService.updateUserInfo(career, phonenumber, location, birthday, username, face_url,
-					uid, token, signature, school, sex, latitude, longitude, hometown, timestamp);
+					uid, token, signature, school, sex, latitude, longitude, hometown, tags, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(userDTO, timestamp);
 
 		} catch (ParameterException e) {

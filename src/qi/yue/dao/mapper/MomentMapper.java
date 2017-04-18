@@ -31,4 +31,6 @@ public interface MomentMapper {
 
 	List<MomentDTO> findNearMap(Map<String, Object> map);
 
+	MomentDTO findMoment(Map<String, Object> map);
+
 }

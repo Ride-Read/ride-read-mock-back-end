@@ -40,7 +40,7 @@ public interface MomentService {
 	 * @throws ParameterException
 	 * @throws BusinessException
 	 */
-	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
+	public MomentDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
 			String moment_location) throws ParameterException, BusinessException;
 
@@ -121,4 +121,7 @@ public interface MomentService {
 	List<MomentDTO> findUserMap(Integer uid, Long timestamp, String token);
 
 	List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token, BigDecimal latitude, BigDecimal longitude);
+
+	MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
+			BigDecimal longitude);
 }

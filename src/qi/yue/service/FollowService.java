@@ -32,4 +32,6 @@ public interface FollowService {
 	public Map<String, Object> searchFollowerOrFollowing(Integer uid, String token, Long timestamp, String shortname);
 
 	public FollowDTO findByFidAndTid(Map<String, Object> map);
+
+	public Integer isFollow(Integer uid, Integer user_id);
 }

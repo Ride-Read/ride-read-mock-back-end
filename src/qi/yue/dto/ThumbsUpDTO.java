@@ -15,6 +15,8 @@ public class ThumbsUpDTO {
 
 	private String signature;
 
+	private Integer is_followed;
+
 	private Date created_at;
 
 	private Date updated_at;
@@ -81,6 +83,14 @@ public class ThumbsUpDTO {
 
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
+	}
+
+	public Integer getIs_followed() {
+		return is_followed;
+	}
+
+	public void setIs_followed(Integer is_followed) {
+		this.is_followed = is_followed;
 	}
 
 }

@@ -23,15 +23,16 @@ import qi.yue.dao.mapper.MomentMapper;
 import qi.yue.dao.mapper.ThumbsUpMapper;
 import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.CommentDTO;
-import qi.yue.dto.FollowDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.PageDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.CommentDTOAssembler;
+import qi.yue.dto.assembler.MomentDTOAssembler;
 import qi.yue.dto.assembler.ThumbsUpDTOAssembler;
 import qi.yue.service.CommentService;
+import qi.yue.service.FollowService;
 import qi.yue.service.MomentService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
@@ -62,6 +63,9 @@ public class MomentServiceImpl implements MomentService {
 	@Resource
 	private CommentService commentService;
 
+	@Resource
+	private FollowService followService;
+
 	/**
 	 * 插入到悦圈内容表
 	 * 
@@ -76,7 +80,6 @@ public class MomentServiceImpl implements MomentService {
 		} catch (BusinessException e) {
 			throw new BusinessException(MessageCommon.STATUS_SAVE_FAIL, MessageCommon.FAIL_MESSAGE_SAVE_FAIL);
 		}
-
 	}
 
 	@Override
@@ -115,15 +118,17 @@ public class MomentServiceImpl implements MomentService {
 	public List<MomentDTO> findFollowingsMoment(Map<String, Object> map) throws BusinessException {
 		List<MomentDTO> MomentDTOList = momentMapper.findFollowingsMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
-			Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			mapTemp1.put("fid", momentDTO.getUid());
-			mapTemp1.put("tid", map.get("fid"));
-			FollowDTO followDTO = followMapper.findByFidAndTid(mapTemp1);
-			if (!CommonUtil.isNull(followDTO)) {
-				momentDTO.getUser().setIs_followed(0);
-			} else {
-				momentDTO.getUser().setIs_followed(1);
-			}
+			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+			// mapTemp1.put("fid", momentDTO.getUid());
+			// mapTemp1.put("tid", map.get("fid"));
+			// FollowDTO followDTO = followMapper.findByFidAndTid(mapTemp1);
+			// if (!CommonUtil.isNull(followDTO)) {
+			// momentDTO.getUser().setIs_followed(0);
+			// } else {
+			// momentDTO.getUser().setIs_followed(1);
+			// }
+			Integer isFollow = followService.isFollow(Integer.parseInt(map.get("fid").toString()), momentDTO.getUid());
+			momentDTO.getUser().setIs_followed(isFollow);
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 					.doubleValue();
 			momentDTO.setDistance_string(distance.toString() + "km");
@@ -147,22 +152,29 @@ public class MomentServiceImpl implements MomentService {
 		try {
 			List<MomentDTO> MomentDTOList = momentMapper.findNearbyMoment(map);
 			for (MomentDTO momentDTO : MomentDTOList) {
-				Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-				mapTemp1.put("fid", map.get("fid"));
-				mapTemp1.put("tid", momentDTO.getUid());
-				FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
-
-				Map<String, Object> mapTemp2 = new HashMap<String, Object>();
-				mapTemp2.put("fid", momentDTO.getUid());
-				mapTemp2.put("tid", map.get("fid"));
-				FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
-				if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
-					momentDTO.getUser().setIs_followed(-1);
-				} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
-					momentDTO.getUser().setIs_followed(0);
-				} else {
-					momentDTO.getUser().setIs_followed(1);
-				}
+				Integer isFollow = followService.isFollow(Integer.parseInt(map.get("fid").toString()),
+						momentDTO.getUid());
+				// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+				// mapTemp1.put("fid", map.get("fid"));
+				// mapTemp1.put("tid", momentDTO.getUid());
+				// FollowDTO followDTO1 =
+				// followMapper.findByFidAndTid(mapTemp1);
+				//
+				// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+				// mapTemp2.put("fid", momentDTO.getUid());
+				// mapTemp2.put("tid", map.get("fid"));
+				// FollowDTO followDTO2 =
+				// followMapper.findByFidAndTid(mapTemp1);
+				// if (CommonUtil.isNull(followDTO1) &&
+				// CommonUtil.isNull(followDTO2)) {
+				// momentDTO.getUser().setIs_followed(-1);
+				// } else if (!CommonUtil.isNull(followDTO1) &&
+				// !CommonUtil.isNull(followDTO2)) {
+				// momentDTO.getUser().setIs_followed(0);
+				// } else {
+				// momentDTO.getUser().setIs_followed(1);
+				// }
+				momentDTO.getUser().setIs_followed(isFollow);
 				Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 						.doubleValue();
 				momentDTO.setDistance_string(distance.toString() + "km");
@@ -179,7 +191,7 @@ public class MomentServiceImpl implements MomentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
+	public MomentDTO postMoment(String msg, Integer uid, String video_url, Integer type, Long timestamp,
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
 			String moment_location) throws ParameterException, BusinessException {
 		if (CommonUtil.isNullOrEmpty(msg) || CommonUtil.isNull(uid) || CommonUtil.isNull(type)
@@ -207,6 +219,7 @@ public class MomentServiceImpl implements MomentService {
 		moment.setCreatedAt(new Date());
 		moment.setUpdatedAt(new Date());
 		save(moment);
+		return MomentDTOAssembler.toDto(moment);
 	}
 
 	private ResponseDTO checkType(Integer type, String[] pictures_url, String cover, String video_url, Integer uid,
@@ -246,22 +259,27 @@ public class MomentServiceImpl implements MomentService {
 		map.put("longitude", longitude);
 		List<MomentDTO> MomentDTOList = momentMapper.findUserMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
-			Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			mapTemp1.put("fid", uid);
-			mapTemp1.put("tid", momentDTO.getUid());
-			FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
 
-			Map<String, Object> mapTemp2 = new HashMap<String, Object>();
-			mapTemp2.put("fid", momentDTO.getUid());
-			mapTemp2.put("tid", uid);
-			FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
-			if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
-				momentDTO.getUser().setIs_followed(-1);
-			} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
-				momentDTO.getUser().setIs_followed(0);
-			} else {
-				momentDTO.getUser().setIs_followed(1);
-			}
+			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+			// mapTemp1.put("fid", uid);
+			// mapTemp1.put("tid", momentDTO.getUid());
+			// FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
+			//
+			// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+			// mapTemp2.put("fid", momentDTO.getUid());
+			// mapTemp2.put("tid", uid);
+			// FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
+			// if (CommonUtil.isNull(followDTO1) &&
+			// CommonUtil.isNull(followDTO2)) {
+			// momentDTO.getUser().setIs_followed(-1);
+			// } else if (!CommonUtil.isNull(followDTO1) &&
+			// !CommonUtil.isNull(followDTO2)) {
+			// momentDTO.getUser().setIs_followed(0);
+			// } else {
+			// momentDTO.getUser().setIs_followed(1);
+			// }
+			Integer isFollow = followService.isFollow(uid, user_id);
+			momentDTO.getUser().setIs_followed(isFollow);
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
 				momentDTO.setPictures(momentDTO.getPictureString().split(","));
 			}
@@ -284,7 +302,6 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(longitude)) {
 			throw new ParameterException();
 		}
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
@@ -390,7 +407,30 @@ public class MomentServiceImpl implements MomentService {
 		map.put("mid", mid);
 		map.put("size", MessageCommon.PAGE_SIZE);
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
-		return thumbsUpMapper.findThumbsUpByMid(map);
+		List<ThumbsUpDTO> thumbsUpDTOList = thumbsUpMapper.findThumbsUpByMid(map);
+		for (ThumbsUpDTO thumbsUpDTO : thumbsUpDTOList) {
+			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+			// mapTemp1.put("fid", uid);
+			// mapTemp1.put("tid", thumbsUpDTO.getUid());
+			// FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
+			//
+			// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+			// mapTemp2.put("fid", thumbsUpDTO.getUid());
+			// mapTemp2.put("tid", uid);
+			// FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
+			// if (CommonUtil.isNull(followDTO1) &&
+			// CommonUtil.isNull(followDTO2)) {
+			// thumbsUpDTO.setIs_followed(-1);
+			// } else if (!CommonUtil.isNull(followDTO1) &&
+			// !CommonUtil.isNull(followDTO2)) {
+			// thumbsUpDTO.setIs_followed(0);
+			// } else {
+			// thumbsUpDTO.setIs_followed(1);
+			// }
+			Integer isFollow = followService.isFollow(uid, thumbsUpDTO.getUid());
+			thumbsUpDTO.setIs_followed(isFollow);
+		}
+		return thumbsUpDTOList;
 	}
 
 	@Override
@@ -462,5 +502,29 @@ public class MomentServiceImpl implements MomentService {
 			}
 		}
 		return moments;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
+			BigDecimal longitude) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(timestamp)
+				|| CommonUtil.isNull(token) || CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude)) {
+			throw new ParameterException();
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", mid);
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		MomentDTO momentDTO = momentMapper.findMoment(map);
+		Integer isFollow = followService.isFollow(uid, momentDTO.getUid());
+		momentDTO.getUser().setIs_followed(isFollow);
+		Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
+				.doubleValue();
+		momentDTO.setDistance_string(distance.toString() + "km");
+		List<CommentDTO> commentDTOList = commentMapper.findByMomentId(momentDTO.getMid());
+		List<ThumbsUpDTO> thumbsUpDTOLsit = thumbsUpMapper.findByMomentId(momentDTO.getMid());
+		momentDTO.setComment(commentDTOList);
+		momentDTO.setThumbs_up(thumbsUpDTOLsit);
+		return momentDTO;
 	}
 }

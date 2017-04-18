@@ -53,9 +53,9 @@ public class MomentController {
 			String[] pictures_url, String cover, String token, BigDecimal latitude, BigDecimal longitude,
 			String moment_location) {
 		try {
-			momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token, latitude,
-					longitude, moment_location);
-			return ResponseUtil.ConvertToSuccessResponse();
+			MomentDTO data = momentService.postMoment(msg, uid, video_url, type, timestamp, pictures_url, cover, token,
+					latitude, longitude, moment_location);
+			return ResponseUtil.ConvertToSuccessResponse(data);
 		} catch (ParameterException e) {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
 					MessageCommon.FAIL_MESSAGE_PARAMETER);
@@ -271,5 +271,27 @@ public class MomentController {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
+	}
+
+	@RequestMapping(value = "/show_one_moment", method = RequestMethod.POST)
+	public @ResponseBody Object showOneMoment(Integer uid, Integer mid, Long timestamp, String token,
+			BigDecimal latitude, BigDecimal longitude) {
+
+		try {
+			MomentDTO data = momentService.showOneMoment(uid, mid, timestamp, token, latitude, longitude);
+			return ResponseUtil.ConvertToSuccessResponse(data);
+
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+
 	}
 }

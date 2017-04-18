@@ -16,27 +16,32 @@ import qi.yue.common.MessageCommon;
 import qi.yue.utils.StringUtil;
 
 public class QiNiuTest {
-	@Test
-	public void test() {
-		Auth auth = Auth.create(MessageCommon.QI_NIU_ACCESS_KEY, MessageCommon.QI_NIU_SECRE_KEY);
-		String upToken = auth.uploadToken(MessageCommon.QI_NIU_BUCKET, "filename");
-		System.out.println(upToken);
-	}
-
-	@Test
-	public void testSendSms() {
-		String mobile = "18374911770";
-		String randCode = StringUtil.getRandomNumber(MessageCommon.RAND_LENGTH);
-		String text = StringUtil.getYunPianCode(randCode);
-		YunpianRestClient client = new YunpianRestClient(MessageCommon.YUN_PIAN_APIKEY);// 用apikey生成client,可作为全局静态变量
-		SmsOperator smsOperator = client.getSmsOperator();// 获取所需操作类
-		ResultDO<SendSingleSmsInfo> result = smsOperator.singleSend(mobile, text);// 发送短信,ResultDO<?>.isSuccess()判断是否成功
-		System.out.println(result);
-		JSONObject json = JSONObject.fromObject(result);
-		JSONObject data = (JSONObject) json.get("data");
-		String code = data.get("code").toString();
-		System.out.println(code);
-	}
+	// @Test
+	// public void test() {
+	// Auth auth = Auth.create(MessageCommon.QI_NIU_ACCESS_KEY,
+	// MessageCommon.QI_NIU_SECRE_KEY);
+	// String upToken = auth.uploadToken(MessageCommon.QI_NIU_BUCKET,
+	// "filename");
+	// System.out.println(upToken);
+	// }
+	//
+	// @Test
+	// public void testSendSms() {
+	// String mobile = "18374911770";
+	// String randCode = StringUtil.getRandomNumber(MessageCommon.RAND_LENGTH);
+	// String text = StringUtil.getYunPianCode(randCode);
+	// YunpianRestClient client = new
+	// YunpianRestClient(MessageCommon.YUN_PIAN_APIKEY);//
+	// 用apikey生成client,可作为全局静态变量
+	// SmsOperator smsOperator = client.getSmsOperator();// 获取所需操作类
+	// ResultDO<SendSingleSmsInfo> result = smsOperator.singleSend(mobile,
+	// text);// 发送短信,ResultDO<?>.isSuccess()判断是否成功
+	// System.out.println(result);
+	// JSONObject json = JSONObject.fromObject(result);
+	// JSONObject data = (JSONObject) json.get("data");
+	// String code = data.get("code").toString();
+	// System.out.println(code);
+	// }
 
 	// /**
 	// * 基于HttpClient 4.3的通用POST方法
@@ -79,4 +84,19 @@ public class QiNiuTest {
 	// }
 	// return responseText;
 	// }
+	@Test
+	public void testCode() {
+		String a = "abcdefg";
+		String b = "cd";
+		boolean c = a.contains(b);
+		String f = a.replaceAll(b, "*");
+		// if (c) {
+		// int index = a.indexOf(b);
+		// String d = a.substring(0, index);
+		// String f = a.substring(index + b.length(), a.length());
+		// a = d + "*" + f;
+		// }
+		System.out.println(f);
+
+	}
 }

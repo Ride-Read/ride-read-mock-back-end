@@ -87,6 +87,50 @@
 		thumbs_up.created_at as t_created_at, thumbs_up.updated_at as
 		t_updated_at
 	</sql>
+
+	<select id="findMoment" parameterType="map" resultMap="UserResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		<include refid="User_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		* PI() /
+		180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance
+
+		from
+		t_moment moment left join t_user user
+		on
+		user.id=moment.user_id
+		where
+		moment.id
+		=#{id,jdbcType=INTEGER}
+	</select>
+
 	<select id="findNearMap" parameterType="map" resultMap="BaseResultMap">
 		select
 		<include refid="Moment_Column" />

@@ -29,6 +29,27 @@ public class FollowServiceImpl implements FollowService {
 	@Resource
 	private UserMapper userMapper;
 
+	public Integer isFollow(Integer uid, Integer user_id) {
+		Map<String, Object> mapTemp1 = new HashMap<String, Object>();
+		mapTemp1.put("fid", uid);
+		mapTemp1.put("tid", user_id);
+		FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
+
+		Map<String, Object> mapTemp2 = new HashMap<String, Object>();
+		mapTemp2.put("fid", user_id);
+		mapTemp2.put("tid", uid);
+		FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
+		if (CommonUtil.isNull(followDTO1) && CommonUtil.isNull(followDTO2)) {
+			return -1;
+		} else if (!CommonUtil.isNull(followDTO1) && !CommonUtil.isNull(followDTO2)) {
+			return 0;
+		} else if (!CommonUtil.isNull(followDTO1)) {
+			return 1;
+		} else {
+			return 2;
+		}
+	}
+
 	@Transactional(rollbackFor = Exception.class)
 	public void follow(Integer uid, String token, Integer user_id, Long timestamp)
 			throws ParameterException, BusinessException {
@@ -73,7 +94,7 @@ public class FollowServiceImpl implements FollowService {
 			usering.setFollowing(following);
 			userMapper.update(usering);
 		} else {
-			throw new BusinessException(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE_REPEAT_FOLLOW);
+			throw new BusinessException(MessageCommon.STATUS_REPEAT_FOLLOW, MessageCommon.FAIL_MESSAGE_REPEAT_FOLLOW);
 		}
 	}
 

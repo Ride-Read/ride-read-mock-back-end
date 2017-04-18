@@ -277,7 +277,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
 			String face_url, Integer uid, String token, String signature, String school, Integer sex,
-			BigDecimal latitude, BigDecimal longitude, String hometown, Long timestamp)
+			BigDecimal latitude, BigDecimal longitude, String hometown, String[] tags, Long timestamp)
 			throws ParameterException, BusinessException {
 
 		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
@@ -285,7 +285,8 @@ public class UserServiceImpl implements UserService {
 				|| CommonUtil.isNullOrEmpty(username) || CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNull(uid)
 				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(signature)
 				|| CommonUtil.isNullOrEmpty(school) || CommonUtil.isNull(sex) || CommonUtil.isNull(latitude)
-				|| CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNull(timestamp)) {
+				|| CommonUtil.isNull(longitude) || CommonUtil.isNullOrEmpty(hometown) || CommonUtil.isNullOrEmpty(tags)
+				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
 		UserDTO userDTO = find(uid);
@@ -309,6 +310,10 @@ public class UserServiceImpl implements UserService {
 		user.setLongitude(longitude);
 		user.setSex(sex);
 		user.setHometown(hometown);
+		if (CommonUtil.isNullOrEmpty(tags)) {
+			user.setTags(tags.toString());
+		}
+
 		user.setUpdatedAt(new Date());
 		try {
 			user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));
