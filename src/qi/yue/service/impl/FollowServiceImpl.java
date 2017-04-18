@@ -145,7 +145,7 @@ public class FollowServiceImpl implements FollowService {
 			usered.setFollower(follower);
 			userMapper.update(usered);
 
-			Integer following = userFollowed.getFollowing() - 1;
+			Integer following = userFollowing.getFollowing() - 1;
 			User usering = new User();
 			usering.setId(userFollowing.getUid());
 			usering.setFollowing(following);
