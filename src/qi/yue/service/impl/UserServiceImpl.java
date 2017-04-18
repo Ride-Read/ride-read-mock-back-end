@@ -310,8 +310,12 @@ public class UserServiceImpl implements UserService {
 		user.setLongitude(longitude);
 		user.setSex(sex);
 		user.setHometown(hometown);
-		if (CommonUtil.isNullOrEmpty(tags)) {
-			user.setTags(tags.toString());
+		if (!CommonUtil.isNullOrEmpty(tags)) {
+			StringBuffer buffer = new StringBuffer();
+			for (String str : tags) {
+				buffer.append(str);
+			}
+			user.setTags(buffer.toString());
 		}
 
 		user.setUpdatedAt(new Date());

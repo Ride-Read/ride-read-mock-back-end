@@ -164,15 +164,15 @@
 		distance
 		from
 		t_moment moment
-		where moment.longitude &gt; #{minLat}
+		where moment.longitude &gt; #{minLng}
 		and
 		moment.longitude
 		&lt;
-		#{maxLat}
-		and
-		moment.latitude &gt; #{minLng} and
-		moment.latitude &lt;
 		#{maxLng}
+		and
+		moment.latitude &gt; #{minLat} and
+		moment.latitude &lt;
+		#{maxLat}
 		order
 		by
 		created_at desc
