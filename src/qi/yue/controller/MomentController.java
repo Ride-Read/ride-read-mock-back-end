@@ -237,8 +237,8 @@ public class MomentController {
 		}
 	}
 
-	@RequestMapping(value = "/show_collection", method = RequestMethod.POST)
-	public @ResponseBody Object showCollection(String token, Integer uid, Long timestamp) {
+	@RequestMapping(value = "/show_collect_moment", method = RequestMethod.POST)
+	public @ResponseBody Object showCollectMoment(String token, Integer uid, Long timestamp) {
 		try {
 			List<CollectionDTO> data = collectionService.showCollections(token, uid, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(data);

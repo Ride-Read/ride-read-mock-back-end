@@ -50,6 +50,8 @@ public class UserDTO {
 
 	private String ride_read_id;
 
+	private Integer is_login;
+
 	public Integer getUid() {
 		return uid;
 	}
@@ -232,5 +234,13 @@ public class UserDTO {
 
 	public void setRide_read_id(String ride_read_id) {
 		this.ride_read_id = ride_read_id;
+	}
+
+	public Integer getIs_login() {
+		return is_login;
+	}
+
+	public void setIs_login(Integer is_login) {
+		this.is_login = is_login;
 	}
 }

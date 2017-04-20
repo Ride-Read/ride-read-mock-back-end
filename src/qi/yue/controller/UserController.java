@@ -54,6 +54,25 @@ public class UserController {
 
 	}
 
+	@RequestMapping(value = "/login_out", method = RequestMethod.POST)
+	public @ResponseBody ResponseDTO loginOut(Integer uid, String token, Long timestamp) {
+		try {
+			userService.loginOut(uid, token, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse();
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
+		}
+
+	}
+
 	@RequestMapping(value = "/reset_password", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO resetPassword(String phonenumber, String new_password, Long timestamp) {
 		try {

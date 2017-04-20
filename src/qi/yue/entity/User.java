@@ -36,11 +36,11 @@ public class User {
 
 	private String career;
 
-//	private String nickname;
-
 	private BigDecimal longitude;
 
 	private BigDecimal latitude;
+
+	private Integer is_login;
 
 	private Date createdAt;
 
@@ -224,4 +224,11 @@ public class User {
 		this.rideReadId = rideReadId;
 	}
 
+	public Integer getIs_login() {
+		return is_login;
+	}
+
+	public void setIs_login(Integer is_login) {
+		this.is_login = is_login;
+	}
 }

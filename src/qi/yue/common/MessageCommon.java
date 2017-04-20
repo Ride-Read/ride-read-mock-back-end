@@ -20,6 +20,7 @@ public class MessageCommon {
 	public static final String STATUS_REPEAT_FOLLOW = "1014";// 重复关注
 	public static final String STATUS_REPEAT_COLLECT = "1015";// 重复收藏
 	public static final String STATUS_REPEAT_THUMBS_UP = "1016";// 重复点赞
+	public static final String STATUS_USER_IS_LOGIN = "1017";// 用户已经登录
 
 	public static final String SUCCESS_MESSAGE = "返回成功";
 	public static final String FAIL_MESSAGE = "返回失败";
@@ -42,6 +43,7 @@ public class MessageCommon {
 	public static final String FAIL_MESSAGE_REPEAT_FOLLOW = "重复关注";
 	public static final String FAIL_MESSAGE_REPEAT_COLLECT = "重复收藏";
 	public static final String FAIL_MESSAGE_REPEAT_THUMBS_UP = "重复点赞";
+	public static final String FAIL_MESSAGE_USER_IS_LOGIN = "用户已经登录";
 
 	public static final String TYPE_ERROR = "1011";// 类型错误
 	public static final String IMAGE_EMPTY = "1012";// 图片为空

@@ -185,6 +185,9 @@ public class UserServiceImpl implements UserService {
 		if (CommonUtil.isNull(userDTO)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
+		if (userDTO.getIs_login().equals(1)) {
+			throw new BusinessException(MessageCommon.STATUS_USER_IS_LOGIN, MessageCommon.FAIL_MESSAGE_USER_IS_LOGIN);
+		}
 
 		password = EncryptionUtil.GetSHACode(password);
 		if (!password.equals(userDTO.getPassword())) {
@@ -200,6 +203,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setId(userDTO.getUid());
 		user.setToken(token);
+		user.setIs_login(1);
 		user.setLatitude(latitude);
 		user.setLongitude(longitude);
 		update(user);
@@ -260,6 +264,7 @@ public class UserServiceImpl implements UserService {
 		user.setSex(0);
 		user.setFollower(0);
 		user.setFollowing(0);
+		user.setIs_login(0);
 		userMapper.insert(user);
 		return UserDTOAssembler.toDto(user);
 	}
@@ -344,5 +349,18 @@ public class UserServiceImpl implements UserService {
 		List<String> list = Arrays.asList(userIdList);
 		List<SimplifyUserDTO> data = userMapper.findByIds(list);
 		return data;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void loginOut(Integer uid, String token, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
+			throw new ParameterException();
+		}
+		User user = new User();
+		user.setId(uid);
+		user.setIs_login(0);
+		user.setToken(null);
+		update(user);
 	}
 }

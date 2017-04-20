@@ -112,4 +112,6 @@ public interface UserService {
 
 	public List<SimplifyUserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)
 			throws ParameterException, BusinessException;
+
+	void loginOut(Integer uid, String token, Long timestamp);
 }

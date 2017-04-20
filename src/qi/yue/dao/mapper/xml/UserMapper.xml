@@ -23,6 +23,7 @@
 		<result column="latitude" jdbcType="DECIMAL" property="latitude" />
 		<result column="career" property="career" jdbcType="VARCHAR" />
 		<result column="ride_read_id" property="ride_read_id" jdbcType="VARCHAR" />
+		<result column="is_login" property="is_login" jdbcType="INTEGER" />
 	</resultMap>
 
 	<resultMap id="SimplifyResultMap" type="qi.yue.dto.SimplifyUserDTO">
@@ -39,7 +40,7 @@
 		birthday, career, longitude,
 		latitude,
 		created_at,
-		updated_at,ride_read_id
+		updated_at,ride_read_id,is_login
 	</sql>
 
 	<sql id="User_Column">
@@ -136,7 +137,7 @@
 		tags, location, birthday,
 		career,
 		longitude,
-		latitude, created_at, updated_at,ride_read_id
+		latitude, created_at, updated_at,ride_read_id,is_login
 		)
 		values
 		(#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
@@ -154,7 +155,7 @@
 		#{latitude,jdbcType=DECIMAL},
 		#{createdAt,jdbcType=TIMESTAMP},
 		#{updatedAt,jdbcType=TIMESTAMP},
-		#{rideReadId,jdbcType=VARCHAR})
+		#{rideReadId,jdbcType=VARCHAR},#{is_login,jdbcType=INTEGER})
 	</insert>
 
 	<update id="update" parameterType="qi.yue.entity.User">
@@ -218,7 +219,10 @@
 				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
 			</if>
 			<if test="rideReadId != null">
-				ride_read_id,
+				ride_read_id=#{rideReadId,jdbcType=VARCHAR},
+			</if>
+			<if test="is_login != null">
+				is_login=#{is_login,jdbcType=INTEGER},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
