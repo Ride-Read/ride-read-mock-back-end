@@ -131,6 +131,56 @@
 		=#{id,jdbcType=INTEGER}
 	</select>
 
+	<select id="findWithtThumbsUpCount" parameterType="map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Moment_Column" />
+		,
+		ROUND(
+		6378.138 * 2 * ASIN(
+		SQRT(
+		POW(
+		SIN(
+		(
+		#{latitude,jdbcType=DECIMAL}
+		*
+		PI() / 180 - moment.latitude * PI() / 180
+		) / 2
+		),
+		2
+		) +
+		COS(#{latitude,jdbcType=DECIMAL}* PI() / 180) * COS( moment.latitude*
+		PI() / 180) * POW(
+		SIN(
+		(
+		#{longitude,jdbcType=DECIMAL} * PI() / 180 -
+		moment.longitude * PI() / 180
+		) / 2
+		),
+		2
+		)
+		)
+		) * 1000
+		) AS
+		distance,(select
+		count(*) from t_thumbs_up where moment_id=moment.id) as thumbs_up_count
+		from
+		t_moment
+		moment
+		where moment.longitude &gt; #{minLng}
+		and
+		moment.longitude
+		&lt;
+		#{maxLng}
+		and
+		moment.latitude &gt; #{minLat} and
+		moment.latitude &lt;
+		#{maxLat}
+		order
+		by
+		thumbs_up_count desc
+	</select>
+
 	<select id="findNearMap" parameterType="map" resultMap="BaseResultMap">
 		select
 		<include refid="Moment_Column" />

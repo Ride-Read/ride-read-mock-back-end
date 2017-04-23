@@ -1,6 +1,7 @@
 package qi.yue.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -526,5 +527,154 @@ public class MomentServiceImpl implements MomentService {
 		momentDTO.setComment(commentDTOList);
 		momentDTO.setThumbs_up(thumbsUpDTOLsit);
 		return momentDTO;
+	}
+
+	@Override
+	public List<MomentDTO> showMapNumber(Integer uid, Long timestamp, String token, BigDecimal latitude,
+			BigDecimal longitude, Double scaling_ratio) {
+		Double lat = latitude.doubleValue();
+		Double lon = longitude.doubleValue();
+		Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon, MessageCommon.DISTANCE_AROUND);
+		Double intervalRadiusLat = (lat - maxLatAndLog[0]) / 3;
+		Double intervalRadiusLon = (lon - maxLatAndLog[1]) / 3;
+		Double intervalRadiusLat2 = intervalRadiusLat * 2;
+		Double intervalRadiusLon2 = intervalRadiusLon * 2;
+		List<MomentDTO> moments = new ArrayList<>();
+
+		Map<String, Object> map1 = new HashMap<String, Object>();// 中心点范围
+		map1.put("minLat", maxLatAndLog[0] + intervalRadiusLat2);// 最小纬度
+		map1.put("minLng", maxLatAndLog[1] + intervalRadiusLon2);// 最小经度
+		map1.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2);// 最大纬度
+		map1.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2);// 最大经度
+		map1.put("latitude", lat);
+		map1.put("longitude", lon);
+		List<MomentDTO> moments1 = momentMapper.findWithtThumbsUpCount(map1);
+		MomentDTO momentDTO1 = null;
+		if (!CommonUtil.isNullOrEmpty(moments1)) {
+			momentDTO1 = moments1.get(0);
+			momentDTO1.setCount(moments1.size());
+			moments.add(momentDTO1);
+		}
+
+		Map<String, Object> map2 = new HashMap<String, Object>();// 中心点下面的一点
+		map2.put("minLat", maxLatAndLog[0]);
+		map2.put("minLng", maxLatAndLog[1] + intervalRadiusLon2);
+		map2.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2 * 2);
+		map2.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2);
+		map2.put("latitude", lat - intervalRadiusLat2);
+		map2.put("longitude", lon);
+		List<MomentDTO> moments2 = momentMapper.findWithtThumbsUpCount(map2);
+		MomentDTO momentDTO2 = null;
+		if (!CommonUtil.isNullOrEmpty(moments2)) {
+			momentDTO2 = moments2.get(0);
+			momentDTO2.setCount(moments2.size());
+			moments.add(momentDTO2);
+		}
+
+		Map<String, Object> map3 = new HashMap<String, Object>();// 中心点下面的一点的左边一点
+		map3.put("minLat", maxLatAndLog[0]);
+		map3.put("minLng", maxLatAndLog[1]);
+		map3.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2 * 2);
+		map3.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2 * 2);
+		map3.put("latitude", lat - intervalRadiusLat2);
+		map3.put("longitude", lon - intervalRadiusLon2);
+		List<MomentDTO> moments3 = momentMapper.findWithtThumbsUpCount(map3);
+		MomentDTO momentDTO3 = null;
+		if (!CommonUtil.isNullOrEmpty(moments3)) {
+			momentDTO3 = moments3.get(0);
+			momentDTO3.setCount(moments3.size());
+			moments.add(momentDTO3);
+		}
+
+		Map<String, Object> map4 = new HashMap<String, Object>();// 中心点下面的一点的右边一点
+		map4.put("minLat", maxLatAndLog[0]);
+		map4.put("minLng", maxLatAndLog[1] + intervalRadiusLon2 * 2);
+		map4.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2 * 2);
+		map4.put("maxLng", maxLatAndLog[3]);
+		map4.put("latitude", lat - intervalRadiusLat2);
+		map4.put("longitude", lon + intervalRadiusLon2);
+		List<MomentDTO> moments4 = momentMapper.findWithtThumbsUpCount(map4);
+		MomentDTO momentDTO4 = null;
+		if (!CommonUtil.isNullOrEmpty(moments4)) {
+			momentDTO4 = moments4.get(0);
+			momentDTO4.setCount(moments4.size());
+			moments.add(momentDTO4);
+		}
+
+		Map<String, Object> map5 = new HashMap<String, Object>();// 中心点左边一点
+		map5.put("minLat", maxLatAndLog[0] + intervalRadiusLat2);
+		map5.put("minLng", maxLatAndLog[1]);
+		map5.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2);
+		map5.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2 * 2);
+		map5.put("latitude", lat);
+		map5.put("longitude", lon - intervalRadiusLon2);
+		List<MomentDTO> moments5 = momentMapper.findWithtThumbsUpCount(map5);
+		MomentDTO momentDTO5 = null;
+		if (!CommonUtil.isNullOrEmpty(moments5)) {
+			momentDTO5 = moments5.get(0);
+			momentDTO5.setCount(moments5.size());
+			moments.add(momentDTO5);
+		}
+
+		Map<String, Object> map6 = new HashMap<String, Object>();// 中心点右边一点
+		map6.put("minLat", maxLatAndLog[0] + intervalRadiusLat2);
+		map6.put("minLng", maxLatAndLog[1] + intervalRadiusLon2 * 2);
+		map6.put("maxLat", maxLatAndLog[2] - intervalRadiusLat2);
+		map6.put("maxLng", maxLatAndLog[3]);
+		map6.put("latitude", lat);
+		map6.put("longitude", lon + intervalRadiusLon2);
+		List<MomentDTO> moments6 = momentMapper.findWithtThumbsUpCount(map6);
+		MomentDTO momentDTO6 = null;
+		if (!CommonUtil.isNullOrEmpty(moments6)) {
+			momentDTO6 = moments6.get(0);
+			momentDTO6.setCount(moments6.size());
+			moments.add(momentDTO6);
+		}
+
+		Map<String, Object> map7 = new HashMap<String, Object>();// 中心点上面一点
+		map7.put("minLat", maxLatAndLog[0] + intervalRadiusLat2 * 2);
+		map7.put("minLng", maxLatAndLog[1] + intervalRadiusLon2);
+		map7.put("maxLat", maxLatAndLog[2]);
+		map7.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2);
+		map7.put("latitude", lat + intervalRadiusLat2);
+		map7.put("longitude", lon);
+		List<MomentDTO> moments7 = momentMapper.findWithtThumbsUpCount(map7);
+		MomentDTO momentDTO7 = null;
+		if (!CommonUtil.isNullOrEmpty(moments7)) {
+			momentDTO7 = moments7.get(0);
+			momentDTO7.setCount(moments7.size());
+			moments.add(momentDTO7);
+		}
+
+		Map<String, Object> map8 = new HashMap<String, Object>();// 中心点上面的左边一点
+		map8.put("minLat", maxLatAndLog[0] + intervalRadiusLat2 * 2);
+		map8.put("minLng", maxLatAndLog[1]);
+		map8.put("maxLat", maxLatAndLog[2]);
+		map8.put("maxLng", maxLatAndLog[3] - intervalRadiusLon2 * 2);
+		map8.put("latitude", lat + intervalRadiusLat2);
+		map8.put("longitude", lon - intervalRadiusLon2);
+		List<MomentDTO> moments8 = momentMapper.findWithtThumbsUpCount(map8);
+		MomentDTO momentDTO8 = null;
+		if (!CommonUtil.isNullOrEmpty(moments8)) {
+			momentDTO8 = moments8.get(0);
+			momentDTO8.setCount(moments8.size());
+			moments.add(momentDTO8);
+		}
+
+		Map<String, Object> map9 = new HashMap<String, Object>();// 中心点上面的右边一点
+		map9.put("minLat", maxLatAndLog[0] + intervalRadiusLat2 * 2);
+		map9.put("minLng", maxLatAndLog[1] + intervalRadiusLon2 * 2);
+		map9.put("maxLat", maxLatAndLog[2]);
+		map9.put("maxLng", maxLatAndLog[3]);
+		map9.put("latitude", lat + intervalRadiusLat2);
+		map9.put("longitude", lon + intervalRadiusLon2);
+		List<MomentDTO> moments9 = momentMapper.findWithtThumbsUpCount(map9);
+		MomentDTO momentDTO9 = null;
+		if (!CommonUtil.isNullOrEmpty(moments9)) {
+			momentDTO9 = moments9.get(0);
+			momentDTO9.setCount(moments9.size());
+			moments.add(momentDTO9);
+		}
+		return moments;
 	}
 }

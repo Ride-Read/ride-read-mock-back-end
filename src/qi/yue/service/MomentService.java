@@ -124,4 +124,7 @@ public interface MomentService {
 
 	MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
 			BigDecimal longitude);
+
+	List<MomentDTO> showMapNumber(Integer uid, Long timestamp, String token, BigDecimal latitude, BigDecimal longitude,
+			Double scaling_ratio);
 }

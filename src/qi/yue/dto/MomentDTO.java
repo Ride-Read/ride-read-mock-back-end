@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MomentDTO {
+
 	private Integer mid;
 
 	private Integer uid;
@@ -44,6 +45,8 @@ public class MomentDTO {
 	private String moment_location;
 
 	private String first_picture;
+
+	private Integer count;
 
 	public Integer getMid() {
 		return mid;
@@ -205,4 +208,11 @@ public class MomentDTO {
 		this.first_picture = first_picture;
 	}
 
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 }

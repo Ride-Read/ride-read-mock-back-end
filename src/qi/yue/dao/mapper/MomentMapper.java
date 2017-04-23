@@ -33,4 +33,5 @@ public interface MomentMapper {
 
 	MomentDTO findMoment(Map<String, Object> map);
 
+	List<MomentDTO> findWithtThumbsUpCount(Map<String, Object> map);
 }

@@ -62,4 +62,25 @@ public class ReadMapController {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
 	}
+
+	@RequestMapping(value = "/show_map_number", method = RequestMethod.POST)
+	public @ResponseBody Object showMapNumber(Integer uid, Long timestamp, String token, BigDecimal latitude,
+			BigDecimal longitude, Double scaling_ratio) {
+		try {
+			List<MomentDTO> data = momentService.showMapNumber(uid, timestamp, token, latitude, longitude,
+					scaling_ratio);
+			ResponseDTO responseDTO = ResponseUtil.ConvertToSuccessResponse(data);
+			return responseDTO;
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
 }
