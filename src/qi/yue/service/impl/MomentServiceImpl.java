@@ -38,6 +38,7 @@ import qi.yue.service.MomentService;
 import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.DistanceUtil;
+import qi.yue.utils.EncryptionUtil;
 import qi.yue.utils.ResponseUtil;
 import qi.yue.utils.StringUtil;
 
@@ -119,15 +120,6 @@ public class MomentServiceImpl implements MomentService {
 	public List<MomentDTO> findFollowingsMoment(Map<String, Object> map) throws BusinessException {
 		List<MomentDTO> MomentDTOList = momentMapper.findFollowingsMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
-			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			// mapTemp1.put("fid", momentDTO.getUid());
-			// mapTemp1.put("tid", map.get("fid"));
-			// FollowDTO followDTO = followMapper.findByFidAndTid(mapTemp1);
-			// if (!CommonUtil.isNull(followDTO)) {
-			// momentDTO.getUser().setIs_followed(0);
-			// } else {
-			// momentDTO.getUser().setIs_followed(1);
-			// }
 			Integer isFollow = followService.isFollow(Integer.parseInt(map.get("fid").toString()), momentDTO.getUid());
 			momentDTO.getUser().setIs_followed(isFollow);
 			Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
@@ -155,26 +147,6 @@ public class MomentServiceImpl implements MomentService {
 			for (MomentDTO momentDTO : MomentDTOList) {
 				Integer isFollow = followService.isFollow(Integer.parseInt(map.get("fid").toString()),
 						momentDTO.getUid());
-				// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-				// mapTemp1.put("fid", map.get("fid"));
-				// mapTemp1.put("tid", momentDTO.getUid());
-				// FollowDTO followDTO1 =
-				// followMapper.findByFidAndTid(mapTemp1);
-				//
-				// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
-				// mapTemp2.put("fid", momentDTO.getUid());
-				// mapTemp2.put("tid", map.get("fid"));
-				// FollowDTO followDTO2 =
-				// followMapper.findByFidAndTid(mapTemp1);
-				// if (CommonUtil.isNull(followDTO1) &&
-				// CommonUtil.isNull(followDTO2)) {
-				// momentDTO.getUser().setIs_followed(-1);
-				// } else if (!CommonUtil.isNull(followDTO1) &&
-				// !CommonUtil.isNull(followDTO2)) {
-				// momentDTO.getUser().setIs_followed(0);
-				// } else {
-				// momentDTO.getUser().setIs_followed(1);
-				// }
 				momentDTO.getUser().setIs_followed(isFollow);
 				Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
 						.doubleValue();
@@ -204,7 +176,11 @@ public class MomentServiceImpl implements MomentService {
 		if (!checkResult.getStatus().equals(MessageCommon.STATUS_SUCCESS)) {
 			throw new BusinessException(checkResult.getStatus(), checkResult.getMsg());
 		}
-
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		Moment moment = new Moment();
 		moment.setMsg(msg);
 		moment.setUserId(uid);
@@ -236,11 +212,6 @@ public class MomentServiceImpl implements MomentService {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.VIDEO_EMPTY,
 					MessageCommon.FAIL_MESSAGE_VIDEO_EMPTY);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// return ResponseUtil.ConvertToFailResponse();
-		// }
 		return ResponseUtil.ConvertToSuccessResponse();
 	}
 
@@ -252,6 +223,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		map.put("size", MessageCommon.PAGE_SIZE);
@@ -260,25 +236,6 @@ public class MomentServiceImpl implements MomentService {
 		map.put("longitude", longitude);
 		List<MomentDTO> MomentDTOList = momentMapper.findUserMoment(map);
 		for (MomentDTO momentDTO : MomentDTOList) {
-
-			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			// mapTemp1.put("fid", uid);
-			// mapTemp1.put("tid", momentDTO.getUid());
-			// FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
-			//
-			// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
-			// mapTemp2.put("fid", momentDTO.getUid());
-			// mapTemp2.put("tid", uid);
-			// FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
-			// if (CommonUtil.isNull(followDTO1) &&
-			// CommonUtil.isNull(followDTO2)) {
-			// momentDTO.getUser().setIs_followed(-1);
-			// } else if (!CommonUtil.isNull(followDTO1) &&
-			// !CommonUtil.isNull(followDTO2)) {
-			// momentDTO.getUser().setIs_followed(0);
-			// } else {
-			// momentDTO.getUser().setIs_followed(1);
-			// }
 			Integer isFollow = followService.isFollow(uid, user_id);
 			momentDTO.getUser().setIs_followed(isFollow);
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
@@ -302,6 +259,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(pages) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(latitude)
 				|| CommonUtil.isNull(longitude)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
@@ -331,6 +293,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		UserDTO user = userService.find(uid);
 		Comment comment = new Comment();
 		if (!CommonUtil.isNullOrEmpty(reply_uid)) {
@@ -357,6 +324,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		commentMapper.delete(comment_id);
 	}
 
@@ -366,6 +338,11 @@ public class MomentServiceImpl implements MomentService {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("mid", mid);
@@ -395,6 +372,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		thumbsUpMapper.delete(thumbs_up_id);
 	}
 
@@ -404,30 +386,17 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(pages) || CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("mid", mid);
 		map.put("size", MessageCommon.PAGE_SIZE);
 		map.put("currentNumber", pages * MessageCommon.PAGE_SIZE);
 		List<ThumbsUpDTO> thumbsUpDTOList = thumbsUpMapper.findThumbsUpByMid(map);
 		for (ThumbsUpDTO thumbsUpDTO : thumbsUpDTOList) {
-			// Map<String, Object> mapTemp1 = new HashMap<String, Object>();
-			// mapTemp1.put("fid", uid);
-			// mapTemp1.put("tid", thumbsUpDTO.getUid());
-			// FollowDTO followDTO1 = followMapper.findByFidAndTid(mapTemp1);
-			//
-			// Map<String, Object> mapTemp2 = new HashMap<String, Object>();
-			// mapTemp2.put("fid", thumbsUpDTO.getUid());
-			// mapTemp2.put("tid", uid);
-			// FollowDTO followDTO2 = followMapper.findByFidAndTid(mapTemp1);
-			// if (CommonUtil.isNull(followDTO1) &&
-			// CommonUtil.isNull(followDTO2)) {
-			// thumbsUpDTO.setIs_followed(-1);
-			// } else if (!CommonUtil.isNull(followDTO1) &&
-			// !CommonUtil.isNull(followDTO2)) {
-			// thumbsUpDTO.setIs_followed(0);
-			// } else {
-			// thumbsUpDTO.setIs_followed(1);
-			// }
 			Integer isFollow = followService.isFollow(uid, thumbsUpDTO.getUid());
 			thumbsUpDTO.setIs_followed(isFollow);
 		}
@@ -440,6 +409,11 @@ public class MomentServiceImpl implements MomentService {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		UserDTO user = userService.find(uid);
 		Map<String, Object> map = new HashMap<>();
@@ -468,6 +442,11 @@ public class MomentServiceImpl implements MomentService {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		List<MomentDTO> momentDTOList = momentMapper.findUserMap(uid);
 		for (MomentDTO momentDTO : momentDTOList) {
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
@@ -478,32 +457,35 @@ public class MomentServiceImpl implements MomentService {
 		return momentDTOList;
 	}
 
-	@Override
-	public List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token, BigDecimal latitude,
-			BigDecimal longitude) {
-		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)
-				|| CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude)) {
-			throw new ParameterException();
-		}
-		Double lat = latitude.doubleValue();
-		Double lon = longitude.doubleValue();
-		Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon, MessageCommon.DISTANCE_AROUND);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("minLat", maxLatAndLog[0]);
-		map.put("minLng", maxLatAndLog[1]);
-		map.put("maxLat", maxLatAndLog[2]);
-		map.put("maxLng", maxLatAndLog[3]);
-		map.put("latitude", latitude);
-		map.put("longitude", longitude);
-		List<MomentDTO> moments = momentMapper.findNearMap(map);
-		for (MomentDTO momentDTO : moments) {
-			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
-				String[] pictures = momentDTO.getPictureString().split(",");
-				momentDTO.setFirst_picture(pictures[0]);
-			}
-		}
-		return moments;
-	}
+	// @Override
+	// public List<MomentDTO> findNearMap(Integer uid, Long timestamp, String
+	// token, BigDecimal latitude,
+	// BigDecimal longitude) {
+	// if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) ||
+	// CommonUtil.isNull(token)
+	// || CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude)) {
+	// throw new ParameterException();
+	// }
+	// Double lat = latitude.doubleValue();
+	// Double lon = longitude.doubleValue();
+	// Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon,
+	// MessageCommon.DISTANCE_AROUND);
+	// Map<String, Object> map = new HashMap<String, Object>();
+	// map.put("minLat", maxLatAndLog[0]);
+	// map.put("minLng", maxLatAndLog[1]);
+	// map.put("maxLat", maxLatAndLog[2]);
+	// map.put("maxLng", maxLatAndLog[3]);
+	// map.put("latitude", latitude);
+	// map.put("longitude", longitude);
+	// List<MomentDTO> moments = momentMapper.findNearMap(map);
+	// for (MomentDTO momentDTO : moments) {
+	// if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+	// String[] pictures = momentDTO.getPictureString().split(",");
+	// momentDTO.setFirst_picture(pictures[0]);
+	// }
+	// }
+	// return moments;
+	// }
 
 	@Transactional(rollbackFor = Exception.class)
 	public MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
@@ -511,6 +493,11 @@ public class MomentServiceImpl implements MomentService {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(mid) || CommonUtil.isNull(timestamp)
 				|| CommonUtil.isNull(token) || CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", mid);
@@ -532,9 +519,19 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	public List<MomentDTO> showMapNumber(Integer uid, Long timestamp, String token, BigDecimal latitude,
 			BigDecimal longitude, Double scaling_ratio) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(timestamp) || CommonUtil.isNull(token)
+				|| CommonUtil.isNull(latitude) || CommonUtil.isNull(longitude) || CommonUtil.isNull(scaling_ratio)) {
+			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		Double lat = latitude.doubleValue();
 		Double lon = longitude.doubleValue();
-		Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon, MessageCommon.DISTANCE_AROUND);
+		int distance = (int) (MessageCommon.DISTANCE_AROUND / scaling_ratio);
+		Double[] maxLatAndLog = DistanceUtil.getAround(lat, lon, distance);
 		Double intervalRadiusLat = (lat - maxLatAndLog[0]) / 3;
 		Double intervalRadiusLon = (lon - maxLatAndLog[1]) / 3;
 		Double intervalRadiusLat2 = intervalRadiusLat * 2;

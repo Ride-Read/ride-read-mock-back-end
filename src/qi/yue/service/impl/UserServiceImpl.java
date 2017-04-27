@@ -294,6 +294,11 @@ public class UserServiceImpl implements UserService {
 				|| CommonUtil.isNull(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		UserDTO userDTO = find(uid);
 		if (CommonUtil.isNull(userDTO)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
@@ -345,6 +350,11 @@ public class UserServiceImpl implements UserService {
 				|| CommonUtil.isNullOrEmpty(userIds)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		String[] userIdList = userIds.split(",");
 		List<String> list = Arrays.asList(userIdList);
 		List<SimplifyUserDTO> data = userMapper.findByIds(list);
@@ -356,6 +366,11 @@ public class UserServiceImpl implements UserService {
 	public void loginOut(Integer uid, String token, Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		User user = new User();
 		user.setId(uid);

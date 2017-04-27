@@ -53,6 +53,7 @@
 		<!-- <table tableName="t_moment"></table> -->
 		<!-- <table tableName="t_sms_code"></table> -->
 		<!-- <table tableName="t_collection"></table> -->
-		<table tableName="t_read_picture"></table>
+		<!-- <table tableName="t_read_picture"></table> -->
+		<table tableName="t_version_number"></table>
 	</context>
 </generatorConfiguration>

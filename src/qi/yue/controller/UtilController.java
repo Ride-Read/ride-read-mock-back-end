@@ -21,8 +21,10 @@ import com.yunpian.sdk.service.YunpianRestClient;
 import net.sf.json.JSONObject;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.SmsCodeDTO;
+import qi.yue.dto.VersionNumberDTO;
 import qi.yue.entity.SmsCode;
 import qi.yue.service.SmsCodeService;
+import qi.yue.service.VersionNumberService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.ResponseUtil;
 import qi.yue.utils.StringUtil;
@@ -32,6 +34,9 @@ import qi.yue.utils.StringUtil;
 public class UtilController {
 	@Resource
 	private SmsCodeService smsCodeService;
+
+	@Resource
+	private VersionNumberService versionNumberService;
 
 	@RequestMapping(value = "/qiniu_token", method = RequestMethod.POST)
 	public @ResponseBody Object qiniuToken(String token, Long timestamp, String filename, Integer uid) {
@@ -100,6 +105,22 @@ public class UtilController {
 			} else {
 				return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
+	@RequestMapping(value = "/verify_version_number", method = RequestMethod.POST)
+	public @ResponseBody Object verifyVersionNumber(String token, Long timestamp, Integer uid, Integer version_type) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(version_type) || CommonUtil.isNull(timestamp)
+				|| CommonUtil.isNull(uid)) {
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		}
+		try {
+			VersionNumberDTO date = versionNumberService.findLastVersion(version_type);
+			return ResponseUtil.ConvertToSuccessResponse(date);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);

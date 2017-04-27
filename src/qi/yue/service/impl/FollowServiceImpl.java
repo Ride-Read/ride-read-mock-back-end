@@ -21,6 +21,8 @@ import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.FollowService;
 import qi.yue.utils.CommonUtil;
+import qi.yue.utils.EncryptionUtil;
+import qi.yue.utils.ResponseUtil;
 
 @Service
 public class FollowServiceImpl implements FollowService {
@@ -177,6 +179,11 @@ public class FollowServiceImpl implements FollowService {
 		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(timestamp)
 				|| CommonUtil.isNullOrEmpty(shortname)) {
 			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("uid", uid);

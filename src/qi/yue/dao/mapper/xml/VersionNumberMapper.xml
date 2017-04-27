@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="qi.yue.dao.mapper.VersionNumberMapper">
+	<resultMap id="BaseResultMap" type="qi.yue.dto.VersionNumberDTO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="version_type" property="version_type" jdbcType="INTEGER" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="create_at" property="create_at" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,version_type,version,
+		create_at
+	</sql>
+	<select id="find" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_version_number where id=#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findLastVersion" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_version_number where
+		version_type=#{version_type,jdbcType=INTEGER} order by create_at desc
+limit 1
+	</select>
+
+	<insert id="insert" parameterType="qi.yue.entity.VersionNumber"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into t_version_number (id,
+		version_type,
+		version,create_at
+		)
+		values
+		(#{id,jdbcType=INTEGER},
+		#{versionType,jdbcType=INTEGER},
+		#{version,jdbcType=VARCHAR},
+		#{createAt,jdbcType=TIMESTAMP}
+		)
+	</insert>
+</mapper>

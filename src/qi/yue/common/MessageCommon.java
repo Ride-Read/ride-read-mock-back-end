@@ -1,7 +1,7 @@
 package qi.yue.common;
 
 public class MessageCommon {
-
+	public static final String STATUS_TOKEN_VALIDATE_FAIL = "9999";// token验证失败
 	public static final String STATUS_SUCCESS = "0";// 返回成功
 	public static final String STATUS_FAIL = "1";// 返回失败
 	public static final String STATUS_USER_IS_EXIST = "1000";// 用户已存在
@@ -22,6 +22,7 @@ public class MessageCommon {
 	public static final String STATUS_REPEAT_THUMBS_UP = "1016";// 重复点赞
 	public static final String STATUS_USER_IS_LOGIN = "1017";// 用户已经登录
 
+	public static final String FAIL_MESSAGE_VALIDATE_FAIL = "token验证失败";
 	public static final String SUCCESS_MESSAGE = "返回成功";
 	public static final String FAIL_MESSAGE = "返回失败";
 	public static final String FAIL_MESSAGE_PARAMETER = "参数错误或者为空";

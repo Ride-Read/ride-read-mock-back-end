@@ -2,8 +2,6 @@ package qi.yue.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -11,36 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 import qi.yue.common.MessageCommon;
 import qi.yue.dto.CollectionDTO;
 import qi.yue.dto.CommentDTO;
 import qi.yue.dto.MomentDTO;
 import qi.yue.dto.ResponseDTO;
 import qi.yue.dto.ThumbsUpDTO;
-import qi.yue.dto.UserDTO;
 import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.CollectionService;
-import qi.yue.service.CommentService;
 import qi.yue.service.MomentService;
-import qi.yue.service.ThumbsUpService;
-import qi.yue.service.UserService;
 import qi.yue.utils.CommonUtil;
 import qi.yue.utils.ResponseUtil;
 
 @Controller
 @RequestMapping("/moments")
 public class MomentController {
-	@Resource
-	private UserService userService;
-
-	@Resource
-	private ThumbsUpService thumbsUpService;
-
-	@Resource
-	private CommentService commentService;
 
 	@Resource
 	private MomentService momentService;
@@ -294,5 +278,5 @@ public class MomentController {
 		}
 
 	}
-	
+
 }

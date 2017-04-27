@@ -162,7 +162,6 @@ public class UserController {
 	@RequestMapping(value = "/followers", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO followers(Integer uid, String token, Long timestamp) {
 		try {
-
 			List<FollowDTO> followerList = followService.queryFollower(uid, token, timestamp);
 			return ResponseUtil.ConvertToSuccessResponse(followerList);
 
