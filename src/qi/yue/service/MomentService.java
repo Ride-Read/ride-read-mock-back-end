@@ -127,4 +127,6 @@ public interface MomentService {
 
 	List<MomentDTO> showMapNumber(Integer uid, Long timestamp, String token, BigDecimal latitude, BigDecimal longitude,
 			Double scaling_ratio);
+
+	List<MomentDTO> findOtherUserMap(Integer uid, Long timestamp, String token, Integer user_id);
 }

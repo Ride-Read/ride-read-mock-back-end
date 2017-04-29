@@ -2,7 +2,6 @@ package qi.yue.service.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -185,9 +184,10 @@ public class UserServiceImpl implements UserService {
 		if (CommonUtil.isNull(userDTO)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
-		if (userDTO.getIs_login().equals(1)) {
-			throw new BusinessException(MessageCommon.STATUS_USER_IS_LOGIN, MessageCommon.FAIL_MESSAGE_USER_IS_LOGIN);
-		}
+		// if (userDTO.getIs_login().equals(1)) {
+		// throw new BusinessException(MessageCommon.STATUS_USER_IS_LOGIN,
+		// MessageCommon.FAIL_MESSAGE_USER_IS_LOGIN);
+		// }
 
 		password = EncryptionUtil.GetSHACode(password);
 		if (!password.equals(userDTO.getPassword())) {
@@ -282,7 +282,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
 			String face_url, Integer uid, String token, String signature, String school, Integer sex,
-			BigDecimal latitude, BigDecimal longitude, String hometown, String[] tags, Long timestamp)
+			BigDecimal latitude, BigDecimal longitude, String hometown, String tags, Long timestamp)
 			throws ParameterException, BusinessException {
 
 		if (CommonUtil.isNullOrEmpty(career) || CommonUtil.isNullOrEmpty(phonenumber)
@@ -320,14 +320,7 @@ public class UserServiceImpl implements UserService {
 		user.setLongitude(longitude);
 		user.setSex(sex);
 		user.setHometown(hometown);
-		if (!CommonUtil.isNullOrEmpty(tags)) {
-			StringBuffer buffer = new StringBuffer();
-			for (String str : tags) {
-				buffer.append(str);
-			}
-			user.setTags(buffer.toString());
-		}
-
+		user.setTags(tags);
 		user.setUpdatedAt(new Date());
 		try {
 			user.setBirthday(DateUtil.strToDate(birthday, MessageCommon.DATE_TIME_FORMAT));

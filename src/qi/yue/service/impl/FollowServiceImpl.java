@@ -59,6 +59,11 @@ public class FollowServiceImpl implements FollowService {
 				|| CommonUtil.isNullOrEmpty(timestamp)) {
 			throw new ParameterException();
 		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		UserDTO userFollowed = userMapper.find(user_id);
 		UserDTO userFollowing = userMapper.find(uid);
 

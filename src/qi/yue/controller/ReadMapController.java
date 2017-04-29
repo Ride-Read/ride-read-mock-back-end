@@ -44,6 +44,25 @@ public class ReadMapController {
 		}
 	}
 
+	@RequestMapping(value = "/show_other_user_map", method = RequestMethod.POST)
+	public @ResponseBody Object showOtherUserMap(Integer uid, Long timestamp, String token, Integer user_id) {
+		try {
+			List<MomentDTO> data = momentService.findOtherUserMap(uid, timestamp, token, user_id);
+			ResponseDTO responseDTO = ResponseUtil.ConvertToSuccessResponse(data);
+			return responseDTO;
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
+		}
+	}
+
 	// @RequestMapping(value = "/show_near_map", method = RequestMethod.POST)
 	// public @ResponseBody Object showNearMap(Integer uid, Long timestamp,
 	// String token, BigDecimal latitude,

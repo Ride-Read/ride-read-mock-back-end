@@ -107,7 +107,7 @@ public interface UserService {
 	 */
 	public UserDTO updateUserInfo(String career, String phonenumber, String location, String birthday, String username,
 			String face_url, Integer uid, String token, String signature, String school, Integer sex,
-			BigDecimal latitude, BigDecimal longitude, String hometown, String[] tags, Long timestamp)
+			BigDecimal latitude, BigDecimal longitude, String hometown, String tags, Long timestamp)
 			throws ParameterException, BusinessException;
 
 	public List<SimplifyUserDTO> findMoreUser(Integer uid, String token, Long timestamp, String userIds)

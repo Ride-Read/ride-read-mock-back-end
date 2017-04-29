@@ -457,6 +457,27 @@ public class MomentServiceImpl implements MomentService {
 		return momentDTOList;
 	}
 
+	@Override
+	public List<MomentDTO> findOtherUserMap(Integer uid, Long timestamp, String token, Integer user_id) {
+		if (CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(timestamp) || CommonUtil.isNull(token)
+				|| CommonUtil.isNull(user_id)) {
+			throw new ParameterException();
+		}
+//		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+//		if (!tokenTemp.equals(token)) {
+//			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+//					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+//		}
+		List<MomentDTO> momentDTOList = momentMapper.findUserMap(user_id);
+		for (MomentDTO momentDTO : momentDTOList) {
+			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+				String[] pictures = momentDTO.getPictureString().split(",");
+				momentDTO.setFirst_picture(pictures[0]);
+			}
+		}
+		return momentDTOList;
+	}
+
 	// @Override
 	// public List<MomentDTO> findNearMap(Integer uid, Long timestamp, String
 	// token, BigDecimal latitude,
@@ -504,6 +525,9 @@ public class MomentServiceImpl implements MomentService {
 		map.put("latitude", latitude);
 		map.put("longitude", longitude);
 		MomentDTO momentDTO = momentMapper.findMoment(map);
+		if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
+			momentDTO.setPictures(momentDTO.getPictureString().split(","));
+		}
 		Integer isFollow = followService.isFollow(uid, momentDTO.getUid());
 		momentDTO.getUser().setIs_followed(isFollow);
 		Double distance = momentDTO.getDistance().divide(new BigDecimal(1000), 2, BigDecimal.ROUND_HALF_UP)
@@ -550,6 +574,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments1)) {
 			momentDTO1 = moments1.get(0);
 			momentDTO1.setCount(moments1.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO1.getPictureString())) {
+				momentDTO1.setPictures(momentDTO1.getPictureString().split(","));
+			}
 			moments.add(momentDTO1);
 		}
 
@@ -565,6 +592,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments2)) {
 			momentDTO2 = moments2.get(0);
 			momentDTO2.setCount(moments2.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO2.getPictureString())) {
+				momentDTO2.setPictures(momentDTO2.getPictureString().split(","));
+			}
 			moments.add(momentDTO2);
 		}
 
@@ -580,6 +610,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments3)) {
 			momentDTO3 = moments3.get(0);
 			momentDTO3.setCount(moments3.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO3.getPictureString())) {
+				momentDTO3.setPictures(momentDTO3.getPictureString().split(","));
+			}
 			moments.add(momentDTO3);
 		}
 
@@ -595,6 +628,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments4)) {
 			momentDTO4 = moments4.get(0);
 			momentDTO4.setCount(moments4.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO4.getPictureString())) {
+				momentDTO4.setPictures(momentDTO4.getPictureString().split(","));
+			}
 			moments.add(momentDTO4);
 		}
 
@@ -610,6 +646,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments5)) {
 			momentDTO5 = moments5.get(0);
 			momentDTO5.setCount(moments5.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO5.getPictureString())) {
+				momentDTO5.setPictures(momentDTO5.getPictureString().split(","));
+			}
 			moments.add(momentDTO5);
 		}
 
@@ -625,6 +664,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments6)) {
 			momentDTO6 = moments6.get(0);
 			momentDTO6.setCount(moments6.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO6.getPictureString())) {
+				momentDTO6.setPictures(momentDTO6.getPictureString().split(","));
+			}
 			moments.add(momentDTO6);
 		}
 
@@ -640,6 +682,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments7)) {
 			momentDTO7 = moments7.get(0);
 			momentDTO7.setCount(moments7.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO7.getPictureString())) {
+				momentDTO7.setPictures(momentDTO7.getPictureString().split(","));
+			}
 			moments.add(momentDTO7);
 		}
 
@@ -655,6 +700,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments8)) {
 			momentDTO8 = moments8.get(0);
 			momentDTO8.setCount(moments8.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO8.getPictureString())) {
+				momentDTO8.setPictures(momentDTO8.getPictureString().split(","));
+			}
 			moments.add(momentDTO8);
 		}
 
@@ -670,6 +718,9 @@ public class MomentServiceImpl implements MomentService {
 		if (!CommonUtil.isNullOrEmpty(moments9)) {
 			momentDTO9 = moments9.get(0);
 			momentDTO9.setCount(moments9.size());
+			if (!CommonUtil.isNullOrEmpty(momentDTO9.getPictureString())) {
+				momentDTO9.setPictures(momentDTO9.getPictureString().split(","));
+			}
 			moments.add(momentDTO9);
 		}
 		return moments;
