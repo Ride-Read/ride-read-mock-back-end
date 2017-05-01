@@ -16,5 +16,7 @@ public interface ThumbsUpMapper {
 
 	int delete(Integer id);
 
+	int deleteByMid(Integer mid);
+
 	ThumbsUpDTO findByMidAndUid(Map<String, Object> map);
 }

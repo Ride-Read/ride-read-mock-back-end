@@ -78,6 +78,14 @@
 		where
 		fid = #{fid,jdbcType=INTEGER}
 	</delete>
+
+	<delete id="deleteByFidAndTid" parameterType="map">
+		delete
+		from t_follow
+		where
+		fid = #{fid,jdbcType=INTEGER} and tid =
+		#{tid,jdbcType=INTEGER}
+	</delete>
 	<insert id="insert" parameterType="qi.yue.entity.Follow">
 		insert into t_follow (id, fid,
 		follower_face_url,

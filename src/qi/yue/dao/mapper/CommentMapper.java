@@ -10,6 +10,8 @@ public interface CommentMapper {
 
 	int delete(Integer id);
 
+	int deleteByMid(Integer mid);
+
 	CommentDTO find(Integer id);
 
 	List<CommentDTO> findByMomentId(Integer momentId);

@@ -28,7 +28,8 @@
 		<include refid="Base_Column_List" />
 		from t_comment
 		where moment_id =
-		#{momentId,jdbcType=INTEGER}  order by created_at desc
+		#{momentId,jdbcType=INTEGER} order by
+		created_at desc
 	</select>
 
 	<select id="find" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -42,6 +43,11 @@
 		t_comment
 		where id =
 		#{id,jdbcType=INTEGER}
+	</delete>
+
+	<delete id="deleteByMid" parameterType="java.lang.Integer">
+		delete from t_comment
+		where moment_id=#{moment_id,jdbcType=INTEGER}
 	</delete>
 
 	<insert id="insert" parameterType="qi.yue.entity.Comment"

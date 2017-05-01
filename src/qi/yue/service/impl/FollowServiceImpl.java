@@ -144,8 +144,11 @@ public class FollowServiceImpl implements FollowService {
 		if (CommonUtil.isNull(userFollowed) || CommonUtil.isNull(userFollowing)) {
 			throw new BusinessException(MessageCommon.STATUS_USER_NOT_EXIST, MessageCommon.FAIL_MESSAGE_USER_NOT_EXIST);
 		}
-		try {
-			followMapper.deleteByFid(fid);
+		Map<String, Object> map = new HashMap<>();
+		map.put("tid", user_id);
+		map.put("fid", fid);
+		int deleteNum = followMapper.deleteByFidAndTid(map);
+		if (deleteNum == 1) {
 			Integer follower = userFollowed.getFollower() - 1;
 			User usered = new User();
 			usered.setId(userFollowed.getUid());
@@ -157,10 +160,9 @@ public class FollowServiceImpl implements FollowService {
 			usering.setId(userFollowing.getUid());
 			usering.setFollowing(following);
 			userMapper.update(usering);
-		} catch (BusinessException e) {
-			throw new BusinessException(MessageCommon.STATUS_DELETE_FAIL, MessageCommon.FAIL_MESSAGE_DELETE_FAIL);
+		} else {
+			throw new BusinessException(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-
 	}
 
 	/**

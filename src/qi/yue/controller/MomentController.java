@@ -19,7 +19,6 @@ import qi.yue.exception.BusinessException;
 import qi.yue.exception.ParameterException;
 import qi.yue.service.CollectionService;
 import qi.yue.service.MomentService;
-import qi.yue.utils.CommonUtil;
 import qi.yue.utils.ResponseUtil;
 
 @Controller
@@ -151,7 +150,7 @@ public class MomentController {
 	public @ResponseBody Object removeThumbsup(String token, Integer uid, Integer thumbs_up_id, Long timestamp) {
 		try {
 			momentService.removeThumbsup(token, uid, thumbs_up_id, timestamp);
-			return ResponseUtil.ConvertToSuccessResponse(null);
+			return ResponseUtil.ConvertToSuccessResponse();
 		} catch (ParameterException e) {
 			e.printStackTrace();
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
@@ -167,22 +166,21 @@ public class MomentController {
 	}
 
 	@RequestMapping(value = "/remove_moment", method = RequestMethod.POST)
-	public @ResponseBody Object removeMoment(String token, Integer uid, Integer comment_id, Long timestamp) {
-		ResponseDTO responseDTO = new ResponseDTO();
-		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(uid)
-				|| CommonUtil.isNull(timestamp)) {
-			responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-			return responseDTO;
+	public @ResponseBody Object removeMoment(String token, Integer uid, Integer mid, Long timestamp) {
+		try {
+			momentService.removeMoment(token, uid, mid, timestamp);
+			return ResponseUtil.ConvertToSuccessResponse(null);
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE);
 		}
-		// String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp +
-		// MessageCommon.PUBLIC_KEY);
-		// if (!tokenTemp.equals(token)) {
-		// responseDTO.setStatus(MessageCommon.STATUS_FAIL);
-		// } else {
-		momentService.delete(uid);
-		responseDTO.setStatus(MessageCommon.STATUS_SUCCESS);
-		// }
-		return responseDTO;
 	}
 
 	@RequestMapping(value = "/show_thumbsup", method = RequestMethod.POST)

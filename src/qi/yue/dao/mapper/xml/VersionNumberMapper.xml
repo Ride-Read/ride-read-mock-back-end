@@ -5,11 +5,12 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="version_type" property="version_type" jdbcType="INTEGER" />
 		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="version_url" property="version_url" jdbcType="VARCHAR" />
 		<result column="create_at" property="create_at" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id,version_type,version,
+		id,version_type,version,version_url,
 		create_at
 	</sql>
 	<select id="find" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -24,19 +25,20 @@
 		<include refid="Base_Column_List" />
 		from t_version_number where
 		version_type=#{version_type,jdbcType=INTEGER} order by create_at desc
-limit 1
+		limit 1
 	</select>
 
 	<insert id="insert" parameterType="qi.yue.entity.VersionNumber"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_version_number (id,
 		version_type,
-		version,create_at
+		version,version_url,create_at
 		)
 		values
 		(#{id,jdbcType=INTEGER},
 		#{versionType,jdbcType=INTEGER},
 		#{version,jdbcType=VARCHAR},
+		#{versionUrl,jdbcType=VARCHAR},
 		#{createAt,jdbcType=TIMESTAMP}
 		)
 	</insert>

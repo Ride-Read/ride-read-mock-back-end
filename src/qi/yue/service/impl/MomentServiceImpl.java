@@ -97,7 +97,12 @@ public class MomentServiceImpl implements MomentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int delete(int id) {
-		return momentMapper.delete(id);
+		int delteMom = momentMapper.delete(id);
+		if (1 == delteMom) {
+			commentMapper.deleteByMid(id);
+			thumbsUpMapper.deleteByMid(id);
+		}
+		return delteMom;
 	}
 
 	public List<MomentDTO> findByPage(PageDTO pageDTO) throws BusinessException {
@@ -334,6 +339,21 @@ public class MomentServiceImpl implements MomentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void removeMoment(String token, Integer uid, Integer mid, Long timestamp) {
+		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNullOrEmpty(uid) || CommonUtil.isNull(mid)
+				|| CommonUtil.isNullOrEmpty(timestamp)) {
+			throw new ParameterException();
+		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
+		delete(mid);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ThumbsUpDTO addThumbsup(String token, Integer uid, Integer mid, Long timestamp) {
 		if (CommonUtil.isNullOrEmpty(token) || CommonUtil.isNull(uid) || CommonUtil.isNull(mid)
 				|| CommonUtil.isNull(timestamp)) {
@@ -463,11 +483,11 @@ public class MomentServiceImpl implements MomentService {
 				|| CommonUtil.isNull(user_id)) {
 			throw new ParameterException();
 		}
-//		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
-//		if (!tokenTemp.equals(token)) {
-//			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
-//					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
-//		}
+		String tokenTemp = EncryptionUtil.GetMD5Code(uid + timestamp + MessageCommon.PUBLIC_KEY);
+		if (!tokenTemp.equals(token)) {
+			throw new BusinessException(MessageCommon.STATUS_TOKEN_VALIDATE_FAIL,
+					MessageCommon.FAIL_MESSAGE_VALIDATE_FAIL);
+		}
 		List<MomentDTO> momentDTOList = momentMapper.findUserMap(user_id);
 		for (MomentDTO momentDTO : momentDTOList) {
 			if (!CommonUtil.isNullOrEmpty(momentDTO.getPictureString())) {
@@ -507,7 +527,7 @@ public class MomentServiceImpl implements MomentService {
 	// }
 	// return moments;
 	// }
-
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
 			BigDecimal longitude) {

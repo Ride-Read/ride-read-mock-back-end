@@ -2,12 +2,11 @@ package qi.yue.dto;
 
 import java.util.Date;
 
-import com.sun.jmx.snmp.Timestamp;
-
 public class VersionNumberDTO {
 	private Integer id;
 	private Integer version_type;
 	private String version;
+	private String version_url;
 	private Date create_at;
 
 	public Integer getId() {
@@ -32,6 +31,14 @@ public class VersionNumberDTO {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getVersion_url() {
+		return version_url;
+	}
+
+	public void setVersion_url(String version_url) {
+		this.version_url = version_url;
 	}
 
 	public Date getCreate_at() {

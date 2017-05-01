@@ -81,4 +81,9 @@
 		where id
 		= #{id,jdbcType=INTEGER}
 	</delete>
+
+	<delete id="deleteByMid" parameterType="java.lang.Integer">
+		delete from t_thumbs_up
+		where moment_id=#{mid,jdbcType=INTEGER}
+	</delete>
 </mapper>

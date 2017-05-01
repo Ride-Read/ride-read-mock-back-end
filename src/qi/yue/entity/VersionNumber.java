@@ -2,12 +2,11 @@ package qi.yue.entity;
 
 import java.util.Date;
 
-import com.sun.jmx.snmp.Timestamp;
-
 public class VersionNumber {
 	private Integer id;
 	private Integer versionType;
 	private String version;
+	private String versionUrl;
 	private Date createAt;
 
 	public Integer getId() {
@@ -32,6 +31,14 @@ public class VersionNumber {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getVersionUrl() {
+		return versionUrl;
+	}
+
+	public void setVersionUrl(String versionUrl) {
+		this.versionUrl = versionUrl;
 	}
 
 	public Date getCreateAt() {

@@ -120,7 +120,8 @@ public interface MomentService {
 
 	List<MomentDTO> findUserMap(Integer uid, Long timestamp, String token);
 
-//	List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token, BigDecimal latitude, BigDecimal longitude);
+	// List<MomentDTO> findNearMap(Integer uid, Long timestamp, String token,
+	// BigDecimal latitude, BigDecimal longitude);
 
 	MomentDTO showOneMoment(Integer uid, Integer mid, Long timestamp, String token, BigDecimal latitude,
 			BigDecimal longitude);
@@ -129,4 +130,6 @@ public interface MomentService {
 			Double scaling_ratio);
 
 	List<MomentDTO> findOtherUserMap(Integer uid, Long timestamp, String token, Integer user_id);
+
+	void removeMoment(String token, Integer uid, Integer mid, Long timestamp);
 }
