@@ -16,11 +16,6 @@ public interface UserService {
 
 	public UserDTO findByUidAndToken(Integer uid, String token);
 
-	// public UserDTO findByUsername(String username);
-
-	// public UserDTO findByPhonenumber(String phonenumber) throws
-	// BusinessException;
-
 	/**
 	 * 通过id查询用户信息
 	 * 
@@ -29,18 +24,9 @@ public interface UserService {
 	 */
 	public UserDTO find(Integer id);
 
-	// UserDTO findThumbsUpUserByMid(Integer mid);
-
-	// public int save(User user);
-
-	// public int update(User user) throws ParameterException,BusinessException;
-
 	public int updateTokenById(String token, Integer uid);
 
 	public int updatePasswordByUsernamae(String password, String username);
-
-	// public int updatePasswordByPhonenumber(String password, String
-	// phonenumber) throws ParameterException, BusinessException;
 
 	public UserDTO login(String phonenumber, String password, BigDecimal latitude, BigDecimal longitude, Long timestamp)
 			throws ParameterException, BusinessException;
@@ -72,6 +58,25 @@ public interface UserService {
 	public UserDTO register(String phonenumber, String password, String face_url, String ride_read_id, String username)
 			throws ParameterException, BusinessException;
 
+	/**
+	 * 第三方注册
+	 * 
+	 * @param phonenumber
+	 * @param password
+	 * @param face_url
+	 * @param ride_read_id
+	 * @param username
+	 * @param thirdPartyCode
+	 * @param thirdPartyName
+	 * @param verifyContent
+	 * @throws ParameterException
+	 * @throws BusinessException
+	 */
+	public void thirdPartyRegister(String phonenumber, String password, String face_url, String ride_read_id, String username,
+			String thirdPartyCode, String thirdPartyName, String verifyContent)
+			throws ParameterException, BusinessException;
+	
+	
 	/**
 	 * 用户骑阅号校验
 	 * 

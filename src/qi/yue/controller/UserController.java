@@ -111,6 +111,28 @@ public class UserController {
 			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
 		}
 	}
+	
+	@RequestMapping(value = "/thirdPartyRegister", method = RequestMethod.POST, headers = "Accept=application/json")
+	public @ResponseBody ResponseDTO thirdPartyRegister(String phonenumber, String password, String face_url, String ride_read_id,
+			String username, String thirdPartyCode, String thirdPartyName, String verifyContent) {
+		Long timestamp = new Date().getTime();
+		try {
+			userService.thirdPartyRegister(phonenumber, password, face_url, ride_read_id, username, thirdPartyCode, thirdPartyName, verifyContent);
+			
+			return ResponseUtil.ConvertToSuccessResponse("", timestamp);
+
+		} catch (ParameterException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_PARAMETER_WRONG,
+					MessageCommon.FAIL_MESSAGE_PARAMETER, timestamp);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(e.getCode(), e.getMessage(), timestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.ConvertToFailResponse(MessageCommon.STATUS_FAIL, MessageCommon.FAIL_MESSAGE, timestamp);
+		}
+	}
 
 	@RequestMapping(value = "/verify", method = RequestMethod.POST)
 	public @ResponseBody ResponseDTO verify(String ride_read_id, Long timestamp) {

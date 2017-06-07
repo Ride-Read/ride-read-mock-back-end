@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import qi.yue.common.MessageCommon;
+import qi.yue.dao.mapper.ThirdPartyMapper;
 import qi.yue.dao.mapper.UserMapper;
 import qi.yue.dto.SimplifyUserDTO;
+import qi.yue.dto.ThirdPartyDTO;
 import qi.yue.dto.UserDTO;
 import qi.yue.dto.assembler.UserDTOAssembler;
 import qi.yue.entity.User;
@@ -30,6 +32,9 @@ import qi.yue.utils.EncryptionUtil;
 public class UserServiceImpl implements UserService {
 	@Resource
 	private UserMapper userMapper;
+	
+	@Resource
+	private ThirdPartyMapper thirdPartyMapper;
 
 	@Override
 	public UserDTO findByUsernameAndPassword(String username, String password) {
@@ -370,5 +375,57 @@ public class UserServiceImpl implements UserService {
 		user.setIs_login(0);
 		user.setToken(null);
 		update(user);
+	}
+
+	@Transactional(rollbackFor={ParameterException.class, BusinessException.class})
+	@Override
+	public void thirdPartyRegister(String phonenumber, String password, String face_url, String ride_read_id,
+			String username, String thirdPartyCode, String thirdPartyName, String verifyContent)
+					throws ParameterException, BusinessException {
+		// TODO Auto-generated method stub
+		if (CommonUtil.isNullOrEmpty(phonenumber) || CommonUtil.isNullOrEmpty(password)
+				|| CommonUtil.isNullOrEmpty(face_url) || CommonUtil.isNullOrEmpty(ride_read_id)
+				|| CommonUtil.isNullOrEmpty(username)) {
+			throw new ParameterException();
+		}
+
+		UserDTO userByTele = findByPhonenumber(phonenumber);
+		UserDTO userByRideReadId = findRideReadId(ride_read_id);
+		if (!CommonUtil.isNullOrEmpty(userByTele) || !CommonUtil.isNullOrEmpty(userByRideReadId)) {
+			if (!CommonUtil.isNullOrEmpty(userByTele)) {
+				throw new BusinessException(MessageCommon.STATUS_PHONENUMBER_EXIST,
+						MessageCommon.FAIL_MESSAGE_PHONENUMBER_EXIST);
+			} else {
+				throw new BusinessException(MessageCommon.STATUS_RIDE_READ_ID_EXIST,
+						MessageCommon.FAIL_MESSAGE_RIDE_READ_ID_EXIST);
+			}
+		}
+
+		String passwordSHA = EncryptionUtil.GetSHACode(password);
+		User user = new User();
+		user.setRideReadId(ride_read_id);
+		user.setUsername(username);
+		user.setPhonenumber(phonenumber);
+		user.setPassword(passwordSHA);
+		user.setFaceUrl(face_url);
+		// 其实createdAt和updatedAt 可以直接写在SQL脚本里面，因为一般这个值都是固定为插入的日期，所以直接
+		// 在脚本里面插入sys_date到这个字段就行
+		Date date = new Date();
+		user.setCreatedAt(date);
+		user.setUpdatedAt(date);
+		user.setSex(0);
+		user.setFollower(0);
+		user.setFollowing(0);
+		user.setIs_login(0);
+		userMapper.insert(user);
+		
+		UserDTO userDTO = UserDTOAssembler.toDto(user);
+		
+		ThirdPartyDTO thirdParty = new ThirdPartyDTO();
+		thirdParty.setUserID(userDTO.getUid().toString());
+		thirdParty.setThirdPartyCode(thirdPartyCode);
+		thirdParty.setThirdPartyName(thirdPartyName);
+		thirdParty.setVerifyContent(verifyContent);
+		thirdPartyMapper.insert(thirdParty);
 	}
 }
